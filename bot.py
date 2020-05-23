@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-import pydle, asyncio, sys, os, time
+import pydle, asyncio, dataset, sys, os, time
 
 class Oven(pydle.Client):
   async def on_connect(self):
@@ -11,6 +11,7 @@ class Oven(pydle.Client):
     self.cmd = {}
     self.raw = {}
     self.help = {}
+    self.db = dataset.connect('sqlite:///database.db')
 
 
     print('loading modules...')

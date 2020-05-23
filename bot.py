@@ -43,7 +43,7 @@ class Oven(pydle.Client):
 
 
       if msg == '!botlist':
-        await self.message(chan, 'helo im awkbot i awk stuff for you lol')
+        await self.message(chan, 'helo im owen\'s nice bot')
       if msg[:len(self.prefix)] == self.prefix:
 
         msg = msg[len(self.prefix):]
@@ -71,8 +71,8 @@ class Oven(pydle.Client):
 
 
 if __name__ == "__main__":
-  client = Oven('awkbot', realname='owens awk bot')
-  client.admins = ['lickthecheese', 'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend', 'calamitous', 'brendo', 'khuxkm','lick']
-  client.prefix = 'awkbot: '
+  client = Oven('o', realname='owens bot')
+  client.admins = ['lickthecheese', 'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend', 'calamitous', 'khuxkm','lick']
+  client.prefix = '.'
   client.run('team.tilde.chat', tls=True, tls_verify=False)
 

@@ -21,7 +21,7 @@ async def owoify(self,c,n,m):
 async def owotext(self, back, chan):
   if chan in self.owolog and len(self.owolog[chan]) >= back:
     ms = self.owolog[chan][0-back]
-    ms[1] = ms[1].replace('r','w').replace('l','w').replace('a','aw').replace('ck','wck')
+    ms[1] = ms[1].replace('r','w').replace('l','w').replace('uck','uwk')
     return '<{}> {} {}'.format(ms[0],ms[1],random.choice(['owo','uwu','^w^','Owo?','OwO', 'oWo', 'UwU', 'uWu']))
   return 'My backlog does not go back that far :('
 

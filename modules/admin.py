@@ -1,33 +1,25 @@
-
 import importlib, time
 
-
-async def commit(self, chan, source, msg):
-  await self.quit('{} told me to commit {}'.format(source,msg))
-
 async def quit(self, chan, source, msg):
-  await self.quit('{} told me to {}'.format(source,msg))
-
-
+    await self.quit('[ADMIN] recieved {} signal from {}'
+            .format(msg, source))
 
 async def reloadmods(self, chan, source, msg):
-  await self.message(chan, 'reloading modules...')
-  self.cmd = {}
-  self.raw = {}
-  self.help = {}
-  for i in self.modules:
-    importlib.reload(self.modules[i])
-    await self.modules[i].init(self)
-  await self.message(chan, 'done! did something break? if so you might need to restart')
-
-  
+    await self.message(chan, '[ADMIN] reloading modules...')
+    self.cmd = {}
+    self.raw = {}
+    self.help = {}
+    for i in self.modules:
+        importlib.reload(self.modules[i])
+        await self.modules[i].init(self)
+    await self.message(chan, '[ADMIN] done')
 
 async def part(self, chan, source, msg):
-  await self.message(chan, 'bye {}'.format(msg))
+  await self.message(chan, '[ADMIN] leaving channel {}'.format(msg))
   await self.part(msg)
 
 async def join(self, chan, source, msg):
-  await self.message(chan, 'joined {}'.format(msg))
+  await self.message(chan, '[ADMIN] joining channel {}'.format(msg))
   await self.join(msg)
 
 async def joins(self, chan, source, msg):
@@ -75,12 +67,12 @@ async def adminHandle(self, chan, source, msg):
   if await self.is_admin(source):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-      await self.message(chan, 'you press the wrong button on the oven and it burns you')
+      await self.message(chan, '[ADMIN] invalid command')
       return
-    print('[ADMIN MODULE] {} told me to {}!!!'.format(source,msg[0]))
+    print('[ADMIN] recieved {} signal from {}'.format(msg[0], source))
     await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
   else:
-    await self.message(chan, 'you try to open it, but the oven is locked')
+    await self.message(chan, '[ADMIN] insufficient privileges')
 
 
 async def init(self):

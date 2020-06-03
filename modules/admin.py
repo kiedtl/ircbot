@@ -76,7 +76,7 @@ async def init(self):
     self.cmd['admin'] = adminHandle
     self.joins = ["#team", "#meta"]
 
-    self.help['admin'] = ['admin - various bot owner commands (more for subcommands)', 'admin subcommands (help admin <command>): quit reload commit part join joins eval send']
+    self.help['admin'] = ['admin - various bot owner commands (more for subcommands)', 'admin subcommands: quit reload part join joins eval send']
     self.help['admin quit'] = ['admin quit <message> - send quit signal to bot']
     self.help['admin reload'] = ['admin reload - reload modules and configs']
     self.help['admin part'] = ['admin part <channel> - make bot leave channel']

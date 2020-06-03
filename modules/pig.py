@@ -51,5 +51,5 @@ async def init(self):
     self.piglog = {}
     self.raw['piglog'] = piglogger
     self.cmd['pig'] = pigify
-    self.help['pig'] = ['pig [num] - pigify the text',
+    self.help['pig'] = ['pig [num] - pigify the text (more)',
             '(·(oo)·) (･ั(00)･ั)']

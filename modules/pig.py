@@ -42,12 +42,6 @@ async def pigtext(self, back, chan):
                 random.choice(['(･ั(00)･ั)', '(´·(oo)·`)', '(·(oo)·)', '(v -(··)-v)', '(> (··) <)', '(° (··) °)']))
     return 'errorway: ymay acklogbay isway ootay ortshay!'
 
-# (° (··) °)
-# (> (··) <)
-# (v -(··)-v)
-# (·(oo)·)
-# (´·(oo)·`)
-# (･ั(00)･ั)
 async def init(self):
     self.piglog = {}
     self.raw['piglog'] = piglogger

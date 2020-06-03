@@ -36,9 +36,8 @@ class System(pydle.Client):
             for i in self.raw:
                 await self.raw[i](self, chan,source,msg)
             if msg == '!botlist':
-                await self.message(chan, 'helo im owen\'s nice bot')
+                await self.message(chan, 'Hi! I\'m spacehare\'s bot.')
             if msg[:len(self.prefix)] == self.prefix:
-
                 msg = msg[len(self.prefix):]
                 cmd = msg.split(' ')[0]
                 msg = msg[len(cmd)+1:]
@@ -59,7 +58,13 @@ class System(pydle.Client):
     async def on_private_message(self, trash, source, msg):
         if source != self.nickname:
             for i in self.raw:
-                await self.raw[i](self, source, source, msg)
+                await self.raw[i](self, chan,source,msg)
+            if msg[:len(self.prefix)] == self.prefix:
+                msg = msg[len(self.prefix):]
+                cmd = msg.split(' ')[0]
+                msg = msg[len(cmd)+1:]
+                if cmd in self.cmd:
+                    await self.cmd[cmd](self, chan, source, msg)
 
 if __name__ == "__main__":
     client = System('k', realname='spacehare\'s annoying bot')
@@ -67,4 +72,4 @@ if __name__ == "__main__":
             'gbmor', 'tomasino', 'ubergeek', 'deepend',
             'calamitous','khuxkm']
     client.prefix = ':'
-    client.run('team.tilde.chat', tls=True, tls_verify=False)
+    client.run('localhost', tls=False, tls_verify=False)

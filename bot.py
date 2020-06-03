@@ -2,26 +2,26 @@
 
 import pydle, asyncio, dataset, sys, os, time
 
-class Oven(pydle.Client):
+class System(pydle.Client):
     async def on_connect(self):
-        print('Connected!')
+        print('[IRC] connected!')
 
         self.modules = {}
         self.cmd = {}
         self.raw = {}
         self.help = {}
 
-        print('loading modules...')
+        print('[MODULES] loading modules...')
         await self.loadMods()
-        print('joining channels')
+        print('[IRC] joining channels')
         for i in self.chansjoin:
             await self.join(i)
-        print('Done!')
+        print('[IRC] done!')
 
     async def loadMods(self):
         for i in [s for s in os.listdir('modules') if ".py" in s]:
             i = i[:-3]
-            print('loading', i)
+            print('[MODULES] loading', i)
             m = __import__("modules."+i)
             m = eval('m.'+i)
             await m.init(self)
@@ -31,15 +31,10 @@ class Oven(pydle.Client):
         print('{} invited me to {}!'.format(by, channel))
         await self.join(channel)
 
-
     async def on_message(self, chan, source, msg):
         if source != self.nickname:
-
             for i in self.raw:
                 await self.raw[i](self, chan,source,msg)
-
-
-
             if msg == '!botlist':
                 await self.message(chan, 'helo im owen\'s nice bot')
             if msg[:len(self.prefix)] == self.prefix:
@@ -54,12 +49,11 @@ class Oven(pydle.Client):
     async def is_admin(self, nickname):
         admin = False
 
-        # Check the WHOIS info to see if the source has identified with NickServ.
-        # This is a blocking operation, so use yield.
+        # check the WHOIS info to see if the source has identified.
+        # this is a blocking operation, so use yield.
         if nickname in self.admins:
             info = await self.whois(nickname)
             admin = info['identified']
-
         return admin
 
     async def on_private_message(self, trash, source, msg):
@@ -67,10 +61,10 @@ class Oven(pydle.Client):
             for i in self.raw:
                 await self.raw[i](self, source, source, msg)
 
-
 if __name__ == "__main__":
-    client = Oven('annoyingspacebunny', realname='spacehare\'s annoying bot')
-    client.admins = ['kiedtl', 'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend', 'calamitous', 'khuxkm']
-    client.prefix = '.'
+    client = System('k', realname='spacehare\'s annoying bot')
+    client.admins = ['kiedtl', 'spacehare', 'ben', 'cmccabe',
+            'gbmor', 'tomasino', 'ubergeek', 'deepend',
+            'calamitous','khuxkm']
+    client.prefix = ':'
     client.run('team.tilde.chat', tls=True, tls_verify=False)
-

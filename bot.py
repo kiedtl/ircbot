@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import pydle, asyncio, dataset, sys, os, time
 
 class Oven(pydle.Client):
@@ -12,7 +11,6 @@ class Oven(pydle.Client):
     self.raw = {}
     self.help = {}
     self.db = dataset.connect('sqlite:///database.db')
-
 
     print('loading modules...')
     await self.loadMods()
@@ -72,8 +70,8 @@ class Oven(pydle.Client):
 
 
 if __name__ == "__main__":
-  client = Oven('o', realname='owens bot')
-  client.admins = ['lickthecheese', 'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend', 'calamitous', 'khuxkm','lick']
+  client = Oven('annoyingspacebunny', realname='spacehare\'s annoying bot')
+  client.admins = ['kiedtl', 'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend', 'calamitous', 'khuxkm']
   client.prefix = '.'
   client.run('team.tilde.chat', tls=True, tls_verify=False)
 

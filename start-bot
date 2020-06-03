@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# (c) Kiëd Llaentenn <kiedtl@tilde.team>
+# See the COPYING file for copyright information.
+
+logfile=logs/log-$(date +%d%m%Y-%H%M).txt
+PYTHONUNBUFFERED=1 ./bot.py >> $logfile 2>&1

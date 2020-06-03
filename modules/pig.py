@@ -4,6 +4,7 @@ def twoch(s):
     return s[0] + s[1]
 
 async def piglogger(self, c, n, m):
+    print('[LOGGER] logged message')
     if m[:len(self.prefix)] == self.prefix:
         return
     if c not in self.piglog:

@@ -80,7 +80,7 @@ async def adminHandle(self, chan, source, msg):
 
 async def init(self):
     self.cmd['admin'] = adminHandle
-    self.joins = ["#team", "#meta"]
+    self.joins = ["#team", "#lickthecheese"]
 
     self.help['admin'] = ['admin - various bot owner commands (more for subcommands)', 'admin subcommands: quit restart reload part join joins eval send']
     self.help['admin quit'] = ['admin quit <message> - shutdown bot']

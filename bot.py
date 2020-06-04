@@ -67,9 +67,9 @@ class System(pydle.Client):
                     await self.cmd[cmd](self, chan, source, msg)
 
 if __name__ == "__main__":
-    client = System('k', realname='spacehare\'s annoying bot')
+    client = System('k', realname='spacehare\'s bot')
     client.admins = ['kiedtl', 'spacehare', 'ben', 'cmccabe',
             'gbmor', 'tomasino', 'ubergeek', 'deepend',
-            'calamitous','khuxkm']
+            'calamitous', 'khuxkm']
     client.prefix = ':'
     client.run('localhost', tls=False, tls_verify=False)

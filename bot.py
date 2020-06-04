@@ -36,9 +36,7 @@ class System(pydle.Client):
             for i in self.raw:
                 await self.raw[i](self, chan,source,msg)
             if msg == '!botlist':
-                await self.message(chan, 'Hi! I\'m spacehare\'s bot.')
-                await self.message(chan, 'Try :help to get started.')
-                await self.message(chan, 'Source: https://github.com/kiedtl/ircbot')
+                await self.message(chan, 'k | owner: spacehare, kiedtl | source: https://github.com/kiedtl/ircbot | prefix: \':\' | commands: see :help')
             if msg[:len(self.prefix)] == self.prefix:
                 msg = msg[len(self.prefix):]
                 cmd = msg.split(' ')[0]

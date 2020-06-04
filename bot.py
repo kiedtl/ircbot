@@ -28,7 +28,7 @@ class System(pydle.Client):
             self.modules[i] = m
 
     async def on_invite(self, channel, by):
-        print('{} invited me to {}!'.format(by, channel))
+        print('[irc] recieved invite by {} to {}'.format(by, channel))
         await self.join(channel)
 
     async def on_message(self, chan, source, msg):
@@ -37,6 +37,8 @@ class System(pydle.Client):
                 await self.raw[i](self, chan,source,msg)
             if msg == '!botlist':
                 await self.message(chan, 'Hi! I\'m spacehare\'s bot.')
+                await self.message(chan, 'Try :help to get started.')
+                await self.message(chan, 'Source: https://github.com/kiedtl/ircbot')
             if msg[:len(self.prefix)] == self.prefix:
                 msg = msg[len(self.prefix):]
                 cmd = msg.split(' ')[0]

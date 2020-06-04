@@ -2,7 +2,17 @@ import random
 import re
 
 def twoch(s):
-    return s[0] + s[1]
+    if len(s) < 2:
+        return s[0]
+    else:
+        return s[0] + s[1]
+
+def hasupper(s):
+    has = False
+    for ch in s:
+        if (ch.isupper()):
+            has = True
+    return has
 
 async def piglogger(self, c, n, m):
     print('[LOGGER] logged message')
@@ -27,10 +37,15 @@ async def pigify(self, c, n, m):
 async def pigtext(self, back, chan):
     if chan in self.piglog and len(self.piglog[chan]) >= back:
         ms = self.piglog[chan][0-back]
-        list = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr', 'bl', 'gr', 'st', 'sl', 'cl', 'pl', 'fl']
-        data = re.split('[\ \.,!?]+', ms[1])
+        data = re.split(r'([!-/:-@\[-`{-~\ ]+)', ms[1])
+
+        list = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr',
+                'bl', 'gr', 'st', 'sl', 'cl', 'pl', 'fl']
+
         for k in range(len(data)):
             i = data[k]
+            if len(i) == 0:
+                continue
             if i[0] in ['a', 'e', 'i', 'o', 'u']:
                 data[k] = i + 'ay'
             elif twoch(i) in list:
@@ -39,7 +54,12 @@ async def pigtext(self, back, chan):
                 data[k] = i
             else:
                 data[k] = i[1:] + i[0] + 'ay'
-        return '<{}> {} {}'.format(ms[0], ' '.join(data),
+
+            if (hasupper(data[k])):
+                data[k] = data[k].lower()
+                data[k] = data[k][:1].upper() + data[k][1:]
+
+        return '<{}> {} {}'.format(ms[0], ''.join(data),
                 random.choice(['(･ั(00)･ั)', '(´·(oo)·`)', '(·(oo)·)', '(v -(··)-v)', '(> (··) <)', '(° (··) °)']))
     return 'errorway: ymay acklogbay isway ootay ortshay!'
 

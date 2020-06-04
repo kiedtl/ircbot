@@ -1,5 +1,4 @@
-import random
-import re
+import random, re
 
 def twoch(s):
     if len(s) < 2:
@@ -44,23 +43,34 @@ async def pigtext(self, back, chan):
 
         for k in range(len(data)):
             i = data[k]
+
+            # use 'way' as suffix if word ends
+            # in a vowel
+            suffix = 'ay'
+            if i[-1] in 'aeiou':
+                suffix = 'way'
+
+            # translation
             if len(i) == 0:
                 continue
-            if i[0] in ['a', 'e', 'i', 'o', 'u']:
-                data[k] = i + 'ay'
+            if i[0] in 'aeiou':
+                data[k] = i + suffix
             elif twoch(i) in list:
-                data[k] = i[2:] + i[:2] + 'ay'
+                data[k] = i[2:] + i[:2] + suffix
             elif i.isalpha() == False:
                 data[k] = i
             else:
-                data[k] = i[1:] + i[0] + 'ay'
+                data[k] = i[1:] + i[0] + suffix
 
+            # correct captalization
+            # e.g. "You've" => "ouYay'evay" => "Ouyay'evay"
             if (hasupper(data[k])):
                 data[k] = data[k].lower()
                 data[k] = data[k][:1].upper() + data[k][1:]
 
-        return '<{}> {} {}'.format(ms[0], ''.join(data),
-                random.choice(['(･ั(00)･ั)', '(´·(oo)·`)', '(·(oo)·)', '(v -(··)-v)', '(> (··) <)', '(° (··) °)']))
+        pig = random.choice(['(･ั(00)･ั)', '(´·(oo)·`)', '(·(oo)·)',
+            '(v -(··)-v)', '(> (··) <)', '(° (··) °)'])
+        return '<{}> {} {}'.format(ms[0], ''.join(data), pig)
     return 'errorway: ymay acklogbay isway ootay ortshay!'
 
 async def init(self):

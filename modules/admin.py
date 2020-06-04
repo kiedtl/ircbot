@@ -43,8 +43,8 @@ async def aexec(self, code):
 
 async def ev(self, chan, source, msg):
     msg = msg.split(' ')
-    await aexec(self, ' '.join(msg))
-    await self.message(chan, 'ok')
+    result = await aexec(self, ' '.join(msg))
+    await self.message(chan, '[admin] result: "{}"'.format(result))
 
 async def send(self, c, n, m):
     msg = m.split(' ')
@@ -81,6 +81,10 @@ async def adminHandle(self, chan, source, msg):
 async def init(self):
     self.cmd['admin'] = adminHandle
     self.joins = ["#team", "#lickthecheese"]
+
+    self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda', 'spacehare',
+            'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend',
+            'calamitous', 'khuxkm']
 
     self.help['admin'] = ['admin - various bot owner commands (more for subcommands)', 'admin subcommands: quit restart reload part join joins eval send']
     self.help['admin quit'] = ['admin quit <message> - shutdown bot']

@@ -68,8 +68,5 @@ class System(pydle.Client):
 
 if __name__ == "__main__":
     client = System('k', realname='spacehare\'s bot')
-    client.admins = ['kiedtl', 'spacehare', 'ben', 'cmccabe',
-            'gbmor', 'tomasino', 'ubergeek', 'deepend',
-            'calamitous', 'khuxkm']
     client.prefix = ':'
     client.run('localhost', tls=False, tls_verify=False)

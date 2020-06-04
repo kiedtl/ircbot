@@ -4,4 +4,4 @@
 # See the COPYING file for copyright information.
 
 logfile=logs/log-$(date +%d%m%Y-%H%M).txt
-PYTHONUNBUFFERED=1 ./bot.py >> $logfile 2>&1
+PYTHONUNBUFFERED=1 ./bot.py 2>&1 | tee -a $logfile

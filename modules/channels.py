@@ -1,2 +1,2 @@
 async def init(self):
-    self.chansjoin = ['#bots', '#team']
+    self.chansjoin = ['#bots']

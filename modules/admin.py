@@ -1,8 +1,13 @@
-import importlib, time
+import importlib, time, os
 
 async def quit(self, chan, source, msg):
     await self.quit('[ADMIN] recieved {} signal from {}'
             .format(msg, source))
+
+async def restart(self, chan, source, msg):
+    await self.quit('[ADMIN] recieved {} signal from {}'
+            .format(msg, source))
+    os.system('systemctl --user restart bot')
 
 async def reloadmods(self, chan, source, msg):
     await self.message(chan, '[ADMIN] reloading modules...')
@@ -52,6 +57,7 @@ async def shut(self, c, n, m):
 
 commands = {
     'quit': quit,
+    'restart': restart,
     'reload': reloadmods,
     'part': part,
     'join': join,
@@ -76,8 +82,9 @@ async def init(self):
     self.cmd['admin'] = adminHandle
     self.joins = ["#team", "#meta"]
 
-    self.help['admin'] = ['admin - various bot owner commands (more for subcommands)', 'admin subcommands: quit reload part join joins eval send']
-    self.help['admin quit'] = ['admin quit <message> - send quit signal to bot']
+    self.help['admin'] = ['admin - various bot owner commands (more for subcommands)', 'admin subcommands: quit restart reload part join joins eval send']
+    self.help['admin quit'] = ['admin quit <message> - shutdown bot']
+    self.help['admin restart'] = ['admin restart <message> - restart bot']
     self.help['admin reload'] = ['admin reload - reload modules and configs']
     self.help['admin part'] = ['admin part <channel> - make bot leave channel']
     self.help['admin join'] = ['admin join <channel> -  make bot join channel']

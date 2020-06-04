@@ -1,30 +1,30 @@
 import importlib, time, os
 
 async def quit(self, chan, source, msg):
-    await self.quit('[ADMIN] recieved {} signal from {}'
+    await self.quit('[admin] recieved {} signal from {}'
             .format(msg, source))
 
 async def restart(self, chan, source, msg):
-    await self.quit('[ADMIN] recieved {} signal from {}'
+    await self.quit('[admin] recieved {} signal from {}'
             .format(msg, source))
     os.system('systemctl --user restart bot')
 
 async def reloadmods(self, chan, source, msg):
-    await self.message(chan, '[ADMIN] reloading modules...')
+    await self.message(chan, '[admin] reloading modules...')
     self.cmd = {}
     self.raw = {}
     self.help = {}
     for i in self.modules:
         importlib.reload(self.modules[i])
         await self.modules[i].init(self)
-    await self.message(chan, '[ADMIN] done')
+    await self.message(chan, '[admin] done')
 
 async def part(self, chan, source, msg):
-    await self.message(chan, '[ADMIN] leaving channel {}'.format(msg))
+    await self.message(chan, '[admin] leaving channel {}'.format(msg))
     await self.part(msg)
 
 async def join(self, chan, source, msg):
-    await self.message(chan, '[ADMIN] joining channel {}'.format(msg))
+    await self.message(chan, '[admin] joining channel {}'.format(msg))
     await self.join(msg)
 
 async def joins(self, chan, source, msg):
@@ -71,12 +71,12 @@ async def adminHandle(self, chan, source, msg):
     if await self.is_admin(source):
         msg = msg.split(' ')
         if len(msg) < 1 or not msg[0] in commands:
-            await self.message(chan, '[ADMIN] invalid command')
+            await self.message(chan, '[admin] invalid command')
             return
-        print('[ADMIN] recieved {} signal from {}'.format(msg[0], source))
+        print('[admin] recieved {} signal from {}'.format(msg[0], source))
         await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
     else:
-        await self.message(chan, '[ADMIN] insufficient privileges')
+        await self.message(chan, '[admin] insufficient privileges')
 
 async def init(self):
     self.cmd['admin'] = adminHandle

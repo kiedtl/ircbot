@@ -4,24 +4,24 @@ import pydle, asyncio, dataset, sys, os, time
 
 class System(pydle.Client):
     async def on_connect(self):
-        print('[IRC] connected!')
+        print('[irc] connected!')
 
         self.modules = {}
         self.cmd = {}
         self.raw = {}
         self.help = {}
 
-        print('[MODULES] loading modules...')
+        print('[modules] loading modules...')
         await self.loadMods()
-        print('[IRC] joining channels')
+        print('[irc] joining channels')
         for i in self.chansjoin:
             await self.join(i)
-        print('[IRC] done!')
+        print('[irc] done!')
 
     async def loadMods(self):
         for i in [s for s in os.listdir('modules') if ".py" in s]:
             i = i[:-3]
-            print('[MODULES] loading', i)
+            print('[modules] loading', i)
             m = __import__("modules."+i)
             m = eval('m.'+i)
             await m.init(self)

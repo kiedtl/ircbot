@@ -1,4 +1,5 @@
 import random
+import re
 
 def twoch(s):
     return s[0] + s[1]
@@ -27,7 +28,7 @@ async def pigtext(self, back, chan):
     if chan in self.piglog and len(self.piglog[chan]) >= back:
         ms = self.piglog[chan][0-back]
         list = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr', 'bl', 'gr', 'st', 'sl', 'cl', 'pl', 'fl']
-        data = ms[1].split()
+        data = re.split('[\ \.,!?]+', ms[1])
         for k in range(len(data)):
             i = data[k]
             if i[0] in ['a', 'e', 'i', 'o', 'u']:

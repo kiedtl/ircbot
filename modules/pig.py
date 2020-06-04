@@ -1,5 +1,7 @@
 import random, re
 
+vowels = ['a', 'e', 'i', 'o', 'u']
+
 def twoch(s):
     if len(s) < 2:
         return s[0]
@@ -42,17 +44,17 @@ async def pigtext(self, back, chan):
 
         for k in range(len(data)):
             i = data[k]
+            if len(i) == 0:
+                continue
 
             # use 'way' as suffix if word ends
             # in a vowel
             suffix = 'ay'
-            if i[-1] in 'aeiou':
+            if i[-1] in vowels:
                 suffix = 'way'
 
             # translation
-            if len(i) == 0:
-                continue
-            if i[0] in 'aeiou':
+            if i[0] in vowels:
                 data[k] = i + suffix
             elif twoch(i) in list:
                 data[k] = i[2:] + i[:2] + suffix

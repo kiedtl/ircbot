@@ -15,16 +15,6 @@ def hasupper(s):
             has = True
     return has
 
-async def piglogger(self, c, n, m):
-    if m[:len(self.prefix)] == self.prefix:
-        return
-    if c not in self.piglog:
-        self.piglog[c] = []
-
-    self.piglog[c].append([n,m])
-    if len(self.piglog[c]) > 512:
-        del self.piglog[c][:-256]
-
 async def pigify(self, c, n, m):
     if len(m) < 1:
         m = ["1"]
@@ -35,8 +25,8 @@ async def pigify(self, c, n, m):
     await self.message(c, await pigtext(self, back, c))
 
 async def pigtext(self, back, chan):
-    if chan in self.piglog and len(self.piglog[chan]) >= back:
-        ms = self.piglog[chan][0-back]
+    if chan in self.backlog and len(self.backlog[chan]) >= back:
+        ms = self.backlog[chan][0-back]
         data = re.split(r'([!-/:-@\[-`{-~\ ]+)', ms[1])
 
         list = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr',
@@ -75,8 +65,6 @@ async def pigtext(self, back, chan):
     return 'errorway: ymay acklogbay isway ootay ortshay!'
 
 async def init(self):
-    self.piglog = {}
-    self.raw['piglog'] = piglogger
     self.cmd['pig'] = pigify
     self.help['pig'] = ['pig [num] - pigify the text (more)',
             '(·(oo)·) (･ั(00)･ั)']

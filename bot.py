@@ -35,8 +35,8 @@ class System(pydle.Client):
         if source != self.nickname:
             for i in self.raw:
                 await self.raw[i](self, chan,source,msg)
-            if msg == '!botlist':
-                await self.message(chan, 'k | owner: spacehare, kiedtl | source: https://github.com/kiedtl/ircbot | prefix: \':\' | commands: see :help')
+            if msg == '!botlist' or msg == '!rollcall':
+                await self.message(chan, '> k | owner: spacehare | source: https://github.com/kiedtl/ircbot | prefix: \':\' | commands: see :help')
             if msg[:len(self.prefix)] == self.prefix:
                 msg = msg[len(self.prefix):]
                 cmd = msg.split(' ')[0]

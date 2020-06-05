@@ -2,7 +2,7 @@ import common, subprocess
 from subprocess import Popen, PIPE, STDOUT
 
 async def calc(self, chan, src, msg):
-    res = common.run(self, ['dc'], ' '.join(msg))
+    res = common.run(self, ['dc'], ''.join(msg))
     if res == '':
         res = '(None)'
     lines = res.split('\n')

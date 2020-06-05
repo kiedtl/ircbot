@@ -51,7 +51,7 @@ async def aexec(self, code):
 async def ev(self, chan, source, msg):
     msg = msg.split(' ')
     result = await aexec(self, ' '.join(msg))
-    await self.message(chan, '{] result: \'{}\''
+    await self.message(chan, '{} result: \'{}\''
         .format(modname('admin'), result))
 
 async def send(self, c, n, m):

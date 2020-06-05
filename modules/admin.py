@@ -106,24 +106,19 @@ async def init(self):
     self.cmd['admin'] = adminHandle
     self.joins = ['#team', '#lickthecheese', '#chaos']
 
-    self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda', 'spacehare',
-            'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend',
-            'calamitous', 'khuxkm']
+    self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
+            'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino',
+            'ubergeek', 'deepend', 'calamitous', 'khuxkm']
 
     self.help['admin'] = ['admin - various bot owner commands (more for subcommands)',
         'admin subcommands: quit restart reload part join joins eval send sleep']
-    self.help['admin quit'] = ['admin quit <message> - shutdown bot', '']
-    self.help['admin restart'] = ['admin restart <message> - restart bot', '']
-    self.help['admin reload'] = ['admin reload - reload modules and configs', '']
-    self.help['admin part'] = ['admin part <channel> - make bot leave channel',
-        '']
-    self.help['admin join'] = ['admin join <channel> -  make bot join channel',
-        '']
-    self.help['admin joins'] = ['admin joins - join channels defined in the admin module',
-        '']
-    self.help['admin eval'] = ['admin eval <command> - evaluate command', '']
-    self.help['admin send'] = ['admin send <channel> <message> - send message',
-        '']
-    self.help['admin sleep'] = ['admin sleep [num] - send me into an enchanted sleep for [num] minutes (default: 5m)', '']
-    self.help['admin wake'] = ['admin wake - wake me up from an enchanted sleep',
-        '']
+    self.help['admin quit'] = ['admin quit <message> - shutdown bot']
+    self.help['admin restart'] = ['admin restart <message> - restart bot']
+    self.help['admin reload'] = ['admin reload - reload modules and configs']
+    self.help['admin part'] = ['admin part <channel> - make bot leave channel']
+    self.help['admin join'] = ['admin join <channel> -  make bot join channel']
+    self.help['admin joins'] = ['admin joins - join channels defined in the admin module']
+    self.help['admin eval'] = ['admin eval <command> - evaluate command']
+    self.help['admin send'] = ['admin send <channel> <message> - send message']
+    self.help['admin sleep'] = ['admin sleep [num] - send me into an enchanted sleep for [num] minutes (default: 5m)']
+    self.help['admin wake'] = ['admin wake - wake me up from an enchanted sleep']

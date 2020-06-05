@@ -30,5 +30,5 @@ async def rot13(self, chan, src, msg):
 async def init(self):
     self.cmd['rev13'] = rev13
     self.cmd['rot13'] = rot13
-    self.help['rot13'] = ['ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl', '']
-    self.help['rev13'] = ['attempt to decrypt rot13-encrypted messages', '']
+    self.help['rot13'] = ['ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
+    self.help['rev13'] = ['attempt to decrypt rot13-encrypted messages']

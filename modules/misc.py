@@ -11,4 +11,4 @@ async def list_mods(self, chan, src, msg):
 
 async def init(self):
     self.cmd['modules'] = list_mods
-    self.help['modules'] = ['modules - list loaded modules', '']
+    self.help['modules'] = ['modules - list loaded modules']

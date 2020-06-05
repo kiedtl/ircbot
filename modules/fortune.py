@@ -11,4 +11,4 @@ async def fortune(self, c, n, m):
 
 async def init(self):
     self.cmd['fortune'] = fortune
-    self.help['fortune'] = ['fortune - get a fortune', '']
+    self.help['fortune'] = ['fortune - get a fortune']

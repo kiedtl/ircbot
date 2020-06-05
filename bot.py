@@ -12,13 +12,15 @@ class System(pydle.Client):
         self.help = {}
 
         print('[modules] loading modules...')
-        await self.loadMods()
+        await self.load_mods()
         print('[irc] joining channels')
         for i in self.chansjoin:
             await self.join(i)
         print('[irc] done!')
+        print('[irc] attempting to set mode +B')
+        await self.set_mode('k', '+B')
 
-    async def loadMods(self):
+    async def load_mods(self):
         for i in [s for s in os.listdir('modules') if ".py" in s]:
             i = i[:-3]
             print('[modules] loading', i)
@@ -66,6 +68,9 @@ class System(pydle.Client):
                 msg = msg[len(cmd)+1:]
                 if cmd in self.cmd:
                     await self.cmd[cmd](self, chan, source, msg)
+
+    async def on_user_mode_change(self, modes):
+        print('[irc] mode changed: {}'.format(modes))
 
 if __name__ == "__main__":
     client = System('k', realname='spacehare\'s bot')

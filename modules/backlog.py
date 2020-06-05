@@ -1,19 +1,36 @@
 # backlogger
 # stores messages for modules such
-# as :pig and :owo
+# as :pig and :owo and logs them
+# for irc statistics
 
-import random, re
+from datetime import datetime
 
-async def backlogger(self, c, n, m):
-    if m[:len(self.prefix)] == self.prefix:
-        return
-    if c not in self.backlog:
-        self.backlog[c] = []
+async def backlogger(self, chan, src, msg):
+    if chan not in self.backlog:
+        self.backlog[chan] = []
+    if chan not in self.logfiles:
+        logpath = 'chans/{}.log'.format(chan)
+        print('[logger] opening logfile {}'
+            .format(logpath))
+        self.logfiles[chan] = open(logpath, 'a')
 
-    self.backlog[c].append([n,m])
-    if len(self.backlog[c]) > 1024:
-        del self.backlog[c][:-512]
+    # store in logfile
+    now = datetime.now()
+    time = datetime.strftime(now, '%d%m%y%H%M')
+    self.logfiles[chan].write('{} {} {}\n'
+        .format(time, src, msg))
+    self.logfiles[chan].flush()
+
+    # don't store in backlog if msg
+    # is a command
+    if msg[:len(self.prefix)] != self.prefix:
+        self.backlog[chan].append([src, msg])
+
+        # flush backlog if its size exceeds 1024
+        if len(self.backlog[chan]) > 1024:
+            del self.backlog[chan][:-512]
 
 async def init(self):
     self.backlog = {}
+    self.logfiles = {}
     self.raw['backlog'] = backlogger

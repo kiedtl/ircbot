@@ -28,7 +28,7 @@ class System(pydle.Client):
             self.modules[i] = m
 
     async def on_invite(self, channel, by):
-        print('[irc] recieved invite by {} to {}'.format(by, channel))
+        print('[irc] received invite by {} to {}'.format(by, channel))
         await self.join(channel)
 
     async def on_message(self, chan, source, msg):
@@ -42,7 +42,8 @@ class System(pydle.Client):
                 cmd = msg.split(' ')[0]
                 msg = msg[len(cmd)+1:]
                 if cmd in self.cmd:
-                    await self.cmd[cmd](self, chan, source, msg)
+                    if self.asleep < time.time() or cmd == 'admin':
+                        await self.cmd[cmd](self, chan, source, msg)
 
 
     async def is_admin(self, nickname):
@@ -69,4 +70,5 @@ class System(pydle.Client):
 if __name__ == "__main__":
     client = System('k', realname='spacehare\'s bot')
     client.prefix = ':'
+    client.asleep = time.time()
     client.run('localhost', tls=False, tls_verify=False)

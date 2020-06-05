@@ -51,9 +51,20 @@ async def send(self, c, n, m):
     await self.message(msg.pop(0), ' '.join(msg))
     await self.message(c, 'ok')
 
-async def shut(self, c, n, m):
-    self.qtime[c] = time.time()+(60*10)
-    await self.message(c, 'Ok, il be back')
+async def shutup(self, c, n, m):
+    duration = 5
+    if len(m) >= 1:
+        try:
+            duration = int(m) + 0
+        except:
+            duration = 5
+    self.asleep = time.time() + (duration * 60)
+    await self.message(c, '[admin] disabled for {}m'
+            .format(duration))
+
+async def wake(self, c, n, m):
+    self.asleep = time.time()
+    await self.message(c, '[admin] I\'m back!')
 
 commands = {
     'quit': quit,
@@ -64,7 +75,8 @@ commands = {
     'eval': ev,
     'send': send,
     'joins': joins,
-    'shut': shut
+    'sleep': shutup,
+    'wake': wake,
 }
 
 async def adminHandle(self, chan, source, msg):
@@ -86,7 +98,8 @@ async def init(self):
             'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend',
             'calamitous', 'khuxkm']
 
-    self.help['admin'] = ['admin - various bot owner commands (more for subcommands)', 'admin subcommands: quit restart reload part join joins eval send']
+    self.help['admin'] = ['admin - various bot owner commands (more for subcommands)',
+        'admin subcommands: quit restart reload part join joins eval send sleep']
     self.help['admin quit'] = ['admin quit <message> - shutdown bot', '']
     self.help['admin restart'] = ['admin restart <message> - restart bot', '']
     self.help['admin reload'] = ['admin reload - reload modules and configs', '']
@@ -98,4 +111,7 @@ async def init(self):
         '']
     self.help['admin eval'] = ['admin eval <command> - evaluate command', '']
     self.help['admin send'] = ['admin send <channel> <message> - send message',
+        '']
+    self.help['admin sleep'] = ['admin sleep [num] - send me into an enchanted sleep for [num] minutes (default: 5m)', '']
+    self.help['admin wake'] = ['admin wake - wake me up from an enchanted sleep',
         '']

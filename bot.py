@@ -39,12 +39,14 @@ class System(pydle.Client):
                 await self.raw[i](self, chan,source,msg)
             if msg == '!botlist' or msg == '!rollcall':
                 await self.message(chan, '> k | owner: spacehare | source: https://github.com/kiedtl/ircbot | prefix: \':\' | commands: see :help')
+            if not chan in self.asleep:
+                self.asleep[chan] = time.time()
             if msg[:len(self.prefix)] == self.prefix:
                 msg = msg[len(self.prefix):]
                 cmd = msg.split(' ')[0]
                 msg = msg[len(cmd)+1:]
                 if cmd in self.cmd:
-                    if self.asleep < time.time() or cmd == 'admin':
+                    if self.asleep[chan] < time.time() or cmd == 'admin':
                         await self.cmd[cmd](self, chan, source, msg)
 
 
@@ -75,5 +77,5 @@ class System(pydle.Client):
 if __name__ == '__main__':
     client = System('k', realname='spacehare\'s bot')
     client.prefix = ':'
-    client.asleep = time.time()
+    client.asleep = {}
     client.run('localhost', tls=False, tls_verify=False)

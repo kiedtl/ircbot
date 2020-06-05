@@ -66,12 +66,12 @@ async def shutup(self, c, n, m):
             duration = int(m) + 0
         except:
             duration = 5
-    self.asleep = time.time() + (duration * 60)
+    self.asleep[c] = time.time() + (duration * 60)
     await self.message(c, '{} disabled for {}m'
         .format(modname('admin'), duration))
 
 async def wake(self, c, n, m):
-    self.asleep = time.time()
+    self.asleep[c] = time.time()
     await self.message(c, '{} I\'m back!'
         .format(modname('admin')))
 

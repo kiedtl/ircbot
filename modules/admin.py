@@ -10,6 +10,7 @@ async def restart(self, chan, source, msg):
     os.system('systemctl --user restart bot')
 
 async def reloadmods(self, chan, source, msg):
+    before = time.time()
     await self.message(chan, '[admin] reloading modules...')
     self.cmd = {}
     self.raw = {}
@@ -17,7 +18,8 @@ async def reloadmods(self, chan, source, msg):
     for i in self.modules:
         importlib.reload(self.modules[i])
         await self.modules[i].init(self)
-    await self.message(chan, '[admin] done')
+    await self.message(chan, '[admin] {} modules reloaded in {}s'
+        .format(len(self.modules), round(time.time() - before, 3)))
 
 async def part(self, chan, source, msg):
     await self.message(chan, '[admin] leaving channel {}'.format(msg))

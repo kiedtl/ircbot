@@ -2,7 +2,7 @@ import subprocess
 from subprocess import Popen, PIPE, STDOUT
 
 async def fortune(self, c, n, m):
-    proc = Popen(["fortune", "-s", "-e"],
+    proc = Popen(['fortune', '-s', '-e'],
             stdout=PIPE, stderr=STDOUT)
     (out, err) = proc.communicate()
     exit = proc.wait()

@@ -6,7 +6,7 @@ import common, subprocess
 from subprocess import Popen, PIPE, STDOUT
 
 async def rev13(self, chan, src, msg):
-    txt = ""
+    txt = ''
     try:
         txt = common.get_backlog_msg(self, chan, msg)[1]
     except:
@@ -17,7 +17,7 @@ async def rev13(self, chan, src, msg):
     await self.message(chan, res)
 
 async def rot13(self, chan, src, msg):
-    txt = ""
+    txt = ''
     try:
         txt = common.get_backlog_msg(self, chan, msg)[1]
     except:

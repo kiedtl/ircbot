@@ -2,7 +2,7 @@ import random
 
 async def owoify(self,c,n,m):
     if len(m) < 1:
-        m = ["1"]
+        m = ['1']
     try:
         back = int(m[0])+0
     except:

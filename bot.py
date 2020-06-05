@@ -21,10 +21,10 @@ class System(pydle.Client):
         await self.set_mode('k', '+B')
 
     async def load_mods(self):
-        for i in [s for s in os.listdir('modules') if ".py" in s]:
+        for i in [s for s in os.listdir('modules') if '.py' in s]:
             i = i[:-3]
             print('[modules] loading', i)
-            m = __import__("modules."+i)
+            m = __import__('modules.' + i)
             m = eval('m.'+i)
             await m.init(self)
             self.modules[i] = m
@@ -72,7 +72,7 @@ class System(pydle.Client):
     async def on_user_mode_change(self, modes):
         print('[irc] mode changed: {}'.format(modes))
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     client = System('k', realname='spacehare\'s bot')
     client.prefix = ':'
     client.asleep = time.time()

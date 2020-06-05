@@ -3,7 +3,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 def get_backlog_msg(self, chan, msg):
     if len(msg) < 1:
-        msg = ["1"]
+        msg = ['1']
     try:
         back = int(msg[0]) + 0
     except:

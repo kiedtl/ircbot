@@ -46,7 +46,7 @@ async def aexec(self, code):
 async def ev(self, chan, source, msg):
     msg = msg.split(' ')
     result = await aexec(self, ' '.join(msg))
-    await self.message(chan, '[admin] result: "{}"'.format(result))
+    await self.message(chan, '[admin] result: \'{}\''.format(result))
 
 async def send(self, c, n, m):
     msg = m.split(' ')
@@ -94,7 +94,7 @@ async def adminHandle(self, chan, source, msg):
 
 async def init(self):
     self.cmd['admin'] = adminHandle
-    self.joins = ["#team", "#lickthecheese", "#chaos"]
+    self.joins = ['#team', '#lickthecheese', '#chaos']
 
     self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda', 'spacehare',
             'ben', 'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend',

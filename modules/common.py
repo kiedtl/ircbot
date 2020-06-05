@@ -1,6 +1,10 @@
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
 
+def modname(name):
+    """Get a stylized version of module name"""
+    return '[\x032{}\x0f]'.format(name)
+
 def get_backlog_msg(self, chan, msg):
     if len(msg) < 1:
         msg = ['1']

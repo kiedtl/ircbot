@@ -1,32 +1,37 @@
+from common import modname
 import importlib, time, os
 
 async def quit(self, chan, source, msg):
-    await self.quit('[admin] recieved {} signal from {}'
-            .format(msg, source))
+    await self.quit('{} recieved {} signal from {}'
+            .format(modname('admin'), msg, source))
 
 async def restart(self, chan, source, msg):
-    await self.quit('[admin] recieved {} signal from {}'
-            .format(msg, source))
+    await self.quit('{} recieved {} signal from {}'
+            .format(modname('admin'), msg, source))
     os.system('systemctl --user restart bot')
 
 async def reloadmods(self, chan, source, msg):
     before = time.time()
-    await self.message(chan, '[admin] reloading modules...')
+    await self.message(chan, '{} reloading modules...'
+        .format(modname('admin')))
     self.cmd = {}
     self.raw = {}
     self.help = {}
     for i in self.modules:
         importlib.reload(self.modules[i])
         await self.modules[i].init(self)
-    await self.message(chan, '[admin] {} modules reloaded in {}s'
-        .format(len(self.modules), round(time.time() - before, 3)))
+    await self.message(chan, '{} {} modules reloaded in {}s'
+        .format(modname('admin'), len(self.modules),
+            round(time.time() - before, 3)))
 
 async def part(self, chan, source, msg):
-    await self.message(chan, '[admin] leaving channel {}'.format(msg))
+    await self.message(chan, '{} leaving channel {}'
+        .format(modname('admin'), msg))
     await self.part(msg)
 
 async def join(self, chan, source, msg):
-    await self.message(chan, '[admin] joining channel {}'.format(msg))
+    await self.message(chan, '{] joining channel {}'
+        .format(modname('admin'), msg))
     await self.join(msg)
 
 async def joins(self, chan, source, msg):
@@ -46,7 +51,8 @@ async def aexec(self, code):
 async def ev(self, chan, source, msg):
     msg = msg.split(' ')
     result = await aexec(self, ' '.join(msg))
-    await self.message(chan, '[admin] result: \'{}\''.format(result))
+    await self.message(chan, '{] result: \'{}\''
+        .format(modname('admin'), result))
 
 async def send(self, c, n, m):
     msg = m.split(' ')
@@ -61,12 +67,13 @@ async def shutup(self, c, n, m):
         except:
             duration = 5
     self.asleep = time.time() + (duration * 60)
-    await self.message(c, '[admin] disabled for {}m'
-            .format(duration))
+    await self.message(c, '{} disabled for {}m'
+        .format(modname('admin'), duration))
 
 async def wake(self, c, n, m):
     self.asleep = time.time()
-    await self.message(c, '[admin] I\'m back!')
+    await self.message(c, '{} I\'m back!'
+        .format(modname('admin')))
 
 commands = {
     'quit': quit,
@@ -85,12 +92,15 @@ async def adminHandle(self, chan, source, msg):
     if await self.is_admin(source):
         msg = msg.split(' ')
         if len(msg) < 1 or not msg[0] in commands:
-            await self.message(chan, '[admin] invalid command')
+            await self.message(chan, '{} invalid command'
+                .format(modname('admin')))
             return
-        print('[admin] recieved {} signal from {}'.format(msg[0], source))
+        print('{} recieved {} signal from {}'
+            .format(modname('admin'), msg[0], source))
         await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
     else:
-        await self.message(chan, '[admin] insufficient privileges')
+        await self.message(chan, '{} insufficient privileges'
+            .format(modname('admin')))
 
 async def init(self):
     self.cmd['admin'] = adminHandle

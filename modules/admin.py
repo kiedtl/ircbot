@@ -103,6 +103,7 @@ async def adminHandle(self, chan, source, msg):
             .format(modname('admin')))
 
 async def init(self):
+    self.cmd[':']     = adminHandle # alias
     self.cmd['admin'] = adminHandle
     self.joins = ['#team', '#lickthecheese', '#chaos']
 
@@ -111,7 +112,7 @@ async def init(self):
             'ubergeek', 'deepend', 'calamitous', 'khuxkm']
 
     self.help['admin'] = ['admin - various bot owner commands (more for subcommands)',
-        'admin subcommands: quit restart reload part join joins eval send sleep']
+        'admin subcommands: quit restart reload part join joins eval send sleep wake']
     self.help['admin quit'] = ['admin quit <message> - shutdown bot']
     self.help['admin restart'] = ['admin restart <message> - restart bot']
     self.help['admin reload'] = ['admin reload - reload modules and configs']

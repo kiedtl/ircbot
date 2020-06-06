@@ -46,7 +46,7 @@ class System(pydle.Client):
                 cmd = msg.split(' ')[0]
                 msg = msg[len(cmd)+1:]
                 if cmd in self.cmd:
-                    if self.asleep[chan] < time.time() or cmd == 'admin':
+                    if self.asleep[chan] < time.time() or cmd == 'admin' or cmd == ':':
                         await self.cmd[cmd](self, chan, source, msg)
 
 

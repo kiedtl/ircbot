@@ -1,3 +1,4 @@
+from common import get_backlog_msg
 import random, re
 
 vowels = ['a', 'e', 'i', 'o', 'u']
@@ -16,53 +17,44 @@ def hasupper(s):
     return has
 
 async def pigify(self, c, n, m):
-    if len(m) < 1:
-        m = ['1']
+    ms = []
     try:
-        back = int(m[0])+0
+        ms = get_backlog_msg(self, c, m)
     except:
-        back = 1
-    await self.message(c, await pigtext(self, back, c))
+        await self.message(c, 'errorway: ymay acklogbay isway ootay ortshay!')
+        return
+    await self.message(c, await pigtext(self, ms))
 
-async def pigtext(self, back, chan):
-    if chan in self.backlog and len(self.backlog[chan]) >= back:
-        ms = self.backlog[chan][0-back]
-        data = re.split(r'([!-/:-@\[-`{-~\ ]+)', ms[1])
+async def pigtext(self, ms):
+    data = re.split(r'([!-/:-@\[-`{-~\ ]+)', ms[1])
 
-        list = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr',
-                'bl', 'gr', 'st', 'sl', 'cl', 'pl', 'fl']
+    list = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr',
+        'bl', 'gr', 'st', 'sl', 'cl', 'pl', 'fl']
 
-        for k in range(len(data)):
-            i = data[k]
-            if len(i) == 0:
-                continue
+    for k in range(len(data)):
+        i = data[k]
+        if len(i) == 0:
+            continue
 
-            # use 'way' as suffix if word ends
-            # in a vowel
-            suffix = 'ay'
-            if i[-1] in vowels:
-                suffix = 'way'
+        # translation
+        if i[0] in vowels:
+            data[k] = i + 'way'
+        elif twoch(i) in list:
+            data[k] = i[2:] + i[:2] + 'ay'
+        elif i.isalpha() == False:
+            data[k] = i
+        else:
+            data[k] = i[1:] + i[0] + 'ay'
 
-            # translation
-            if i[0] in vowels:
-                data[k] = i + suffix
-            elif twoch(i) in list:
-                data[k] = i[2:] + i[:2] + suffix
-            elif i.isalpha() == False:
-                data[k] = i
-            else:
-                data[k] = i[1:] + i[0] + suffix
+        # correct captalization
+        # e.g. "You've" => "ouYay'evay" => "Ouyay'evay"
+        if (hasupper(data[k])):
+            data[k] = data[k].lower()
+            data[k] = data[k][:1].upper() + data[k][1:]
 
-            # correct captalization
-            # e.g. "You've" => "ouYay'evay" => "Ouyay'evay"
-            if (hasupper(data[k])):
-                data[k] = data[k].lower()
-                data[k] = data[k][:1].upper() + data[k][1:]
-
-        pig = random.choice(['(･ั(00)･ั)', '(´·(oo)·`)', '(·(oo)·)',
-            '(v -(··)-v)', '(> (··) <)', '(° (··) °)'])
-        return '<{}> {} {}'.format(ms[0], ''.join(data), pig)
-    return 'errorway: ymay acklogbay isway ootay ortshay!'
+    pig = random.choice(['(･ั(00)･ั)', '(´·(oo)·`)', '(·(oo)·)',
+        '(v -(··)-v)', '(> (··) <)', '(° (··) °)'])
+    return '<{}> {} {}'.format(ms[0], ''.join(data), pig)
 
 async def init(self):
     self.cmd['pig'] = pigify

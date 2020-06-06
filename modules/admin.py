@@ -103,7 +103,6 @@ async def adminHandle(self, chan, source, msg):
             .format(modname('admin')))
 
 async def init(self):
-    self.cmd[':']     = adminHandle # alias
     self.cmd['admin'] = adminHandle
     self.joins = ['#team', '#lickthecheese', '#chaos']
 

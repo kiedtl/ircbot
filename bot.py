@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import pydle, asyncio, dataset, sys, os, time
+from misc import whoami
 
 class System(pydle.Client):
     async def on_connect(self):
@@ -38,7 +39,8 @@ class System(pydle.Client):
             for i in self.raw:
                 await self.raw[i](self, chan,source,msg)
             if msg == '!botlist' or msg == '!rollcall':
-                await self.message(chan, '> k | owner: spacehare | source: https://github.com/kiedtl/ircbot | prefix: \':\' | commands: see :help')
+                await whoami(self, chan, source, msg)
+                return
             if not chan in self.asleep:
                 self.asleep[chan] = time.time()
             if msg[:len(self.prefix)] == self.prefix:

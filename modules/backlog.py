@@ -10,25 +10,30 @@ async def backlogger(self, chan, src, msg):
         self.backlog[chan] = []
     if chan not in self.logfiles:
         logpath = 'chans/{}.log'.format(chan)
-        print('[logger] opening logfile {}'
-            .format(logpath))
+        print('[logger] opening logfile {}'.format(logpath))
         self.logfiles[chan] = open(logpath, 'a')
 
     # store in logfile
     now = datetime.now()
     time = datetime.strftime(now, '%d%m%y%H%M')
-    self.logfiles[chan].write('{} {} {}\n'
-        .format(time, src, msg))
+    self.logfiles[chan].write('{} {} {}\n'.format(time, src, msg))
     self.logfiles[chan].flush()
 
-    # don't store in backlog if msg
-    # is a command
-    if msg[:len(self.prefix)] != self.prefix:
-        self.backlog[chan].append([src, msg])
+    # don't store in backlog if msg is a command
+    if msg[:len('|| ')] == '|| ':
+        # it's a :sed command alias
+        return
+    if msg[:len(self.prefix)] == self.prefix:
+        cmd = msg[len(self.prefix):]
+        cmd = cmd.split(' ')[0]
+        if cmd in self.cmd:
+            return
 
-        # flush backlog if its size exceeds 1024
-        if len(self.backlog[chan]) > 1024:
-            del self.backlog[chan][:-512]
+    self.backlog[chan].append([src, msg])
+
+    # flush backlog if its size exceeds 1024
+    if len(self.backlog[chan]) > 1024:
+        del self.backlog[chan][:-512]
 
 async def init(self):
     self.backlog = {}

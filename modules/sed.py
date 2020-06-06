@@ -29,4 +29,5 @@ async def sed(self, chan, src, msg):
 async def init(self):
     self.raw['filtersed'] = filtersed
     self.cmd['sed'] = sed
-    self.help['sed'] = ['']
+    self.help['sed'] = ['sed - an improved version of the sedbot. (more for usage)',
+        'syntax: |<user>| <expr>. note that <user> can be omitted if the command is issued by the same user. example: |spacehare| s/teh/the/g']

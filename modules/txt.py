@@ -6,26 +6,26 @@ import common, subprocess
 from subprocess import Popen, PIPE, STDOUT
 
 async def rev13(self, chan, src, msg):
-    txt = ''
+    txt = []
     try:
-        txt = common.get_backlog_msg(self, chan, msg)[1]
+        txt = common.get_backlog_msg(self, chan, msg)
     except:
         await self.message(chan, self.err_backlog_too_short)
         return
 
-    res = common.run(self, ['caesar'], txt)
-    await self.message(chan, res)
+    res = common.run(self, ['caesar'], txt[1])
+    await self.message(chan, '<{}> {}'.format(txt[0], res))
 
 async def rot13(self, chan, src, msg):
-    txt = ''
+    txt = []
     try:
-        txt = common.get_backlog_msg(self, chan, msg)[1]
+        txt = common.get_backlog_msg(self, chan, msg)
     except:
         await self.message(chan, self.err_backlog_too_short)
         return
 
-    res = common.run(self, ['rot13'], txt)
-    await self.message(chan, res)
+    res = common.run(self, ['rot13'], txt[1])
+    await self.message(chan, '<{}> {}'.format(txt[0], res))
 
 async def init(self):
     self.cmd['rev13'] = rev13

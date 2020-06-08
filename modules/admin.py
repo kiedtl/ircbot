@@ -104,7 +104,6 @@ async def adminHandle(self, chan, source, msg):
 
 async def init(self):
     self.cmd['admin'] = adminHandle
-    self.joins = ['#team', '#lickthecheese', '#chaos']
 
     self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
             'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino',

@@ -1,24 +1,17 @@
-from common import modname
+from common import modname, nohighlight
 module_name = 'user stats'
 
 async def noisiest(self, chan, src, msg):
     stats = {}
+    total = 0
 
-    if len(msg) < 1:
-        msg = '1'
-
-    try:
-        until = int(msg)
-    except:
-        until = 3
-
-    # prevent spam
-    if until > 10:
-        until = 10
+    targetchan = chan
+    if len(msg) > 0 and msg[:1] == '#':
+        targetchan = msg
 
     logf = ''
     try:
-        logf = open('chans/{}.log'.format(chan))
+        logf = open('chans/{}.log'.format(targetchan))
     except:
         await self.message(chan, '{} error opening log file'
             .format(modname(module_name)))
@@ -35,14 +28,21 @@ async def noisiest(self, chan, src, msg):
         if not user in stats:
             stats[user] = 0
         stats[user] += 1
+        total += 1
 
+    output = ''
     ctr = 0
+    until = 3
     for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
         if ctr == until:
             break
-        await self.message(chan, '{} {}: {} messages'
-            .format(modname(module_name), i[0], i[1]))
+        percentage = '{0:.2f}'.format(i[1] * 100 / total)
+        output += ('{} ({}%, {} msgs), '
+            .format(nohighlight(i[0]), percentage, i[1]))
         ctr += 1
+    output = output[:-2] # trim ', '
+    await self.message(chan, '{} top talkers at {}: {}'
+        .format(modname(module_name), targetchan, output))
 
 commands = {
     'noisiest': noisiest

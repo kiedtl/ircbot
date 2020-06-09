@@ -25,13 +25,9 @@ async def reloadmods(self, chan, source, msg):
             round(time.time() - before, 3)))
 
 async def part(self, chan, source, msg):
-    await self.message(chan, '{} leaving channel {}'
-        .format(modname('admin'), msg))
     await self.part(msg)
 
 async def join(self, chan, source, msg):
-    await self.message(chan, '{] joining channel {}'
-        .format(modname('admin'), msg))
     await self.join(msg)
 
 async def joins(self, chan, source, msg):

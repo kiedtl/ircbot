@@ -1,6 +1,9 @@
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
 
+def nohighlight(nick):
+    return nick[0] + '\u200c' + nick[1:]
+
 def modname(name):
     """Get a stylized version of module name"""
     return '[\x032{}\x0f]'.format(name)

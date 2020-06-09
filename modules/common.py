@@ -7,9 +7,9 @@ def modname(name):
 
 def get_backlog_msg(self, chan, msg):
     if len(msg) < 1:
-        msg = ['1']
+        msg = '1'
     try:
-        back = int(msg[0]) + 0
+        back = int(msg) + 0
     except:
         back = 1
 

@@ -106,6 +106,7 @@ async def init(self):
     self.cmd['admin'] = adminHandle
 
     self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
+            'spacehare_',
             'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino',
             'ubergeek', 'deepend', 'calamitous', 'khuxkm']
 

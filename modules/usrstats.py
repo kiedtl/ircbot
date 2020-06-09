@@ -58,4 +58,4 @@ async def usrstats_handle(self, chan, source, msg):
 
 async def init(self):
     self.cmd['usrstats'] = usrstats_handle
-    self.help[''] = ['']
+    self.help['usrstats'] = ['display statistics on various users']

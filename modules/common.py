@@ -1,6 +1,12 @@
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
 
+def loadlogs(chan):
+    logf = open('chans/{}.log'.format(chan))
+    res = logf.read().split('\n')
+    logf.close()
+    return res
+
 def nohighlight(nick):
     return nick[0] + '\u200c' + nick[1:]
 

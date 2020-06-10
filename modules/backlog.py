@@ -20,6 +20,8 @@ async def backlogger(self, chan, src, msg):
     self.logfiles[chan].flush()
 
     # don't store in backlog if msg is a command
+    if src == self.nickname:
+        return
     if msg[:len('|| ')] == '|| ':
         # it's a :sed command alias
         return

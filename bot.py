@@ -19,7 +19,7 @@ class System(pydle.Client):
             await self.join(i)
         print('[irc] done!')
         print('[irc] attempting to set mode +B')
-        await self.set_mode('k', '+B')
+        await self.set_mode(self.nickname, '+B')
 
     async def load_mods(self):
         for i in [s for s in os.listdir('modules') if '.py' in s]:
@@ -35,9 +35,9 @@ class System(pydle.Client):
         await self.join(channel)
 
     async def on_message(self, chan, source, msg):
+        for i in self.raw:
+            await self.raw[i](self, chan,source,msg)
         if source != self.nickname:
-            for i in self.raw:
-                await self.raw[i](self, chan,source,msg)
             if msg == '!botlist' or msg == '!rollcall':
                 await whoami(self, chan, source, msg)
                 return
@@ -63,9 +63,9 @@ class System(pydle.Client):
         return admin
 
     async def on_private_message(self, trash, source, msg):
+        for i in self.raw:
+            await self.raw[i](self, chan,source,msg)
         if source != self.nickname:
-            for i in self.raw:
-                await self.raw[i](self, chan,source,msg)
             if msg[:len(self.prefix)] == self.prefix:
                 msg = msg[len(self.prefix):]
                 cmd = msg.split(' ')[0]

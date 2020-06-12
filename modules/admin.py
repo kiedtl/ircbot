@@ -100,6 +100,7 @@ async def adminHandle(self, chan, source, msg):
 
 async def init(self):
     self.cmd['admin'] = adminHandle
+    self.cmd['a'] = self.cmd['admin']
 
     self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
             'spacehare_',

@@ -31,6 +31,7 @@ def run(self, cmd, stdin):
     proc = Popen(cmd, stdout=PIPE,
         stderr=STDOUT, stdin=PIPE)
     out, err = proc.communicate(stdin.encode('utf-8'))
+    print('stdin="{}"'.format(stdin.encode('utf-8')))
     exit = proc.wait()
     return out.decode('utf-8').rstrip()
 

@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 
-import pydle, asyncio, dataset, sys, os, time
+import asyncio
+import config
+import os
+import pydle
+import sys
+import time
+
 from misc import whoami
 
 class System(pydle.Client):
@@ -30,9 +36,11 @@ class System(pydle.Client):
             await m.init(self)
             self.modules[i] = m
 
-    async def on_invite(self, channel, by):
-        print('[irc] received invite by {} to {}'.format(by, channel))
-        await self.join(channel)
+    async def on_invite(self, chan, by):
+        print('[irc] received invite by {} to {}'.format(by, chan))
+
+        if config.join_on_invite and chan not in config.bannedchans:
+            await self.join(chan)
 
     async def on_message(self, chan, source, msg):
         for i in self.raw:
@@ -64,22 +72,16 @@ class System(pydle.Client):
             admin = info['identified']
         return admin
 
-    async def on_private_message(self, trash, source, msg):
-        for i in self.raw:
-            await self.raw[i](self, chan,source,msg)
-        if source != self.nickname:
-            if msg[:len(self.prefix)] == self.prefix:
-                msg = msg[len(self.prefix):]
-                cmd = msg.split(' ')[0]
-                msg = msg[len(cmd)+1:]
-                if cmd in self.cmd:
-                    await self.cmd[cmd](self, chan, source, msg)
+    async def on_private_message(self, chan, source, msg):
+        await self.message(source,
+            'private messages are not yet supported.')
+        await self.on_message(chan, source, msg)
 
     async def on_user_mode_change(self, modes):
         print('[irc] mode changed: {}'.format(modes))
 
 if __name__ == '__main__':
-    client = System('k', realname='spacehare\'s bot')
-    client.prefix = ':'
+    client = System(config.nickname, realname=config.realname)
+    client.prefix = config.prefix
     client.asleep = {}
-    client.run('localhost', tls=False, tls_verify=False)
+    client.run(config.server, tls=config.tls, tls_verify=config.tls_verify)

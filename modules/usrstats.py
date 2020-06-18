@@ -5,6 +5,7 @@ module_name = 'user stats'
 async def get_all_logs(chan, msg):
     logf = open('chans/{}.log'.format(chan))
     rawlogs = logf.read().split('\n')
+    logf.close()
 
     logs = []
     for line in rawlogs:
@@ -94,9 +95,47 @@ async def happiest(self, chan, src, msg):
     await self.message(chan, '{} happiest people at {}: {}'
         .format(modname(module_name), targetchan, output))
 
+async def saddest(self, chan, src, msg):
+    stats = {}
+
+    targetchan = chan
+    if len(msg) > 0 and msg[:1] == '#':
+        targetchan = msg
+
+    logs = []
+    try:
+        logs = await get_all_logs(targetchan, msg)
+    except:
+        await self.message(chan, '{} error opening log file'
+            .format(modname(module_name)))
+        return
+
+    sad = [':(', ':/', ':|', ';-;', ';_;', ';(', ':-(', ';-(',
+        ':^(', ';^(', ':-/', ':-|', ';-/', ';-|', '=(', '=/',
+        '=|', ':\'(']
+    for item in logs:
+        if any(phrase in item['msg'] for phrase in sad):
+            if not item['user'] in stats:
+                stats[item['user']] = 0
+            stats[item['user']] += 1
+
+    output = ''
+    ctr = 0
+    until = 7
+    for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
+        if ctr == until:
+            break
+        output += ('{} ({} msgs), '
+            .format(nohighlight(i[0]), i[1]))
+        ctr += 1
+    output = output[:-2] # trim ', '
+    await self.message(chan, '{} saddest people at {}: {}'
+        .format(modname(module_name), targetchan, output))
+
 commands = {
     'noisiest': noisiest,
-    'happiest': happiest
+    'happiest': happiest,
+    'saddest':  saddest
 }
 
 async def usrstats_handle(self, chan, source, msg):
@@ -109,6 +148,7 @@ async def usrstats_handle(self, chan, source, msg):
 
 async def init(self):
     self.cmd['usrstats'] = usrstats_handle
-    self.help['usrstats'] = ['usrstats - display statistics on various users (more for subcommands)', 'usrstats subcommands: noisiest happiest']
+    self.help['usrstats'] = ['usrstats - display statistics on various users (more for subcommands)', 'usrstats subcommands: noisiest happiest saddest']
     self.help['usrstats noisiest'] = ['usrstats noisiest [chan] - get the top talkers for [chan] (default: current)']
     self.help['usrstats happiest'] = ['usrstats happiest [chan] - get the users who type "lol", "lmao", ":)", ":D", etc in their messages the most on [chan]. (default: current)']
+    self.help['usrstats saddest'] = ['usrstats saddest [chan] - get the users who type ":/", ":(", etc in their messages the most on [chan]. (default: current)']

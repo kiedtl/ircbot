@@ -35,8 +35,8 @@ async def noisiest(self, chan, src, msg):
     try:
         logs = await self.get_all_logs(targetchan, msg)
     except:
-        await self.message(chan, '{} error opening log file'
-            .format(modname(module_name)))
+        await common.msg(self, chan, src, '{} {}'
+            .format(modname(module_name), self.err_invalid_logfile))
         return
 
     for item in logs:
@@ -56,7 +56,7 @@ async def noisiest(self, chan, src, msg):
             .format(nohighlight(i[0]), percentage, i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await self.message(chan, '{} top talkers at {}: {}'
+    await common.msg(self, chan, src, '{} top talkers at {}: {}'
         .format(modname(module_name), targetchan, output))
 
 async def happiest(self, chan, src, msg):
@@ -70,8 +70,8 @@ async def happiest(self, chan, src, msg):
     try:
         logs = await get_all_logs(targetchan, msg)
     except:
-        await self.message(chan, '{} error opening log file'
-            .format(modname(module_name)))
+        await common.msg(self, chan, '{} {}'
+            .format(modname(module_name), self.err_invalid_logfile))
         return
 
     happy = ['lol', 'lmao', ':)', ':-)', ':^)', ':D' ':-D', ';)', 'c:']
@@ -91,7 +91,7 @@ async def happiest(self, chan, src, msg):
             .format(nohighlight(i[0]), i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await self.message(chan, '{} happiest people at {}: {}'
+    await common.msg(self, chan, src, '{} happiest people at {}: {}'
         .format(modname(module_name), targetchan, output))
 
 async def saddest(self, chan, src, msg):
@@ -105,8 +105,8 @@ async def saddest(self, chan, src, msg):
     try:
         logs = await get_all_logs(targetchan, msg)
     except:
-        await self.message(chan, '{} error opening log file'
-            .format(modname(module_name)))
+        await common.msg(self, chan, src, '{} {}'
+            .format(modname(module_name), self.err_invalid_logfile))
         return
 
     sad = [':(', ':/', ':|', ';-;', ';_;', ';(', ':-(', ';-(',
@@ -128,7 +128,7 @@ async def saddest(self, chan, src, msg):
             .format(nohighlight(i[0]), i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await self.message(chan, '{} saddest people at {}: {}'
+    await common.msg(self, chan, src, '{} saddest people at {}: {}'
         .format(modname(module_name), targetchan, output))
 
 commands = {
@@ -140,7 +140,7 @@ commands = {
 async def usrstats_handle(self, chan, source, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await self.message(chan, '{} invalid command'
+        await common.msg(self, chan, src, '{} invalid command'
             .format(modname(module_name)))
         return
     await commands[msg.pop(0)](self, chan, source, ' '.join(msg))

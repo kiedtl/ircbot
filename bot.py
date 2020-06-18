@@ -73,8 +73,6 @@ class System(pydle.Client):
         return admin
 
     async def on_private_message(self, chan, source, msg):
-        await self.message(source,
-            'private messages are not yet supported.')
         await self.on_message(chan, source, msg)
 
     async def on_user_mode_change(self, modes):

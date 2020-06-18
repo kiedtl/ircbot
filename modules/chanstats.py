@@ -58,8 +58,8 @@ commands = {
 async def chanstats_handle(self, chan, source, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await self.message(chan, '{} invalid command'
-            .format(modname(module_name)))
+        await self.message(chan, '{} {}'
+            .format(modname(module_name), self.err_invalid_command))
         return
     await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
 

@@ -1,4 +1,6 @@
+import common
 from common import modname, nohighlight
+
 module_name = 'user stats'
 
 # TODO: move to common
@@ -137,13 +139,13 @@ commands = {
     'saddest':  saddest
 }
 
-async def usrstats_handle(self, chan, source, msg):
+async def usrstats_handle(self, chan, src, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await common.msg(self, chan, src, '{} invalid command'
-            .format(modname(module_name)))
+        await common.msg(self, chan, src, '{} {}'
+            .format(modname(module_name), self.err_invalid_command))
         return
-    await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
+    await commands[msg.pop(0)](self, chan, src, ' '.join(msg))
 
 async def init(self):
     self.cmd['usrstats'] = usrstats_handle

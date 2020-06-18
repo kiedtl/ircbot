@@ -4,6 +4,11 @@
 
 import config, common
 
+async def communist(self, chan, src, msg):
+    txt = msg.upper()
+    await common.msg(self, chan, src,
+        '\x030,5 ☭ {} ☭ \x0f'.format(txt))
+
 async def rev13(self, chan, src, msg):
     txt = []
     try:
@@ -33,5 +38,12 @@ async def rot13(self, chan, src, msg):
 async def init(self):
     self.cmd['rev13'] = rev13
     self.cmd['rot13'] = rot13
+
+    self.cmd['communist'] = communist
+    self.cmd['c'] = communist
+
     self.help['rot13'] = ['ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
     self.help['rev13'] = ['attempt to decrypt rot13-encrypted messages']
+
+    self.help['communist'] = ['communist - \x030,5 ☭ SEIZE THE MEANS OF CHAOS PRODUCTION ☭\x04']
+    self.help['c'] = self.help['communist']

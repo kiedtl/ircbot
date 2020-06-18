@@ -52,3 +52,4 @@ async def msg(self, chan, src, txt):
 async def init(self):
     self.err_backlog_too_short = 'error: backlog too short'
     self.err_invalid_logfile   = 'error: could not open log file'
+    self.err_invalid_command   = 'error: invalid command'

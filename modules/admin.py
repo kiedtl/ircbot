@@ -88,8 +88,8 @@ async def adminHandle(self, chan, source, msg):
     if await self.is_admin(source):
         msg = msg.split(' ')
         if len(msg) < 1 or not msg[0] in commands:
-            await self.message(chan, '{} invalid command'
-                .format(modname('admin')))
+            await self.message(chan, '{} {}'
+                .format(modname('admin'), self.err_invalid_command))
             return
         print('{} recieved {} signal from {}'
             .format(modname('admin'), msg[0], source))

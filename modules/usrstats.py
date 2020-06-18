@@ -22,7 +22,6 @@ async def get_all_logs(chan, msg):
                 'msg':  mesg
             }
         )
-    print(logs[0])
     return logs
 
 async def noisiest(self, chan, src, msg):

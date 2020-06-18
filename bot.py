@@ -32,7 +32,7 @@ class System(pydle.Client):
             i = i[:-3]
             print('[modules] loading', i)
             m = __import__('modules.' + i)
-            m = eval('m.'+i)
+            m = eval('m.' + i)
             await m.init(self)
             self.modules[i] = m
 
@@ -47,20 +47,20 @@ class System(pydle.Client):
             await self.raw[i](self, chan,source,msg)
         if source != self.nickname:
             if msg == '!botlist' or msg == '!rollcall':
-                await whoami(self, chan, source, msg)
+                if config.respond_to_rollcall:
+                    await whoami(self, chan, source, msg)
                 return
             if not chan in self.asleep:
                 self.asleep[chan] = time.time()
             if msg[:len(self.prefix)] == self.prefix:
                 msg = msg[len(self.prefix):]
                 cmd = msg.split(' ')[0]
-                msg = msg[len(cmd)+1:]
+                msg = msg[len(cmd) + 1:]
                 if cmd in self.cmd:
                     if self.asleep[chan] < time.time() or cmd == 'admin':
                         await self.cmd[cmd](self, chan, source, msg)
                     print('[cmd] recieved command {} from {} in {}'
                         .format(cmd, source, chan))
-
 
     async def is_admin(self, nickname):
         admin = False

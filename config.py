@@ -6,5 +6,6 @@ tls_verify = False
 
 prefix = ':'
 join_on_invite = True
+respond_to_rollcall = True
 
 bannedchans = []

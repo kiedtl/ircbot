@@ -102,11 +102,6 @@ async def init(self):
     self.cmd['admin'] = adminHandle
     self.cmd['a'] = self.cmd['admin']
 
-    self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
-            'spacehare_',
-            'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino',
-            'ubergeek', 'deepend', 'calamitous', 'khuxkm']
-
     self.help['admin'] = ['admin - various bot owner commands (more for subcommands)',
         'admin subcommands: quit restart reload part join joins eval send sleep wake']
     self.help['admin quit'] = ['admin quit <message> - shutdown bot']

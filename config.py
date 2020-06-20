@@ -8,7 +8,7 @@ join_on_invite = True
 respond_to_rollcall = True
 
 prefix = ':'
-self.admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
+admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
     'spacehare_', 'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino',
     'ubergeek', 'deepend', 'calamitous', 'khuxkm']
 

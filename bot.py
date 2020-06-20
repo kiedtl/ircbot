@@ -67,7 +67,7 @@ class System(pydle.Client):
 
         # check the WHOIS info to see if the source has identified.
         # this is a blocking operation, so use yield.
-        if nickname in self.admins:
+        if nickname in config.admins:
             info = await self.whois(nickname)
             admin = info['identified']
         return admin

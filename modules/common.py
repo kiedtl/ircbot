@@ -42,12 +42,13 @@ def run(self, cmd, stdin):
     return out.decode('utf-8').rstrip()
 
 async def msg(self, chan, src, txt):
-    target = chan
+    #target = chan
     # in case of PM's
-    if target == config.nickname:
-        target = src
-    print('sending msg: {}'.format(txt))
-    await self.message(target, txt)
+    #if target == config.nickname:
+    #    target = src
+    #print('sending msg: {}'.format(txt))
+    #await self.message(target, txt)
+    await self.message(chan, txt)
 
 async def init(self):
     self.err_backlog_too_short = 'error: backlog too short'

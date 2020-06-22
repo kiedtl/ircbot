@@ -113,7 +113,7 @@ async def saddest(self, chan, src, msg):
 
     sad = [':(', ':/', ':|', ';-;', ';_;', ';(', ':-(', ';-(',
         ':^(', ';^(', ':-/', ':-|', ';-/', ';-|', '=(', '=/',
-        '=|', ':\'(']
+        '=|', ':\'(', ':V']
     for item in logs:
         if any(phrase in item['msg'] for phrase in sad):
             if not item['user'] in stats:

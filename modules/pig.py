@@ -28,7 +28,7 @@ async def pigify(self, c, n, m):
 async def pigtext(self, ms):
     # filter out ZWNJ's
     ms[1] = ms[1].replace('\u200c', '')
-    data = re.split(r'([!-/:-@\[-`{-~\ ]+)', ms[1])
+    data = re.split(r'([!-/:-@\[-`{-~\ 0-9]+)', ms[1])
 
     disyms = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr',
         'bl', 'gr', 'st', 'sl', 'cl', 'pl', 'fl']

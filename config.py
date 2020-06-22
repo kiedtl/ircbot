@@ -6,6 +6,7 @@ tls_verify = False
 
 join_on_invite = True
 respond_to_rollcall = True
+set_botmode = True
 
 prefix = ':'
 admins = ['kiedtl', 'segmentation', 'admin', 'glenda',

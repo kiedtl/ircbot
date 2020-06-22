@@ -24,8 +24,10 @@ class System(pydle.Client):
         for i in self.chansjoin:
             await self.join(i)
         print('[irc] done!')
-        print('[irc] attempting to set mode +B')
-        await self.set_mode(self.nickname, '+B')
+
+        if config.set_botmode:
+            print('[irc] attempting to set mode +B')
+            await self.set_mode(self.nickname, '+B')
 
     async def load_mods(self):
         for i in [s for s in os.listdir('modules') if '.py' in s]:
@@ -39,8 +41,9 @@ class System(pydle.Client):
     async def on_invite(self, chan, by):
         print('[irc] received invite by {} to {}'.format(by, chan))
 
-        if config.join_on_invite and chan not in config.bannedchans:
-            await self.join(chan)
+        if config.join_on_invite:
+            if chan not in config.bannedchans:
+                await self.join(chan)
 
     async def on_message(self, chan, source, msg):
         for i in self.raw:

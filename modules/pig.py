@@ -26,9 +26,11 @@ async def pigify(self, c, n, m):
     await self.message(c, await pigtext(self, ms))
 
 async def pigtext(self, ms):
-    data = re.split(r'([!-/:-@\[-`{-~\ \u200c]+)', ms[1])
+    # filter out ZWNJ's
+    ms[1] = ms[1].replace('\u200c', '')
+    data = re.split(r'([!-/:-@\[-`{-~\ ]+)', ms[1])
 
-    list = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr',
+    disyms = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr',
         'bl', 'gr', 'st', 'sl', 'cl', 'pl', 'fl']
 
     for k in range(len(data)):
@@ -39,7 +41,7 @@ async def pigtext(self, ms):
         # translation
         if i[0] in vowels:
             data[k] = i + 'way'
-        elif twoch(i) in list:
+        elif twoch(i) in disyms:
             data[k] = i[2:] + i[:2] + 'ay'
         elif i.isalpha() == False:
             data[k] = i

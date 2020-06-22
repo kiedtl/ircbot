@@ -26,7 +26,7 @@ async def pigify(self, c, n, m):
     await self.message(c, await pigtext(self, ms))
 
 async def pigtext(self, ms):
-    data = re.split(r'([!-/:-@\[-`{-~\ ]+)', ms[1])
+    data = re.split(r'([!-/:-@\[-`{-~\ \u200c]+)', ms[1])
 
     list = ['sh', 'gl', 'ch', 'ph', 'tr', 'br', 'fr',
         'bl', 'gr', 'st', 'sl', 'cl', 'pl', 'fl']

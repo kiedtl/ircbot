@@ -4,7 +4,7 @@ import subprocess, common, random
 from common import modname
 
 async def list_mods(self, chan, src, msg):
-    await self.message(chan, f'{} loaded: {}'
+    await self.message(chan, '{} loaded: {}'
         .format(modname('modules'), list(self.modules.keys())))
 
 async def ping(self, chan, src, msg):

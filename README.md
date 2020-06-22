@@ -6,7 +6,7 @@ channels of the `irc.tilde.chat` IRC network.
 ## credits
 
 Originally based on lickthecheese's
-[`owo` IRC bot](https://github.com/lickthecheese/awkbot).
+[`owo` IRC bot](https://github.com/lickthecheese/oirc-bot).
 
 ## license
 

@@ -11,6 +11,6 @@ set_botmode = True
 prefix = ':'
 admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
     'spacehare_', 'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino',
-    'ubergeek', 'deepend', 'calamitous', 'khuxkm']
+    'ubergeek', 'deepend', 'calamitous']
 
 bannedchans = []

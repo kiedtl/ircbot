@@ -3,11 +3,17 @@
 # and posting the result
 
 import config, common
+from common import modname
 
 async def communist(self, chan, src, msg):
     txt = msg.upper()
     await common.msg(self, chan,
         '\x038,5 ☭ {} ☭ \x0f'.format(txt))
+
+async def status(self, chan, src, msg):
+    res = common.run(self, ['bin/status'], '')
+    await common.msg(self, chan, '{} ~team status: {}'
+        .format(modname('status'), res))
 
 async def rev13(self, chan, src, msg):
     txt = []
@@ -36,14 +42,16 @@ async def rot13(self, chan, src, msg):
         .format(txt[0], res))
 
 async def init(self):
-    self.cmd['rev13'] = rev13
-    self.cmd['rot13'] = rot13
+    self.cmd['rev13']   = rev13
+    self.cmd['rot13']   = rot13
+    self.cmd['sysinfo'] = status
 
     self.cmd['communist'] = communist
     self.cmd['c'] = communist
 
-    self.help['rot13'] = ['ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
-    self.help['rev13'] = ['attempt to decrypt rot13-encrypted messages']
+    self.help['rot13']   = ['rot13 - ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
+    self.help['rev13']   = ['rev13 - attempt to decrypt rot13-encrypted messages']
+    self.help['sysinfo'] = ['sysinfo - retrieve info for the tilde.team server']
 
     self.help['communist'] = ['communist - \x038,5 ☭ SEIZE THE MEANS OF CHAOS PRODUCTION ☭\x04']
     self.help['c'] = self.help['communist']

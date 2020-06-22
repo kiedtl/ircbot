@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+# bin/status - a script that is used for the status command
+# (c) Kiëd Llaentenn <kiedtl@tilde.team>
+# See the COPYING file for copyright information.
+
+# ugly and quick hack
+PATH=$PATH:$HOME/local/bin/
+
+# ----- MEMORY -----
+read -r mem_used mem_total <<EOF
+$(mem '$gb_used $gb_total')
+EOF
+
+mem_p=$(((mem_used*100)/mem_total))
+
+printf 'memory: %dG / %dG (%d%%), ' \
+    "$mem_used" \
+    "$mem_total" \
+    "$mem_p"
+
+# ----- DISK -----
+
+read -r disk_used disk_total <<EOF
+$(disk '$gb_used $gb_total' '/$')
+EOF
+
+disk_p=$(((disk_used*100)/disk_total))
+
+printf 'disk: %dG / %dG (%d%%), ' \
+    "$disk_used" \
+    "$disk_total" \
+    "$disk_p"
+
+# ----- USER SESSIONS -----
+
+who | awk \
+    '{
+        users[$1]+=1
+    }
+
+    END {
+        for (user in users) {
+            sessions+=users[user]
+            user_count+=1
+        }
+
+        printf "%d users online, ", user_count
+        printf "%d sessions", sessions
+    }
+    '
+
+echo # newline

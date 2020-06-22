@@ -24,4 +24,4 @@ async def init(self):
     # instead of getting them
     self.slapped = {}
 
-    self.is_slap = re.compile('^;slap\ ' + self.nickname)
+    self.is_slap = re.compile('^;slap\ ' + self.nickname + '$')

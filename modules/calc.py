@@ -8,8 +8,7 @@ async def do_calc(self, chan, msg, cmd):
         res = '(None)'
     lines = res.split('\n')
     for line in res.split('\n'):
-        await self.message(chan, '{} {}'
-            .format(modname('calc'), line))
+        await self.message(chan, f'{modname("calc")} {line}')
 
 async def dc_calc(self, chan, src, msg):
     await do_calc(self, chan, msg, ['dc'])

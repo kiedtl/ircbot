@@ -14,7 +14,7 @@ async def owotext(self, msg):
     msg[1] = msg[1].replace('r', 'w').replace('l', 'w').replace('uck', 'uwk').replace('too', 'two').replace('ou', 'ow')
     owo = random.choice(['owo', 'uwu', '^w^', 'OwO', 'Owo',
         'owO', 'Owo?', 'owO?', 'UwU', '0w0', '*w*', '+w+', '-w-'])
-    return '<{}> {} {}'.format(msg[0], msg[1], owo)
+    return f'<{msg[0]}> {msg[1]} {owo}'
 
 async def init(self):
     self.cmd['owo'] = owoify

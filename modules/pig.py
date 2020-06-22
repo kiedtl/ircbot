@@ -54,7 +54,7 @@ async def pigtext(self, ms):
 
     pig = random.choice(['(･ั(00)･ั)', '(´·(oo)·`)', '(·(oo)·)',
         '(v -(··)-v)', '(> (··) <)', '(° (··) °)'])
-    return '<{}> {} {}'.format(ms[0], ''.join(data), pig)
+    return f'<{ms[0]}> {"".join(data)} {pig}'
 
 async def init(self):
     self.cmd['pig'] = pigify

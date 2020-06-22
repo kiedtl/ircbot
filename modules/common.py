@@ -41,13 +41,7 @@ def run(self, cmd, stdin):
     exit = proc.wait()
     return out.decode('utf-8').rstrip()
 
-async def msg(self, chan, src, txt):
-    #target = chan
-    # in case of PM's
-    #if target == config.nickname:
-    #    target = src
-    #print('sending msg: {}'.format(txt))
-    #await self.message(target, txt)
+async def msg(self, chan, txt):
     await self.message(chan, txt)
 
 async def init(self):

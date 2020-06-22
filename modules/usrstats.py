@@ -37,7 +37,7 @@ async def noisiest(self, chan, src, msg):
     try:
         logs = await self.get_all_logs(targetchan, msg)
     except:
-        await common.msg(self, chan, src, '{} {}'
+        await common.msg(self, chan, '{} {}'
             .format(modname(module_name), self.err_invalid_logfile))
         return
 
@@ -58,7 +58,7 @@ async def noisiest(self, chan, src, msg):
             .format(nohighlight(i[0]), percentage, i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await common.msg(self, chan, src, '{} top talkers at {}: {}'
+    await common.msg(self, chan, '{} top talkers at {}: {}'
         .format(modname(module_name), targetchan, output))
 
 async def happiest(self, chan, src, msg):
@@ -93,7 +93,7 @@ async def happiest(self, chan, src, msg):
             .format(nohighlight(i[0]), i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await common.msg(self, chan, src, '{} happiest people at {}: {}'
+    await common.msg(self, chan, '{} happiest people at {}: {}'
         .format(modname(module_name), targetchan, output))
 
 async def saddest(self, chan, src, msg):
@@ -107,7 +107,7 @@ async def saddest(self, chan, src, msg):
     try:
         logs = await get_all_logs(targetchan, msg)
     except:
-        await common.msg(self, chan, src, '{} {}'
+        await common.msg(self, chan, '{} {}'
             .format(modname(module_name), self.err_invalid_logfile))
         return
 
@@ -130,7 +130,7 @@ async def saddest(self, chan, src, msg):
             .format(nohighlight(i[0]), i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await common.msg(self, chan, src, '{} saddest people at {}: {}'
+    await common.msg(self, chan, '{} saddest people at {}: {}'
         .format(modname(module_name), targetchan, output))
 
 commands = {
@@ -142,7 +142,7 @@ commands = {
 async def usrstats_handle(self, chan, src, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await common.msg(self, chan, src, '{} {}'
+        await common.msg(self, chan, '{} {}'
             .format(modname(module_name), self.err_invalid_command))
         return
     await commands[msg.pop(0)](self, chan, src, ' '.join(msg))

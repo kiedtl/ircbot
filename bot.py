@@ -76,7 +76,7 @@ class System(pydle.Client):
         return admin
 
     async def on_private_message(self, chan, source, msg):
-        await self.on_message(chan, source, msg)
+        await self.on_message(source, source, msg)
 
     async def on_user_mode_change(self, modes):
         print('[irc] mode changed: {}'.format(modes))

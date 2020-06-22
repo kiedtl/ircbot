@@ -6,7 +6,7 @@ import config, common
 
 async def communist(self, chan, src, msg):
     txt = msg.upper()
-    await common.msg(self, chan, src,
+    await common.msg(self, chan,
         '\x038,5 ☭ {} ☭ \x0f'.format(txt))
 
 async def rev13(self, chan, src, msg):
@@ -14,12 +14,12 @@ async def rev13(self, chan, src, msg):
     try:
         txt = common.get_backlog_msg(self, chan, msg)
     except:
-        await common.msg(self, chan, src,
+        await common.msg(self, chan,
             self.err_backlog_too_short)
         return
 
     res = common.run(self, ['caesar'], txt[1])
-    await common.msg(self, chan, src, '<{}> {}'
+    await common.msg(self, chan, '<{}> {}'
         .format(txt[0], res))
 
 async def rot13(self, chan, src, msg):
@@ -27,12 +27,12 @@ async def rot13(self, chan, src, msg):
     try:
         txt = common.get_backlog_msg(self, chan, msg)
     except:
-        await common.msg(self, chan, src,
+        await common.msg(self, chan,
             self.err_backlog_too_short)
         return
 
     res = common.run(self, ['rot13'], txt[1])
-    await common.msg(self, chan, src, '<{}> {}'
+    await common.msg(self, chan, '<{}> {}'
         .format(txt[0], res))
 
 async def init(self):

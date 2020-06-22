@@ -11,7 +11,7 @@ async def owoify(self, c, n, m):
     await self.message(c, await owotext(self, ms))
 
 async def owotext(self, msg):
-    msg[1] = msg[1].replace('r','w').replace('l','w').replace('uck','uwk').replace('too', 'two')
+    msg[1] = msg[1].replace('r', 'w').replace('l', 'w').replace('uck', 'uwk').replace('too', 'two').replace('ou', 'ow')
     owo = random.choice(['owo', 'uwu', '^w^', 'OwO', 'Owo',
         'owO', 'Owo?', 'owO?', 'UwU', '0w0', '*w*', '+w+', '-w-'])
     return '<{}> {} {}'.format(msg[0], msg[1], owo)

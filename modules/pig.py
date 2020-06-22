@@ -1,4 +1,4 @@
-from common import get_backlog_msg
+import common
 import random, re
 
 vowels = ['a', 'e', 'i', 'o', 'u']
@@ -19,7 +19,7 @@ def hasupper(s):
 async def pigify(self, c, n, m):
     ms = []
     try:
-        ms = get_backlog_msg(self, c, m)
+        ms = common.get_backlog_msg(self, c, m)
     except:
         await self.message(c, 'errorway: ymay acklogbay isway ootay ortshay!')
         return
@@ -56,7 +56,8 @@ async def pigtext(self, ms):
 
     pig = random.choice(['(･ั(00)･ั)', '(´·(oo)·`)', '(·(oo)·)',
         '(v -(··)-v)', '(> (··) <)', '(° (··) °)'])
-    return f'<{ms[0]}> {"".join(data)} {pig}'
+    usr = common.nohighlight(ms[0])
+    return f'<{usr}> {"".join(data)} {pig}'
 
 async def init(self):
     self.cmd['pig'] = pigify

@@ -1,7 +1,10 @@
 # k
 
-An annoying bot that lives mainly on the `#bots`, `#team` and `#meta`
+An IRC bot that lives mainly on the `#bots`, `#team` and `#meta`
 channels of the `irc.tilde.chat` IRC network.
+
+Not directly useful; but currently provides some basic utilities
+to get statistics for various channels.
 
 ## credits
 

@@ -1,0 +1,31 @@
+move start-bot to bin dir
+dustboto, ov
+change "send" command to send raw
+
+wikipedia command
+
+random command:
+	random nick   [chan]
+	random number [range]
+	random misc   [pattern]
+
+internet:
+	add toot command
+	get reddit/lobsters/hn dicussions
+	distrowatch lookup
+
+evaluation:
+	lua evaluation
+	common lisp evaluation
+	sed evaluation
+	python evaluation
+
+add irc statistics
+	:usrstats  loudest      [#chan:-current]
+	:usrstats  uppercase    [#chan:-current]
+	:usrstats  maddest      [#chan:-current]
+	:usrstats  mostactive   [#chan:-current]
+	:chanstats totalchans
+	:chanstats totalusrs    (#chan:-all)
+
+write dc(1) tutorial on blog

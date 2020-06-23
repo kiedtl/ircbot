@@ -1,10 +1,15 @@
 move start-bot to bin dir
 move sysinfo command to misc
 add netinfo command to misc
-dustboto, ov
+dustboto
 change "send" command to send raw
 
 wikipedia command
+
+ov:
+	fix inv listing
+	move to subcommands
+	add bake all cmd
 
 random command:
 	random nick   [chan]

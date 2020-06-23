@@ -15,7 +15,7 @@ async def filterslap(self, chan, src, msg):
             self.slapped[src] = time.time()
 
 async def init(self):
-    self.raw['filterslap'] = filterslap
+    self.handle_raw['filterslap'] = filterslap
 
     # keeps track of the last time a user
     # was slapped

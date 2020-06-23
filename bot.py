@@ -15,7 +15,7 @@ class System(pydle.Client):
 
         self.modules = {}
         self.cmd = {}
-        self.raw = {}
+        self.handle_raw = {}
         self.help = {}
 
         print('[modules] loading modules...')
@@ -46,8 +46,8 @@ class System(pydle.Client):
                 await self.join(chan)
 
     async def on_message(self, chan, source, msg):
-        for i in self.raw:
-            await self.raw[i](self, chan,source,msg)
+        for i in self.handle_raw:
+            await self.handle_raw[i](self, chan,source,msg)
         if source != self.nickname:
             if msg == '!botlist' or msg == '!rollcall':
                 if config.respond_to_rollcall:

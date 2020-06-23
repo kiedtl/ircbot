@@ -1,6 +1,5 @@
 log full commands
 move start-bot to bin dir
-move sysinfo command to misc
 add netinfo command to misc
 dustboto
 change "send" command to send raw

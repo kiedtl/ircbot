@@ -102,7 +102,7 @@ async def init(self):
     self.cmd['purge'] = purge
     self.cmd['give'] = give
 
-    self.raw['genGoods'] = generate
+    self.handle_raw['genGoods'] = generate
 
     self.help['bake'] = ['bake <item> - bake some stuff']
     self.help['cheat'] = ['cheat <user> <item> - you are bad if you use it']

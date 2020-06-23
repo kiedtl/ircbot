@@ -15,7 +15,7 @@ async def reloadmods(self, chan, source, msg):
     await self.message(chan, '{} reloading modules...'
         .format(modname('admin')))
     self.cmd = {}
-    self.raw = {}
+    self.handle_raw = {}
     self.help = {}
     for i in self.modules:
         importlib.reload(self.modules[i])

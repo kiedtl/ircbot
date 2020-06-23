@@ -40,4 +40,4 @@ async def backlogger(self, chan, src, msg):
 async def init(self):
     self.backlog = {}
     self.logfiles = {}
-    self.raw['backlog'] = backlogger
+    self.handle_raw['backlog'] = backlogger

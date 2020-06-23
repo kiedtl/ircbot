@@ -9,8 +9,7 @@ respond_to_rollcall = True
 set_botmode = True
 
 prefix = ':'
-admins = ['kiedtl', 'segmentation', 'admin', 'glenda',
-    'spacehare_', 'spacehare', 'ben', 'cmccabe', 'gbmor', 'tomasino',
-    'ubergeek', 'deepend', 'calamitous']
+admins = ['kiedtl', 'glenda', 'spacehare', 'ben',
+    'cmccabe', 'gbmor', 'tomasino', 'ubergeek', 'deepend', 'calamitous']
 
 bannedchans = []

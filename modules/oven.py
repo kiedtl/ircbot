@@ -3,7 +3,7 @@ import dataset
 import random
 
 from common import modname
-from common import modname
+from common import nohighlight
 module_name = 'oven'
 
 async def purge(self, c, n, m):
@@ -15,7 +15,7 @@ async def purge(self, c, n, m):
         await self.message(c, '{} need username.'
             .format(modname(module_name)))
         return
-    inv = self.db['inv']
+    inv = self.ovendb['inv']
     inv.delete(name=m)
     await self.message(c, '{} done'
         .format(modname(module_name)))
@@ -30,7 +30,7 @@ async def cheat(self, c, n, m):
         await self.message(c, '{} need username and item.'
             .format(modname(module_name)))
         return
-    inv = self.db['inv']
+    inv = self.ovendb['inv']
     inv.insert(dict(name=m[0], item=m[1]))
     await self.message(c, '{} done'
         .format(modname(module_name)))
@@ -40,7 +40,7 @@ async def give(self, c, n, m):
     if len(m) < 2:
         await self.message(c, '{} you can\'t give air!'
             .format(modname(module_name)))
-    inv = self.db['inv']
+    inv = self.ovendb['inv']
     its = inv.find_one(name=n, item=m[1])
     if its == None:
         await self.message(c, '{} you don\'t have that!'
@@ -56,23 +56,25 @@ async def info(self, c, n, m):
         await self.message(c, '{} need item name'
             .format(modname(module_name)))
         return
-    inv = self.db['inv']
+    inv = self.ovendb['inv']
     items = [ i['item'] for i in inv.find(item = query) ]
 
     instances = len(items)
     price = 0
     if query in self.bakedGoods:
         price = self.bakedGoods[query] / 10
+    total_price = instances * price
 
-    await self.message(c, '{} there exist {} {}s, each with a value of ${}'
-        .format(modname(module_name), instances, query, price))
+    await self.message(c, '{} there exist {} {}s, each with a value of ${} and a combined value of ${}'
+        .format(modname(module_name), instances,
+            query, price, total_price))
 
 async def bake(self, c, n, m):
     if len(m) < 1:
         await self.message(c, '{} you can\'t bake air!'
             .format(modname(module_name)))
         return
-    inv = self.db['inv']
+    inv = self.ovendb['inv']
     its = (inv.find_one(name=n, item=m))
     if its == None:
         await self.message(c, '{} you don\'t have any {}'
@@ -109,7 +111,7 @@ async def invsee(self, c, n, m):
     m = m.split(' ')[0]
     if len(m) < 1:
         m = n.strip()
-    inv = self.db['inv']
+    inv = self.ovendb['inv']
     it = [ i['item'] for i in inv.find(name = m) ]
     if len(it) < 1:
         await self.message(c, 'You look in your oven and see nothing.')
@@ -129,34 +131,48 @@ async def invsee(self, c, n, m):
 
 async def generate(self, c, n, m):
     if int(random.uniform(0, 30)) == 1:
-        inv = self.db['inv']
+        inv = self.ovendb['inv']
         inv.insert(dict(name = n,
             item = random.choice(list(self.bakedGoods.keys()))))
-        qed = self.db['qed']
+        qed = self.ovendb['qed']
         if qed.find_one(name=n) == None:
             qed.insert(dict(name=n))
 
+commands = {
+    'info': info,
+    'bake': bake,
+    'cheat': cheat,
+    'inv': invsee,
+    'items': invsee,
+    'goods': invsee,
+    'purge': purge,
+    'give': give
+}
+
+async def ov_handle(self, chan, src, msg):
+    msg = msg.split(' ')
+    if len(msg) < 1 or not msg[0] in commands:
+        await common.msg(self, chan, '{} {}'
+            .format(modname(module_name), self.err_invalid_command))
+        return
+    await commands[msg.pop(0)](self, chan, src, ' '.join(msg))
+
 async def init(self):
-    self.db = dataset.connect('sqlite:///database.db')
+    self.ovendb = dataset.connect('sqlite:///oven.db')
 
-    # todo: move all cmds to subcommands of 'ov'
-    self.cmd['info'] = info
-    self.cmd['bake'] = bake
-    self.cmd['cheat'] = cheat
-    self.cmd['inv'] = invsee
-    self.cmd['items'] = invsee
-    self.cmd['goods'] = invsee
-    self.cmd['purge'] = purge
-    self.cmd['give'] = give
-
+    self.cmd['ov'] = ov_handle
     self.handle_raw['genGoods'] = generate
 
-    self.help['info'] = ['info <item> - get info for item']
-    self.help['bake'] = ['bake <item> - bake some stuff']
-    self.help['cheat'] = ['cheat <user> <item> - you are bad if you use it']
-    self.help['items'] = ['items|inv|goods [user] - show the stuff in your inventory']
-    self.help['purge'] = ['purge <user> - clear someone\'s inventory']
-    self.help['give'] = ['give <user> <item> - give someone something from your inventory']
+    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give']
+    self.help['ov info'] = ['info <item> - get info for item']
+    self.help['ov bake'] = ['bake <item> - bake some stuff']
+    self.help['ov cheat'] = ['cheat <user> <item> - you are bad if you use it']
+    self.help['ov items'] = ['items|inv|goods [user] - show the stuff in your inventory']
+    self.help['ov inv'] = self.help['ov items']
+    self.help['ov goods'] = self.help['ov items']
+
+    self.help['ov purge'] = ['purge <user> - clear someone\'s inventory']
+    self.help['ov give'] = ['give <user> <item> - give someone something from your inventory']
 
     self.bakedGoods = {
         nohighlight('khuxkm'): -1,

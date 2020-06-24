@@ -1,3 +1,4 @@
+import config
 from common import modname
 import importlib, time, os
 
@@ -31,7 +32,7 @@ async def join(self, chan, source, msg):
     await self.join(msg)
 
 async def joins(self, chan, source, msg):
-    for i in self.joins:
+    for i in config.prod_joins:
         await self.join(i)
 
 async def aexec(self, code):

@@ -21,7 +21,7 @@ class System(pydle.Client):
         print('[modules] loading modules...')
         await self.load_mods()
         print('[irc] joining channels')
-        for i in self.chansjoin:
+        for i in config.initial_chans:
             await self.join(i)
         print('[irc] done!')
 

@@ -15,8 +15,8 @@ async def status(self, chan, src, msg):
 async def ping(self, chan, src, msg):
     await self.message(chan, '{} {}: {}'
         .format(modname('ping'), src,
-            random.choice(['yes?', 'pong!', 'what?', 'hmmm?',
-                'at your service!'])))
+            random.choice(['you rang?', 'yes?', 'pong!',
+                'what?', 'hmmm?', 'at your service!'])))
 
 async def whoami(self, chan, src, msg):
     await self.message(chan, '{} I\'m k, kiedtl\'s bot.'

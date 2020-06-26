@@ -3,6 +3,7 @@ move start-bot to bin dir
 add netinfo command to misc
 dustboto
 wikipedia command
+multiple prefixes
 
 ov:
 	add bake all cmd

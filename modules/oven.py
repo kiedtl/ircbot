@@ -65,7 +65,7 @@ async def info(self, c, n, m):
         price = self.bakedGoods[query] / 10
     total_price = instances * price
 
-    await self.message(c, '{} there exist {} {}s, each with a value of ${} and a combined value of ${}'
+    await self.message(c, '{} there exist {} {}s, each with a value of ${:.2f} and a combined value of ${:.2f}'
         .format(modname(module_name), instances,
             query, price, total_price))
 

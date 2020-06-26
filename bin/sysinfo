@@ -4,6 +4,9 @@
 # (c) Kiëd Llaentenn <kiedtl@tilde.team>
 # See the COPYING file for copyright information.
 
+# NOTE: requires fetchutils to function
+# https://github.com/lptstr/fetchutils
+
 # ugly and quick hack
 PATH=$PATH:$HOME/local/bin/
 

@@ -2,7 +2,6 @@ log full commands
 move start-bot to bin dir
 add netinfo command to misc
 dustboto
-change "send" command to send raw
 wikipedia command
 
 ov:
@@ -34,5 +33,3 @@ add irc statistics
 
 merge :chanstats and :usrstats
 write dc(1) tutorial on blog
-
-update bots list on tildeverse wiki

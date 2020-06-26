@@ -88,6 +88,16 @@ async def bake(self, c, n, m):
                 .format(modname(module_name), thing))
             return
 
+        # if they try to bake a ducc, destroy
+        # their stuff >:(
+        if thing == 'ducc':
+            await self.message(c, '{} {} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'
+                .format(modname(module_name), n))
+            await self.message(c, '{} the oven explodes!'
+                .format(modname(module_name)))
+            inv.delete(name=n)
+            return
+
         # consume the item
         for thing in input:
             inv.delete(id = its['id'])
@@ -122,7 +132,7 @@ async def bake(self, c, n, m):
     newitem = self.bakedPrice[output_value]
     inv.insert(dict(name=n, item=newitem))
 
-    await self.message(c, f'You bake your items, and out pops a {newitem}!')
+    await self.message(c, f'{modname(module_name)} You bake your items, and out pops a {newitem}!')
 
 async def invsee(self, c, n, m):
     m = m.split(' ')[0]
@@ -131,7 +141,7 @@ async def invsee(self, c, n, m):
     inv = self.ovendb['inv']
     it = [ i['item'] for i in inv.find(name = m) ]
     if len(it) < 1:
-        await self.message(c, 'You look in your oven and see nothing.')
+        await self.message(c, f'{modname(module_name)} You look in the oven and see nothing.')
     else:
         price = sum([self.bakedGoods[i]
             for i in it if i in self.bakedGoods]) / 10
@@ -140,17 +150,31 @@ async def invsee(self, c, n, m):
             if not i in itemstats:
                 itemstats[i] = 0
             itemstats[i] += 1
-        output = 'You look in the oven and see: '
+        output = f'{modname(module_name)} You look in the oven and see: '
         for i in sorted(itemstats.items(), key=lambda i: i[1], reverse=True):
             output += f'{i[0]} (x{i[1]}), '
         output += f'with a combined value of ${price}'
         await self.message(c, output)
 
 async def generate(self, c, n, m):
-    if int(random.uniform(0, 30)) == 1:
+    if int(random.uniform(1, 50)) == 1:
         inv = self.ovendb['inv']
+
+        # ensure that items with a high price
+        # have a very low chance of being given
+        # items with a low or negative price
+        # have a high chance of being given
+        choices = []
+        for item in self.bakedGoods:
+            # probability of getting an item
+            prob = ((max(list(self.bakedPrice.keys())) + 2)
+                - abs(self.bakedGoods[item]))
+            for i in range(0, prob):
+                choices.append(item)
+        random.shuffle(choices)
+
         inv.insert(dict(name = n,
-            item = random.choice(list(self.bakedGoods.keys()))))
+            item = random.choice(choices)))
         qed = self.ovendb['qed']
         if qed.find_one(name=n) == None:
             qed.insert(dict(name=n))

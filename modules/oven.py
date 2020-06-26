@@ -152,9 +152,11 @@ async def bake(self, c, n, m):
 
         # if they try to bake a ducc, destroy
         # their stuff >:(
-        if thing == 'ducc':
-            await self.message(c, '{} {} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'
-                .format(modname(module_name), n))
+        # if it's a bomb, blow up.
+        if thing == 'ducc' or thing == 'bomb':
+            if thing == 'ducc':
+                await self.message(c, '{} {} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'
+                    .format(modname(module_name), n))
             await self.message(c, '{} the oven explodes!'
                 .format(modname(module_name)))
             inv.delete(name=n)

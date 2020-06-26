@@ -69,43 +69,60 @@ async def info(self, c, n, m):
         .format(modname(module_name), instances,
             query, price, total_price))
 
+# TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):
     if len(m) < 1:
         await self.message(c, '{} you can\'t bake air!'
             .format(modname(module_name)))
         return
+
     inv = self.ovendb['inv']
-    its = (inv.find_one(name=n, item=m))
-    if its == None:
-        await self.message(c, '{} you don\'t have any {}'
-            .format(modname(module_name), m))
-        return
+    input = m.split()
+    #await self.message(c, f'DEBUG: bakign items: {input}')
+
+    for thing in input:
+        its = inv.find_one(name=n, item=thing)
+
+        if its == None:
+            await self.message(c, '{} you don\'t have any {}'
+                .format(modname(module_name), thing))
+            return
+
+        # consume the item
+        for thing in input:
+            inv.delete(id = its['id'])
+
 
     # if item has value, use that, else use a okay value
-    if m in list(self.bakedGoods.keys()):
-        value = self.bakedGoods[m]
-    else:
-        value = 7
-
-    # consume the item
-    inv.delete(id=its['id'])
+    values = []
+    for thing in input:
+        if thing in list(self.bakedGoods.keys()):
+            values.append(self.bakedGoods[thing])
+        else:
+            values.append(7)
 
     # oooo randomize what will pop out
-    value += random.uniform(-20, 20)
+    sum_value = sum(values)
+    avg_value = sum_value / len(values)
+    #await self.message(c, f'DEBUG: sum={sum_value}, avg={avg_value}')
+    output_value = random.uniform(
+        min(sum_value, avg_value),
+        max(sum_value, avg_value))
 
     # choose the output
-    while value not in list(self.bakedPrice.keys()):
-        value = int(value - 1)
-        if value < 0:
+    prices = list(self.bakedPrice.keys())
+    min_price = min(prices)
+    while output_value not in prices:
+        output_value = int(output_value - 1)
+        if output_value < min_price:
             await self.message(c, '{} the oven begins to smoke...'
                 .format(modname(module_name)))
             return
 
-    newitem = self.bakedPrice[value]
-
+    newitem = self.bakedPrice[output_value]
     inv.insert(dict(name=n, item=newitem))
 
-    await self.message(c, 'You bake your {}, and out pops a {}!'.format(m, newitem))
+    await self.message(c, f'You bake your items, and out pops a {newitem}!')
 
 async def invsee(self, c, n, m):
     m = m.split(' ')[0]

@@ -6,7 +6,9 @@ wikipedia command
 multiple prefixes
 
 ov:
-	add bake all cmd
+	give based on users, not nicks
+	don't give stuff to bots
+	add ":ov bakeall" command
 
 random command:
 	random nick   [chan]

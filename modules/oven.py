@@ -69,6 +69,37 @@ async def info(self, c, n, m):
         .format(modname(module_name), instances,
             query, price, total_price))
 
+async def owners(self, c, n, m):
+    query = m.split(' ')[0]
+    if len(m) < 1:
+        await self.message(c, '{} need item name'
+            .format(modname(module_name)))
+        return
+    inv = self.ovendb['inv']
+
+    total = 0
+    stats = {}
+    for item in list(inv.find(item = query)):
+        if not item['name'] in stats:
+            stats[item['name']] = 0
+        stats[item['name']] += 1
+        total += 1
+
+    output = ''
+    ctr = 0
+    until = 7
+    for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
+        if ctr == until:
+            break
+        percentage = (i[1] * 100) / total
+        output += ('{} (×{}), '
+            .format(nohighlight(i[0]), i[1]))
+        ctr += 1
+
+    output = output[:-2] # trim ', '
+    await self.message(c, '{} top {} owners: {}'
+        .format(modname(module_name), query, output))
+
 # TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):
     if len(m) < 1:
@@ -152,8 +183,8 @@ async def invsee(self, c, n, m):
             itemstats[i] += 1
         output = f'{modname(module_name)} You look in the oven and see: '
         for i in sorted(itemstats.items(), key=lambda i: i[1], reverse=True):
-            output += f'{i[0]} (x{i[1]}), '
-        output += f'with a combined value of ${price}'
+            output += f'{i[0]} (×{i[1]}), '
+        output += f'with a combined value of ${price:.2f}'
         await self.message(c, output)
 
 async def generate(self, c, n, m):
@@ -167,8 +198,8 @@ async def generate(self, c, n, m):
         choices = []
         for item in self.bakedGoods:
             # probability of getting an item
-            prob = ((max(list(self.bakedPrice.keys())) + 2)
-                - abs(self.bakedGoods[item]))
+            prob = int(((max(list(self.bakedPrice.keys())) + 2)
+                - abs(self.bakedGoods[item])))
             for i in range(0, prob):
                 choices.append(item)
         random.shuffle(choices)
@@ -187,7 +218,8 @@ commands = {
     'items': invsee,
     'goods': invsee,
     'purge': purge,
-    'give': give
+    'give': give,
+    'owners': owners
 }
 
 async def ov_handle(self, chan, src, msg):
@@ -204,7 +236,7 @@ async def init(self):
     self.cmd['ov'] = ov_handle
     self.handle_raw['genGoods'] = generate
 
-    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give']
+    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give owners']
     self.help['ov info'] = ['info <item> - get info for item']
     self.help['ov bake'] = ['bake <item> - bake some stuff']
     self.help['ov cheat'] = ['cheat <user> <item> - you are bad if you use it']
@@ -214,6 +246,7 @@ async def init(self):
 
     self.help['ov purge'] = ['purge <user> - clear someone\'s inventory']
     self.help['ov give'] = ['give <user> <item> - give someone something from your inventory']
+    self.help['ov owners'] = ['owners <item> - see which users own an item']
 
     self.bakedGoods = {
         nohighlight('khuxkm'): -1,

@@ -3,50 +3,59 @@ from common import modname, nohighlight, loadlogs
 module_name = 'chan stats'
 
 async def totalmsgs(self, chan, src, msg):
-    channels = 'all'
+    channels = 'all known'
     logfiles = []
-    for i in [s for s in os.listdir('chans') if '#' in s]:
-        logfiles.append(i)
     if len(msg) > 0:
         channels = ', '.join(msg.split(' '))
-        logfiles = msg.split(' ')
+        logfiles = msg.split()
+    else:
+        for i in [s for s in os.listdir('chans') if '#' in s]:
+            logfiles.append(i)
 
     logs = []
     for logfile in logfiles:
         try:
-            logs += loadlogs(chan)
+            logs += loadlogs(logfile)
         except:
-            await self.message(chan, '{} error opening log file'
-                .format(modname(module_name)))
+            await self.message(chan, '{} {}: {}'
+                .format(modname(module_name),
+                    self.err_invalid_logfile, logfile))
             return
+
     await self.message(chan, '{} {:,} total messages for {} channel(s)'
             .format(modname(module_name), len(logs), channels))
 
 async def totalnicks(self, chan, src, msg):
-    channels = 'all'
+    channels = 'all known'
     logfiles = []
-    for i in [s for s in os.listdir('chans') if '#' in s]:
-        logfiles.append(i)
     if len(msg) > 0:
         channels = ', '.join(msg.split(' '))
-        logfiles = msg.split(' ')
+        logfiles = msg.split()
+    else:
+        for i in [s for s in os.listdir('chans') if '#' in s]:
+            logfiles.append(i)
 
     stats = {}
 
     for logfile in logfiles:
         logs = []
         try:
-            logs = loadlogs(chan)
+            logs = loadlogs(logfile)
         except:
-            await self.message('{} error opening log file'
-                .format(modname(module_name)))
+            await self.message(chan, '{} {}: {}'
+                .format(modname(module_name),
+                    self.err_invalid_logfile, logfile))
             return
+
         for log in logs:
-            nick = log.split()[1]
-            print(f'log={log}, nick={nick}')
+            data = log.split()
+            if len(data) < 2:
+                continue
+            nick = data[1]
             if not nick in stats:
                 stats[nick] = 0
             stats[nick] += 1
+
     await self.message(chan, '{} {:,} total unique nicks for {} channel(s)'
             .format(modname(module_name), len(stats), channels))
 

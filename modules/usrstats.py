@@ -4,7 +4,7 @@ from common import modname, nohighlight
 module_name = 'user stats'
 
 # TODO: move to common
-async def get_all_logs(chan, msg):
+def get_all_logs(chan, msg):
     logf = open('chans/{}.log'.format(chan))
     rawlogs = logf.read().split('\n')
     logf.close()
@@ -26,6 +26,40 @@ async def get_all_logs(chan, msg):
         )
     return logs
 
+async def get_stats_by_phrase(self, chan, src, msg, phrases, label):
+    stats = {}
+    total = 0
+    logs = []
+    targetchan = chan
+    if len(msg) > 0 and msg[:1] == '#':
+        targetchan = msg
+
+    try:
+        logs = get_all_logs(targetchan, msg)
+    except:
+        await common.msg(self, chan, '{} {}'
+            .format(modname(module_name), self.err_invalid_logfile))
+        return
+
+    for item in logs:
+        if any(phrase in item['msg'] for phrase in phrases):
+            if not item['user'] in stats:
+                stats[item['user']] = 0
+            stats[item['user']] += 1
+
+    output = ''
+    ctr = 0
+    until = 7
+    for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
+        if ctr == until:
+            break
+        output += ('{} ({} msgs), '
+            .format(nohighlight(i[0]), i[1]))
+        ctr += 1
+    output = output[:-2] # trim ', '
+    await common.msg(self, chan, '{} {} people at {}: {}'
+        .format(modname(module_name), label, targetchan, output))
+
 async def noisiest(self, chan, src, msg):
     stats = {}
     total = 0
@@ -35,7 +69,7 @@ async def noisiest(self, chan, src, msg):
         targetchan = msg
 
     try:
-        logs = await self.get_all_logs(targetchan, msg)
+        logs = get_all_logs(targetchan, msg)
     except:
         await common.msg(self, chan, '{} {}'
             .format(modname(module_name), self.err_invalid_logfile))
@@ -62,112 +96,19 @@ async def noisiest(self, chan, src, msg):
         .format(modname(module_name), targetchan, output))
 
 async def happiest(self, chan, src, msg):
-    stats = {}
-
-    targetchan = chan
-    if len(msg) > 0 and msg[:1] == '#':
-        targetchan = msg
-
-    logs = []
-    try:
-        logs = await get_all_logs(targetchan, msg)
-    except:
-        await common.msg(self, chan, '{} {}'
-            .format(modname(module_name), self.err_invalid_logfile))
-        return
-
     happy = ['lol', 'lmao', ':)', ':-)', ':^)', ':D' ':-D', ';)', 'c:']
-    for item in logs:
-        if any(phrase in item['msg'] for phrase in happy):
-            if not item['user'] in stats:
-                stats[item['user']] = 0
-            stats[item['user']] += 1
-
-    output = ''
-    ctr = 0
-    until = 7
-    for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
-        if ctr == until:
-            break
-        output += ('{} ({} msgs), '
-            .format(nohighlight(i[0]), i[1]))
-        ctr += 1
-    output = output[:-2] # trim ', '
-    await common.msg(self, chan, '{} happiest people at {}: {}'
-        .format(modname(module_name), targetchan, output))
+    await get_stats_by_phrase(self, chan, src, msg, happy, 'happiest')
 
 async def saddest(self, chan, src, msg):
-    stats = {}
-
-    targetchan = chan
-    if len(msg) > 0 and msg[:1] == '#':
-        targetchan = msg
-
-    logs = []
-    try:
-        logs = await get_all_logs(targetchan, msg)
-    except:
-        await common.msg(self, chan, '{} {}'
-            .format(modname(module_name), self.err_invalid_logfile))
-        return
-
     sad = [':(', ':/', ':|', ';-;', ';_;', ';(', ':-(', ';-(',
         ':^(', ';^(', ':-/', ':-|', ';-/', ';-|', '=(', '=/',
         '=|', ':\'(', ':V']
-    for item in logs:
-        if any(phrase in item['msg'] for phrase in sad):
-            if not item['user'] in stats:
-                stats[item['user']] = 0
-            stats[item['user']] += 1
-
-    output = ''
-    ctr = 0
-    until = 7
-    for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
-        if ctr == until:
-            break
-        output += ('{} ({} msgs), '
-            .format(nohighlight(i[0]), i[1]))
-        ctr += 1
-    output = output[:-2] # trim ', '
-    await common.msg(self, chan, '{} saddest people at {}: {}'
-        .format(modname(module_name), targetchan, output))
+    await get_stats_by_phrase(self, chan, src, msg, sad, 'saddest')
 
 async def angriest(self, chan, src, msg):
-    stats = {}
-
-    targetchan = chan
-    if len(msg) > 0 and msg[:1] == '#':
-        targetchan = msg
-
-    logs = []
-    try:
-        logs = await get_all_logs(targetchan, msg)
-    except:
-        await common.msg(self, chan, '{} {}'
-            .format(modname(module_name), self.err_invalid_logfile))
-        return
-
     curses = ['darn', 'dang', 'damn', 'shit', 'fuck', 'fck', 'f*ck',
         'dick', 'moron'] # need more curse words!
-    for item in logs:
-        if any(phrase in item['msg'] for phrase in curses):
-            if not item['user'] in stats:
-                stats[item['user']] = 0
-            stats[item['user']] += 1
-
-    output = ''
-    ctr = 0
-    until = 7
-    for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
-        if ctr == until:
-            break
-        output += ('{} ({} msgs), '
-            .format(nohighlight(i[0]), i[1]))
-        ctr += 1
-    output = output[:-2] # trim ', '
-    await common.msg(self, chan, '{} angriest people at {}: {}'
-        .format(modname(module_name), targetchan, output))
+    await get_stats_by_phrase(self, chan, src, msg, curses, 'angriest')
 
 commands = {
     'noisiest': noisiest,

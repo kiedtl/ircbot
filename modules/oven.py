@@ -282,8 +282,8 @@ async def init(self):
     self.help['ov richest'] = ['richest - see which users own the most valuable items']
 
     self.bakedGoods = {
-        nohighlight('khuxkm'): -1,
-        nohighlight('jan6'):    3,
+        nohighlight('khuxkm'): 10,
+        nohighlight('jan6'):   10,
 
         'poison':   -10,
         'roadkill': -3,

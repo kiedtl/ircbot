@@ -133,10 +133,47 @@ async def saddest(self, chan, src, msg):
     await common.msg(self, chan, '{} saddest people at {}: {}'
         .format(modname(module_name), targetchan, output))
 
+async def angriest(self, chan, src, msg):
+    stats = {}
+
+    targetchan = chan
+    if len(msg) > 0 and msg[:1] == '#':
+        targetchan = msg
+
+    logs = []
+    try:
+        logs = await get_all_logs(targetchan, msg)
+    except:
+        await common.msg(self, chan, '{} {}'
+            .format(modname(module_name), self.err_invalid_logfile))
+        return
+
+    curses = ['darn', 'dang', 'damn', 'shit', 'fuck', 'fck', 'f*ck',
+        'dick', 'moron'] # need more curse words!
+    for item in logs:
+        if any(phrase in item['msg'] for phrase in curses):
+            if not item['user'] in stats:
+                stats[item['user']] = 0
+            stats[item['user']] += 1
+
+    output = ''
+    ctr = 0
+    until = 7
+    for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
+        if ctr == until:
+            break
+        output += ('{} ({} msgs), '
+            .format(nohighlight(i[0]), i[1]))
+        ctr += 1
+    output = output[:-2] # trim ', '
+    await common.msg(self, chan, '{} angriest people at {}: {}'
+        .format(modname(module_name), targetchan, output))
+
 commands = {
     'noisiest': noisiest,
     'happiest': happiest,
-    'saddest':  saddest
+    'saddest':  saddest,
+    'angriest': angriest
 }
 
 async def usrstats_handle(self, chan, src, msg):
@@ -149,7 +186,8 @@ async def usrstats_handle(self, chan, src, msg):
 
 async def init(self):
     self.cmd['usrstats'] = usrstats_handle
-    self.help['usrstats'] = ['usrstats - display statistics on various users (more for subcommands)', 'usrstats subcommands: noisiest happiest saddest']
+    self.help['usrstats'] = ['usrstats - display statistics on various users (more for subcommands)', 'usrstats subcommands: noisiest happiest saddest angriest']
     self.help['usrstats noisiest'] = ['usrstats noisiest [chan] - get the top talkers for [chan] (default: current)']
     self.help['usrstats happiest'] = ['usrstats happiest [chan] - get the users who type "lol", "lmao", ":)", ":D", etc in their messages the most on [chan]. (default: current)']
     self.help['usrstats saddest'] = ['usrstats saddest [chan] - get the users who type ":/", ":(", etc in their messages the most on [chan]. (default: current)']
+    self.help['usrstats angriest'] = ['usrstats angriest [chan] - get the users who curse the most on [chan]. (default: current)']

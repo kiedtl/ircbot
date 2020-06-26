@@ -5,6 +5,7 @@ import random
 from common import modname
 from common import nohighlight
 module_name = 'oven'
+default_price = 7
 
 async def purge(self, c, n, m):
     if not await self.is_admin(n):
@@ -92,13 +93,43 @@ async def owners(self, c, n, m):
         if ctr == until:
             break
         percentage = (i[1] * 100) / total
-        output += ('{} (×{}), '
-            .format(nohighlight(i[0]), i[1]))
+        output += ('{} (×{}, {:.0f}%), '
+            .format(nohighlight(i[0]), i[1], percentage))
         ctr += 1
 
     output = output[:-2] # trim ', '
     await self.message(c, '{} top {} owners: {}'
         .format(modname(module_name), query, output))
+
+async def richest(self, c, n, m):
+    inv = self.ovendb['inv']
+
+    total = 0
+    stats = {}
+    for item in list(inv.find()):
+        price = default_price
+        if item['item'] in self.bakedGoods:
+            price = self.bakedGoods[item['item']] / 10
+
+        if not item['name'] in stats:
+            stats[item['name']] = 0
+        stats[item['name']] += price
+        total += price
+
+    output = ''
+    ctr = 0
+    until = 7
+    for i in sorted(stats.items(), key=lambda i: i[1], reverse=True):
+        if ctr == until:
+            break
+        percentage = (i[1] * 100) / total
+        output += ('{} (${:.2f}, {:.1f}%), '
+            .format(nohighlight(i[0]), i[1], percentage))
+        ctr += 1
+
+    output = output[:-2] # trim ', '
+    await self.message(c, '{} richest users: {} (total wealth: ${:.2f})'
+        .format(modname(module_name), output, total))
 
 # TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):
@@ -140,7 +171,7 @@ async def bake(self, c, n, m):
         if thing in list(self.bakedGoods.keys()):
             values.append(self.bakedGoods[thing])
         else:
-            values.append(7)
+            values.append(default_price)
 
     # oooo randomize what will pop out
     sum_value = sum(values)
@@ -219,7 +250,8 @@ commands = {
     'goods': invsee,
     'purge': purge,
     'give': give,
-    'owners': owners
+    'owners': owners,
+    'richest': richest
 }
 
 async def ov_handle(self, chan, src, msg):
@@ -236,7 +268,7 @@ async def init(self):
     self.cmd['ov'] = ov_handle
     self.handle_raw['genGoods'] = generate
 
-    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give owners']
+    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give owners richest']
     self.help['ov info'] = ['info <item> - get info for item']
     self.help['ov bake'] = ['bake <item> - bake some stuff']
     self.help['ov cheat'] = ['cheat <user> <item> - you are bad if you use it']
@@ -247,6 +279,7 @@ async def init(self):
     self.help['ov purge'] = ['purge <user> - clear someone\'s inventory']
     self.help['ov give'] = ['give <user> <item> - give someone something from your inventory']
     self.help['ov owners'] = ['owners <item> - see which users own an item']
+    self.help['ov richest'] = ['richest - see which users own the most valuable items']
 
     self.bakedGoods = {
         nohighlight('khuxkm'): -1,

@@ -1,6 +1,6 @@
-import os
-from common import modname, nohighlight, loadlogs
-module_name = 'chan stats'
+import os, out
+from common import nohighlight, loadlogs
+modname = 'chan stats'
 
 async def totalmsgs(self, chan, src, msg):
     channels = 'all known'
@@ -17,13 +17,12 @@ async def totalmsgs(self, chan, src, msg):
         try:
             logs += loadlogs(logfile)
         except:
-            await self.message(chan, '{} {}: {}'
-                .format(modname(module_name),
-                    self.err_invalid_logfile, logfile))
+            await out.msg(self, modname, chan,
+                [f'{self.err_invalid_logfile}: {logfile}'])
             return
 
-    await self.message(chan, '{} {:,} total messages for {} channel(s)'
-            .format(modname(module_name), len(logs), channels))
+    await out.msg(self, modname, chan,
+        [f'{len(logs):,} total messages for {channels} channel(s)'])
 
 async def totalnicks(self, chan, src, msg):
     channels = 'all known'
@@ -42,9 +41,8 @@ async def totalnicks(self, chan, src, msg):
         try:
             logs = loadlogs(logfile)
         except:
-            await self.message(chan, '{} {}: {}'
-                .format(modname(module_name),
-                    self.err_invalid_logfile, logfile))
+            await out.msg(self, modname, chan,
+                [f'{self.err_invalid_logfile}: {logfile}'])
             return
 
         for log in logs:
@@ -56,8 +54,8 @@ async def totalnicks(self, chan, src, msg):
                 stats[nick] = 0
             stats[nick] += 1
 
-    await self.message(chan, '{} {:,} total unique nicks for {} channel(s)'
-            .format(modname(module_name), len(stats), channels))
+    await out.msg(self, modname, chan,
+        [f'{len(stats):,} total unique nicks for {channels} channel(s)'])
 
 commands = {
     'totalmsgs': totalmsgs,
@@ -67,12 +65,13 @@ commands = {
 async def chanstats_handle(self, chan, source, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await self.message(chan, '{} {}'
-            .format(modname(module_name), self.err_invalid_command))
+        await out.msg(self, modname, chan,
+            [f'{self.err_invalid_command}'])
         return
     await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
 
 async def init(self):
     self.cmd['chanstats'] = chanstats_handle
-    self.help['chanstats'] = ['display statistics of various channels (more for subcommands)', 'chanstats subcommands: totalmsgs']
+    self.help['chanstats'] = ['chanstats - display statistics of various channels',
+        'chanstats subcommands: totalmsgs']
     self.help['chanstats totalmsgs'] = ['chanstats totalmsgs [chans] - get total messages for [chans]. [chans] defaults to all channels.']

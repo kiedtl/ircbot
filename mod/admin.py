@@ -1,29 +1,31 @@
 import config
-from common import modname
-import importlib, time, os
+import common, importlib, out, os, time
+
+modname = 'admin'
 
 async def quit(self, chan, source, msg):
-    await self.quit('{} recieved {} signal from {}'
-            .format(modname('admin'), msg, source))
+    await self.quit()
 
 async def restart(self, chan, source, msg):
-    await self.quit('{} recieved {} signal from {}'
-            .format(modname('admin'), msg, source))
+    await self.quit()
     os.system('systemctl --user restart bot')
 
 async def reloadmods(self, chan, source, msg):
     before = time.time()
-    await self.message(chan, '{} reloading modules...'
-        .format(modname('admin')))
+    await out.msg(self, modname, chan,
+        ['reloading modules...'])
+
     self.cmd = {}
     self.handle_raw = {}
     self.help = {}
+
     for i in self.modules:
         importlib.reload(self.modules[i])
         await self.modules[i].init(self)
-    await self.message(chan, '{} {} modules reloaded in {}s'
-        .format(modname('admin'), len(self.modules),
-            round(time.time() - before, 3)))
+
+    await out.msg(self, modname, chan, 
+        ['{} modules reloaded in {}s'.format(len(self.modules),
+            round(time.time() - before, 3))])
 
 async def part(self, chan, source, msg):
     await self.part(msg)
@@ -48,13 +50,12 @@ async def aexec(self, code):
 async def ev(self, chan, source, msg):
     msg = msg.split(' ')
     result = await aexec(self, ' '.join(msg))
-    await self.message(chan, '{} result: \'{}\''
-        .format(modname('admin'), result))
+    await out.msg(self, modname, chan,
+        [f'result: \'{result}\''])
 
 async def send(self, c, n, m):
     msg = m.split(' ')
     await self.message(msg.pop(0), ' '.join(msg))
-    await self.message(c, 'ok')
 
 async def shutup(self, c, n, m):
     duration = 5
@@ -64,13 +65,12 @@ async def shutup(self, c, n, m):
         except:
             duration = 5
     self.asleep[c] = time.time() + (duration * 60)
-    await self.message(c, '{} disabled for {}m'
-        .format(modname('admin'), duration))
+    await out.msg(self, modname, chan,
+        [f'disabled for {duration}m'])
 
 async def wake(self, c, n, m):
     self.asleep[c] = time.time()
-    await self.message(c, '{} I\'m back!'
-        .format(modname('admin')))
+    await out.msg(self, modname, chan, ['I\'m back!'])
 
 commands = {
     'quit': quit,
@@ -89,21 +89,21 @@ async def adminHandle(self, chan, source, msg):
     if await self.is_admin(source):
         msg = msg.split(' ')
         if len(msg) < 1 or not msg[0] in commands:
-            await self.message(chan, '{} {}'
-                .format(modname('admin'), self.err_invalid_command))
+            await out.msg(self, modname, chan,
+                [self.err_invalid_command])
             return
         print('{} recieved {} signal from {}'
-            .format(modname('admin'), msg[0], source))
+            .format(common.modname('admin'), msg[0], source))
         await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
     else:
-        await self.message(chan, '{} insufficient privileges'
-            .format(modname('admin')))
+        await out.msg(self, modname, chan,
+            ['insufficient privileges'])
 
 async def init(self):
     self.cmd['admin'] = adminHandle
     self.cmd['a'] = self.cmd['admin']
 
-    self.help['admin'] = ['admin - various bot owner commands (more for subcommands)',
+    self.help['admin'] = ['admin - various bot owner commands',
         'admin subcommands: quit restart reload part join joins eval send sleep wake']
     self.help['admin quit'] = ['admin quit <message> - shutdown bot']
     self.help['admin restart'] = ['admin restart <message> - restart bot']

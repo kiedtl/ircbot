@@ -41,9 +41,6 @@ def run(self, cmd, stdin):
     exit = proc.wait()
     return out.decode('utf-8').rstrip()
 
-async def msg(self, chan, txt):
-    await self.message(chan, txt)
-
 async def init(self):
     self.err_backlog_too_short = 'error: backlog too short'
     self.err_invalid_logfile   = 'error: could not open log file'

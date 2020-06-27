@@ -2,39 +2,35 @@
 # simply piping text into a command
 # and posting the result
 
-import config, common
-from common import modname
+import config, common, out
 
 async def communist(self, chan, src, msg):
     txt = msg.upper()
-    await common.msg(self, chan,
-        '\x038,5 ☭ {} ☭ \x0f'.format(txt))
+    await self.message(chan, f'\x038,5 ☭ {txt} ☭ \x0f')
 
 async def rev13(self, chan, src, msg):
     txt = []
     try:
         txt = common.get_backlog_msg(self, chan, msg)
     except:
-        await common.msg(self, chan,
-            self.err_backlog_too_short)
+        await out.msg(self, 'rev13', chan,
+            [self.err_backlog_too_short])
         return
 
     res = common.run(self, ['caesar'], txt[1])
-    await common.msg(self, chan, '<{}> {}'
-        .format(txt[0], res))
+    await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
 
 async def rot13(self, chan, src, msg):
     txt = []
     try:
         txt = common.get_backlog_msg(self, chan, msg)
     except:
-        await common.msg(self, chan,
-            self.err_backlog_too_short)
+        await out.msg(self, 'rot13', chan,
+            [self.err_backlog_too_short])
         return
 
     res = common.run(self, ['rot13'], txt[1])
-    await common.msg(self, chan, '<{}> {}'
-        .format(txt[0], res))
+    await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
 
 async def init(self):
     self.cmd['rev13']   = rev13

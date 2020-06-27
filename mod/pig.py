@@ -1,6 +1,7 @@
 import common
-import random, re
+import out, random, re
 
+modname = 'pig'
 vowels = ['a', 'e', 'i', 'o', 'u']
 
 def twoch(s):
@@ -21,9 +22,9 @@ async def pigify(self, c, n, m):
     try:
         ms = common.get_backlog_msg(self, c, m)
     except:
-        await self.message(c, 'errorway: ymay acklogbay isway ootay ortshay!')
+        await out.msg(self, modname, c, [f'ymay acklogbay isway ootay ortshay!'])
         return
-    await self.message(c, await pigtext(self, ms))
+    await out.msg(self, modname, c, [await pigtext(self, ms)])
 
 async def pigtext(self, ms):
     # filter out ZWNJ's

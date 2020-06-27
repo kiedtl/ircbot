@@ -1,61 +1,48 @@
-import common
-import dataset
-import random
-
-from common import modname
+import dataset, out, random
 from common import nohighlight
-module_name = 'oven'
+
+modname = 'oven'
 default_price = 7
 
 async def purge(self, c, n, m):
     if not await self.is_admin(n):
-        await self.message(c, '{} insufficient priviliges'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, [f'insufficient privileges'])
         return
     if len(m) < 1:
-        await self.message(c, '{} need username.'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, [f'need username'])
         return
     inv = self.ovendb['inv']
     inv.delete(name=m)
-    await self.message(c, '{} done'
-        .format(modname(module_name)))
+    await out.msg(self, modname, c, [f'done'])
 
 async def cheat(self, c, n, m):
     if not await self.is_admin(n):
-        await self.message(c, '{} insufficient priviliges'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, ['insufficient privileges'])
         return
     m = m.split(' ')
     if len(m) < 2:
-        await self.message(c, '{} need username and item.'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, [f'need username and item.'])
         return
     inv = self.ovendb['inv']
     inv.insert(dict(name=m[0], item=m[1]))
-    await self.message(c, '{} done'
-        .format(modname(module_name)))
+    await out.msg(self, modname, c, [f'done'])
 
 async def give(self, c, n, m):
     m = m.split(' ')
     if len(m) < 2:
-        await self.message(c, '{} you can\'t give air!'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, [f'you can\'t give air!'])
     inv = self.ovendb['inv']
     its = inv.find_one(name=n, item=m[1])
     if its == None:
-        await self.message(c, '{} you don\'t have that!'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, [f'you don\t have that!'])
     inv.delete(id=its['id'])
     inv.insert(dict(name=m[0], item=its['item']))
-    await self.message(c, '{} you gave {} a {}!'
-        .format(modname(module_name), m[0], m[1]))
+    await out.msg(self, modname, c, [f'you have {m[0]} a {m[1]}!'])
 
 async def info(self, c, n, m):
     query = m.split(' ')[0]
     if len(m) < 1:
-        await self.message(c, '{} need item name'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, [f'need item name'])
         return
     inv = self.ovendb['inv']
     items = [ i['item'] for i in inv.find(item = query) ]
@@ -66,15 +53,13 @@ async def info(self, c, n, m):
         price = self.bakedGoods[query] / 10
     total_price = instances * price
 
-    await self.message(c, '{} there exist {} {}s, each with a value of ${:.2f} and a combined value of ${:.2f}'
-        .format(modname(module_name), instances,
-            query, price, total_price))
+    await out.msg(self, modname, c,
+        [f'there exist {instances} {query}s, each with a value of ${price:.2f} and a combined value of ${total_price:.2f}'])
 
 async def owners(self, c, n, m):
     query = m.split(' ')[0]
     if len(m) < 1:
-        await self.message(c, '{} need item name'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, [f'need item name.'])
         return
     inv = self.ovendb['inv']
 
@@ -98,8 +83,7 @@ async def owners(self, c, n, m):
         ctr += 1
 
     output = output[:-2] # trim ', '
-    await self.message(c, '{} top {} owners: {}'
-        .format(modname(module_name), query, output))
+    await out.msg(self, modname, c, [f'top {query} owners: {output}'])
 
 async def richest(self, c, n, m):
     inv = self.ovendb['inv']
@@ -128,14 +112,13 @@ async def richest(self, c, n, m):
         ctr += 1
 
     output = output[:-2] # trim ', '
-    await self.message(c, '{} richest users: {} (total wealth: ${:.2f})'
-        .format(modname(module_name), output, total))
+    await out.msg(self, modname, c,
+        [f'richest users: {output} (total wealth: ${total:.2f}'])
 
 # TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):
     if len(m) < 1:
-        await self.message(c, '{} you can\'t bake air!'
-            .format(modname(module_name)))
+        await out.msg(self, modname, c, [f'you can\'t bake air!'])
         return
 
     inv = self.ovendb['inv']
@@ -146,18 +129,16 @@ async def bake(self, c, n, m):
         its = inv.find_one(name=n, item=thing)
 
         if its == None:
-            await self.message(c, '{} you don\'t have any {}'
-                .format(modname(module_name), thing))
+            await out.msg(self, modname, c, [f'you don\'t have any {thing}'])
             return
 
         # if they try to bake a ducc or a bomb,
         # destroy their stuff
         if thing == 'ducc' or thing == 'bomb':
             if thing == 'ducc':
-                await self.message(c, '{} {} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'
-                    .format(modname(module_name), n))
-            await self.message(c, '{} the oven explodes!'
-                .format(modname(module_name)))
+                await out.msg(self, modname, c, [f'{n} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'])
+
+            await out.msg(self, modname, c, [f'the oven explodes!'])
             inv.delete(name=n)
             return
 
@@ -188,14 +169,13 @@ async def bake(self, c, n, m):
     while output_value not in prices:
         output_value = int(output_value - 1)
         if output_value < min_price:
-            await self.message(c, '{} the oven begins to smoke...'
-                .format(modname(module_name)))
+            await out.msg(self, modname, c, [f'the oven begins to smoke...'])
             return
 
     newitem = self.bakedPrice[output_value]
     inv.insert(dict(name=n, item=newitem))
 
-    await self.message(c, f'{modname(module_name)} You bake your items, and out pops a {newitem}!')
+    await out.msg(self, modname, c, [f'you bake your items, and out pops a {newitem}!'])
 
 async def invsee(self, c, n, m):
     m = m.split(' ')[0]
@@ -204,7 +184,7 @@ async def invsee(self, c, n, m):
     inv = self.ovendb['inv']
     it = [ i['item'] for i in inv.find(name = m) ]
     if len(it) < 1:
-        await self.message(c, f'{modname(module_name)} You look in the oven and see nothing.')
+        await out.msg(self, modname, c, [f'you look into the oven and see nothing'])
     else:
         price = sum([self.bakedGoods[i]
             for i in it if i in self.bakedGoods]) / 10
@@ -213,11 +193,11 @@ async def invsee(self, c, n, m):
             if not i in itemstats:
                 itemstats[i] = 0
             itemstats[i] += 1
-        output = f'{modname(module_name)} You look in the oven and see: '
+        output = 'you look in the oven and see: '
         for i in sorted(itemstats.items(), key=lambda i: i[1], reverse=True):
             output += f'{i[0]} (×{i[1]}), '
         output += f'with a combined value of ${price:.2f}'
-        await self.message(c, output)
+        await out.msg(self, modname, c, [output])
 
 async def generate(self, c, n, m):
     if int(random.uniform(1, 50)) == 1:
@@ -255,13 +235,12 @@ commands = {
     'richest': richest
 }
 
-async def ov_handle(self, chan, src, msg):
+async def ov_handle(self, c, src, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await common.msg(self, chan, '{} {}'
-            .format(modname(module_name), self.err_invalid_command))
+        await out.msg(self, modname, c, [self.err_invalid_command])
         return
-    await commands[msg.pop(0)](self, chan, src, ' '.join(msg))
+    await commands[msg.pop(0)](self, c, src, ' '.join(msg))
 
 async def init(self):
     self.ovendb = dataset.connect('sqlite:///dat/oven.db')

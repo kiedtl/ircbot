@@ -1,7 +1,5 @@
-import common
-from common import modname, nohighlight
-
-module_name = 'user stats'
+from common import nohighlight
+modname = 'user stats'
 
 # TODO: move to common
 def get_all_logs(chan, msg):
@@ -37,8 +35,7 @@ async def get_stats_by_phrase(self, chan, src, msg, phrases, label):
     try:
         logs = get_all_logs(targetchan, msg)
     except:
-        await common.msg(self, chan, '{} {}'
-            .format(modname(module_name), self.err_invalid_logfile))
+        await out.msg(self, modname, chan, [self.err_invalid_logfile])
         return
 
     for item in logs:
@@ -57,8 +54,8 @@ async def get_stats_by_phrase(self, chan, src, msg, phrases, label):
             .format(nohighlight(i[0]), i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await common.msg(self, chan, '{} {} people at {}: {}'
-        .format(modname(module_name), label, targetchan, output))
+    await out.msg(self, modname, chan,
+        [f'{label} people at {targetchan}: {output}'])
 
 async def noisiest(self, chan, src, msg):
     stats = {}
@@ -71,8 +68,7 @@ async def noisiest(self, chan, src, msg):
     try:
         logs = get_all_logs(targetchan, msg)
     except:
-        await common.msg(self, chan, '{} {}'
-            .format(modname(module_name), self.err_invalid_logfile))
+        await out.msg(self, modname, chan, [self.err_invalid_logfile])
         return
 
     for item in logs:
@@ -92,8 +88,8 @@ async def noisiest(self, chan, src, msg):
             .format(nohighlight(i[0]), percentage, i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await common.msg(self, chan, '{} top talkers at {}: {}'
-        .format(modname(module_name), targetchan, output))
+    await out.msg(self, modname, chan,
+        [f'top talkers at {targetchan}: {output}'])
 
 async def happiest(self, chan, src, msg):
     happy = ['lol', 'lmao', ':)', ':-)', ':^)', ':D' ':-D', ';)', 'c:']
@@ -120,8 +116,7 @@ commands = {
 async def usrstats_handle(self, chan, src, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await common.msg(self, chan, '{} {}'
-            .format(modname(module_name), self.err_invalid_command))
+        await out.msg(self, modname, chan, [self.err_invalid_command])
         return
     await commands[msg.pop(0)](self, chan, src, ' '.join(msg))
 

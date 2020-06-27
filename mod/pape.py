@@ -61,3 +61,4 @@ async def init(self):
     self.cmd['spape'] = search_pape
 
     self.help['rpape'] = ['rpape - get a random wallpaper from unsplash']
+    self.help['spape'] = ['spape [query] - search for a wallpaper on unsplash']

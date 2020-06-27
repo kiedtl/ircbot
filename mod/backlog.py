@@ -9,7 +9,7 @@ async def backlogger(self, chan, src, msg):
     if chan not in self.backlog:
         self.backlog[chan] = []
     if chan not in self.logfiles:
-        logpath = 'chans/{}.log'.format(chan)
+        logpath = 'irc/{}.log'.format(chan)
         print('[logger] opening logfile {}'.format(logpath))
         self.logfiles[chan] = open(logpath, 'a')
 

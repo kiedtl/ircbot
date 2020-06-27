@@ -5,7 +5,7 @@ module_name = 'user stats'
 
 # TODO: move to common
 def get_all_logs(chan, msg):
-    logf = open('chans/{}.log'.format(chan))
+    logf = open('irc/{}.log'.format(chan))
     rawlogs = logf.read().split('\n')
     logf.close()
 

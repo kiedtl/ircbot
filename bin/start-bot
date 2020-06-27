@@ -3,8 +3,8 @@
 # (c) Kiëd Llaentenn <kiedtl@tilde.team>
 # See the COPYING file for copyright information.
 
-logfile=logs/log-$(date +%d%m%Y-%H%M).txt
+logfile=log/log-$(date +%d%m%Y-%H%M).txt
 
 PYTHONUNBUFFERED=1 \
-    PYTHONPATH=$(pwd)/modules/:$PYTHONPATH \
-    ./bot.py 2>&1 | tee -a $logfile
+    PYTHONPATH=$(pwd)/mod/:$PYTHONPATH \
+    ./bot 2>&1 | tee -a $logfile

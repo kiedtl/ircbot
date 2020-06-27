@@ -9,7 +9,7 @@ async def totalmsgs(self, chan, src, msg):
         channels = ', '.join(msg.split(' '))
         logfiles = msg.split()
     else:
-        for i in [s for s in os.listdir('chans') if '#' in s]:
+        for i in [s for s in os.listdir('irc') if '#' in s]:
             logfiles.append(i)
 
     logs = []
@@ -32,7 +32,7 @@ async def totalnicks(self, chan, src, msg):
         channels = ', '.join(msg.split(' '))
         logfiles = msg.split()
     else:
-        for i in [s for s in os.listdir('chans') if '#' in s]:
+        for i in [s for s in os.listdir('irc') if '#' in s]:
             logfiles.append(i)
 
     stats = {}

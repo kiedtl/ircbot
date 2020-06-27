@@ -18,6 +18,8 @@ show aliases on help like so:
 fix chanstats
 
 ov:
+	make poisonous items MUCH rarer
+	add a certain degree of randomness to baking
 	give based on users, not nicks
 	don't give stuff to bots
 	add ":ov bakeall" command

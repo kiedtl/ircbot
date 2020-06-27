@@ -2,8 +2,8 @@
 import common, out, random
 
 async def list_mods(self, chan, src, msg):
-    await out.msg(self, 'modules', chan,
-        [f'loaded: {list(self.modules.keys())}'])
+    mods = ', '.join(sorted(list(self.modules.keys())))
+    await out.msg(self, 'modules', chan, [f'loaded: {mods}'])
 
 async def status(self, chan, src, msg):
     res = common.run(self, ['bin/sysinfo'], '')

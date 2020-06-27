@@ -12,3 +12,12 @@ def shorten(url, nullptr = 'https://0x0.st/'):
 
     url = res.text.rstrip()
     return url
+
+def unshorten(target):
+    res = requests.get(url = target, allow_redirects = False)
+
+    if res.status_code != 302:
+        raise Exception(f'received {res.status_code}')
+
+    url = res.headers['Location']
+    return url

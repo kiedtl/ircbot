@@ -164,8 +164,10 @@ async def bake(self, c, n, m):
         max(sum_value, avg_value))
 
     # choose the output
-    prices = list(self.bakedPrice.keys())
-    min_price = min(prices)
+    # we don't want items like bombs or nightshade
+    # to come by baking, so prevent it from happening
+    # by setting a lower limit on prices
+    min_price = -10
     while output_value not in prices:
         output_value = int(output_value - 1)
         if output_value < min_price:
@@ -265,31 +267,29 @@ async def init(self):
         nohighlight('khuxkm'): 10,
         nohighlight('jan6'):   10,
 
-        'bomb':      -200,
-        'ricin':      -20,
-        'nightshade': -10,
-        'foxglove':    -7,
-        'roadkill':    -3,
-        'garbage':     -2,
-        'skeleton':    -2,
-        'bone':        -1,
-        'spam':       0.7,
-        'grass':        4,
-        'flour':        3,
-        'pizza':        8,
-        'pancake':     12,
-        'water':       15,
-        'ration':      20,
-        'egg':         20,
-        'rice':        29,
-        'bread':       30,
-        'pie':         31,
-        'bird':        32,
-        'tortilla':    35,
-        'cookie':      44,
-        'cheese':      50,
-        'sandwich':    55,
-        'wafer':       56,
+        'bomb':       -400,
+        'ricin':      -200,
+        'nightshade': -100,
+        'roadkill':    -10,
+        'skeleton':     -2,
+        'bone':         -1,
+        'spam':        0.7,
+        'flour':         3,
+        'grass':         4,
+        'pizza':         8,
+        'pancake':      12,
+        'water':        15,
+        'ration':       20,
+        'egg':          20,
+        'rice':         29,
+        'bread':        30,
+        'pie':          31,
+        'bird':         32,
+        'tortilla':     35,
+        'cookie':       44,
+        'cheese':       50,
+        'sandwich':     55,
+        'wafer':        56,
         'ducc':        200,
     }
 

@@ -265,7 +265,7 @@ async def ov_handle(self, chan, src, msg):
     await commands[msg.pop(0)](self, chan, src, ' '.join(msg))
 
 async def init(self):
-    self.ovendb = dataset.connect('sqlite:///oven.db')
+    self.ovendb = dataset.connect('sqlite:///dat/oven.db')
 
     self.cmd['ov'] = ov_handle
     self.handle_raw['genGoods'] = generate

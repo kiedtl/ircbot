@@ -10,6 +10,8 @@ on :help <alias>, show help for command
 show aliases on help like so:
 	communist|com, admin|a
 
+fix chanstats
+
 ov:
 	give based on users, not nicks
 	don't give stuff to bots

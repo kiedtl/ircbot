@@ -50,3 +50,5 @@ add irc statistics
 
 merge :chanstats and :usrstats
 write dc(1) tutorial on blog
+
+a ducc module, like botany but a pet :D

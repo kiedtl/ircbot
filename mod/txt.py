@@ -41,9 +41,9 @@ async def init(self):
     self.cmd['rot13']   = rot13
 
     self.cmd['communist'] = communist
-    self.cmd['c'] = communist
+    self.cmd['com']       = communist
 
     self.help['rot13']   = ['rot13 - ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
     self.help['rev13']   = ['rev13 - attempt to decrypt rot13-encrypted messages']
-    self.help['communist'] = ['communist - \x038,5 ☭ SEIZE THE MEANS OF CHAOS PRODUCTION ☭\x04']
-    self.help['c'] = self.help['communist']
+    self.help['communist'] = ['communist|com - \x038,5 ☭ SEIZE THE MEANS OF CHAOS PRODUCTION ☭\x04']
+    self.help['com'] = self.help['communist']

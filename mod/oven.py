@@ -150,9 +150,8 @@ async def bake(self, c, n, m):
                 .format(modname(module_name), thing))
             return
 
-        # if they try to bake a ducc, destroy
-        # their stuff >:(
-        # if it's a bomb, blow up.
+        # if they try to bake a ducc or a bomb,
+        # destroy their stuff
         if thing == 'ducc' or thing == 'bomb':
             if thing == 'ducc':
                 await self.message(c, '{} {} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'
@@ -162,9 +161,9 @@ async def bake(self, c, n, m):
             inv.delete(name=n)
             return
 
-        # consume the item
-        for thing in input:
-            inv.delete(id = its['id'])
+    # consume the item
+    for thing in input:
+        inv.delete(id = its['id'])
 
 
     # if item has value, use that, else use a okay value
@@ -288,8 +287,8 @@ async def init(self):
         nohighlight('jan6'):   10,
 
         'bomb':      -200,
-        'ricin':      -40,
-        'nightshade': -20,
+        'ricin':      -20,
+        'nightshade': -10,
         'foxglove':    -7,
         'roadkill':    -3,
         'garbage':     -2,

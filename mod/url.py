@@ -8,11 +8,13 @@ modname = common.modname('url')
 async def shorten(self, chan, msg, target = 'https://0x0.st/'):
     if len(msg) < 1:
         await self.message(chan, f'{modname} error: need url')
+        return
 
     try:
         res = nullptr.shorten(msg, nullptr = target)
     except:
         await self.message(chan, f'{modname} error: bad url')
+        return
 
     await self.message(chan, f'{modname} {res}')
 
@@ -25,11 +27,13 @@ async def shorten_ttm(self, chan, src, msg):
 async def unshorten(self, chan, src, msg):
     if len(msg) < 1:
         await self.message(chan, f'{modname} error: need url')
+        return
 
     try:
         res = nullptr.unshorten(msg)
     except:
         await self.message(chan, f'{modname} error: bad url')
+        return
 
     await self.message(chan, f'{modname} {res}')
 

@@ -2,13 +2,11 @@ common: move out of modules, split up
 common: don't require self arg for common.run
 
 log full commands
-add netinfo command to misc
-dustboto
 wikipedia command
 multiple prefixes
 
 don't list aliases with commands (on :help)
-	keep aliases in self.aliases, not self.cmd
+keep aliases in self.aliases, not self.cmd
 on :help <alias>, show help for command
 show aliases on help like so:
 	communist|com, admin|a
@@ -16,16 +14,10 @@ show aliases on help like so:
 fix chanstats
 
 ov:
-	make poisonous items MUCH rarer
 	add a certain degree of randomness to baking
 	give based on users, not nicks
 	don't give stuff to bots
 	add ":ov bakeall" command
-
-random command:
-	random nick   [chan]
-	random number [range]
-	random misc   [pattern]
 
 internet:
 	add toot command
@@ -33,10 +25,11 @@ internet:
 	distrowatch lookup
 
 evaluation:
-	lua evaluation
 	common lisp evaluation
 	sed evaluation
 	python evaluation
+	dc evaluation
+	bc evaluation
 
 add irc statistics
 	:usrstats  loudest      [#chan:-current]

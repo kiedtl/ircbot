@@ -102,12 +102,12 @@ async def happiest(self, chan, src, msg):
 async def saddest(self, chan, src, msg):
     sad = [':(', ':/', ':|', ';-;', ';_;', ';(', ':-(', ';-(',
         ':^(', ';^(', ':-/', ':-|', ';-/', ';-|', '=(', '=/',
-        '=|', ':\'(', ':V']
+        '=|', ':\'(', ':V', ':c']
     await get_stats_by_phrase(self, chan, src, msg, sad, 'saddest')
 
 async def angriest(self, chan, src, msg):
     curses = ['darn', 'dang', 'damn', 'shit', 'fuck', 'fck', 'f*ck',
-        'dick', 'moron'] # need more curse words!
+        'dick', 'moron', 'bitch', 'cunt'] # need more curse words!
     await get_stats_by_phrase(self, chan, src, msg, curses, 'angriest')
 
 commands = {

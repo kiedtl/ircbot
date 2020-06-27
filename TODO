@@ -7,6 +7,8 @@ multiple prefixes
 don't list aliases with commands (on :help)
 	keep aliases in self.aliases, not self.cmd
 on :help <alias>, show help for command
+show aliases on help like so:
+	communist|com, admin|a
 
 ov:
 	give based on users, not nicks

@@ -1,23 +1,18 @@
-from common import modname
+import out
+modname = 'help'
 
 async def helpParse(self, c, n, m):
     if m in self.help:
-        if len(self.help[m]) > 1:
-            self.more[c] = self.help[m][1]
-        await self.message(c, '{} {}'
-            .format(modname('help'), self.help[m][0]))
+        await out.msg(self, modname, c, self.help[m])
     else:
-        await self.message(c, '{} no help for "{}" (try :help)'
-            .format(modname('help'), m))
+        commands = ', '.join(
+            [cmd for cmd in sorted(self.cmd) if not ' ' in cmd])
+        await out.msg(self, modname, c,
+            [f'commands: {commands}'])
 
 async def more(self, c, n, m):
-    if c in self.more:
-        await self.message(c, '{} {}'
-            .format(modname('help'), self.more.pop(c)))
-        return
-    else:
-        await self.message(c, '{} no more text to show'
-            .format(modname('help')))
+    # TODO: move to separate module
+    await out.more(self, c)
 
 async def init(self):
     self.cmd['help'] = helpParse

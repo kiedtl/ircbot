@@ -1,3 +1,6 @@
+common: move out of modules, split up
+common: don't require self arg for common.run
+
 log full commands
 add netinfo command to misc
 dustboto

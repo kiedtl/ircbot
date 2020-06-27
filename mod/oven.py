@@ -34,7 +34,7 @@ async def give(self, c, n, m):
     inv = self.ovendb['inv']
     its = inv.find_one(name=n, item=m[1])
     if its == None:
-        await out.msg(self, modname, c, [f'you don\t have that!'])
+        await out.msg(self, modname, c, [f'you don\'t have that!'])
     inv.delete(id=its['id'])
     inv.insert(dict(name=m[0], item=its['item']))
     await out.msg(self, modname, c, [f'you have {m[0]} a {m[1]}!'])

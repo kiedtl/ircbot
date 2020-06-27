@@ -20,4 +20,3 @@ async def init(self):
     self.help['help'] = ['help command - list commands or show help on command']
     self.help['help command'] = ['help <command> - show more info about a command']
     self.help['more'] = ['more - view more text']
-    self.more = {}

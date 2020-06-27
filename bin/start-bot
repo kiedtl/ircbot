@@ -7,4 +7,5 @@ logfile=log/log-$(date +%d%m%Y-%H%M).txt
 
 PYTHONUNBUFFERED=1 \
     PYTHONPATH=$(pwd)/mod/:$PYTHONPATH \
+    PYTHONPATH=$(pwd)/lib/:$PYTHONPATH \
     ./bot 2>&1 | tee -a $logfile

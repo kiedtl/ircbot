@@ -28,7 +28,36 @@ async def random_pape(self, chan, src, msg):
 
     await self.message(chan, f'{modname} {shortened}')
 
+async def search_pape(self, chan, src, msg):
+    if len(msg) < 1:
+        await self.message(chan, f'{modname} error: need search terms')
+        return
+
+    # get wallpaper
+    query = msg.replace(' ', ',')
+    search_url = f'https://source.unsplash.com/2400x1600/?{query}'
+    res = requests.get(url=search_url, allow_redirects=False)
+
+    if res.status_code != 302:
+        await self.message(chan,
+            f'{modname} error: could not get wallpaper')
+        return
+
+    wal = res.headers['Location']
+
+    # the url is really long, so shorten
+    # it first...
+    try:
+        shortened = nullptr.shorten(wal)
+    except:
+        await self.message(chan,
+            f'{modname} error: could not shorten wallpaper link')
+        return
+
+    await self.message(chan, f'{modname} {shortened}')
+
 async def init(self):
     self.cmd['rpape'] = random_pape
+    self.cmd['spape'] = search_pape
 
     self.help['rpape'] = ['rpape - get a random wallpaper from unsplash']

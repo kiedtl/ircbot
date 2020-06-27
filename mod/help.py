@@ -7,9 +7,8 @@ async def helpParse(self, c, n, m):
         await self.message(c, '{} {}'
             .format(modname('help'), self.help[m][0]))
     else:
-        await self.message(c, '{} commands: {}'
-            .format(modname('help'),
-                ' '.join([i for i in self.help if not ' ' in i])))
+        await self.message(c, '{} no help for "{}" (try :help)'
+            .format(modname('help'), m))
 
 async def more(self, c, n, m):
     if c in self.more:
@@ -19,7 +18,6 @@ async def more(self, c, n, m):
     else:
         await self.message(c, '{} no more text to show'
             .format(modname('help')))
-
 
 async def init(self):
     self.cmd['help'] = helpParse

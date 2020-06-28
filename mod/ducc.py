@@ -13,14 +13,6 @@ async def ducc_cure(self, c, n, m):
         dict(last_fed=last_state['last_fed'],
             health=100, stress=0, alive=True))
 
-async def ducc_set_hp(self, c, n, m):
-    """ set the health level of ducc (need admin privs) """
-    pass
-
-async def ducc_set_stress(self, c, n, m):
-    """ set the stress level of ducc (need admin privs) """
-    pass
-
 async def ducc_feed(self, c, n, m):
     """ feed the ducc and increase its health points """
     pass
@@ -31,7 +23,11 @@ async def ducc_pet(self, c, n, m):
 
 async def ducc_quack(self, c, n, m):
     """ QUACK! """
-    pass
+    quacks = ['~quack~', 'QUACK!']
+    duccs  = ['\_o<', '\_O<', '(">', '("=']
+
+    ducc = f'{random.choice(duccs)} {random.choice(quacks)}'
+    await out.msg(self, modname, c, [ducc])
 
 async def ducc_shoot(self, c, n, m):
     """ try to kill the ducc :( """
@@ -43,8 +39,6 @@ async def ducc_info(self, c, n, m):
 
 commands = {
     'cure':       ducc_cure,
-    'set_hp':     ducc_set_hp,
-    'set_stress': ducc_set_stress,
     'feed':       ducc_feed,
     'pet':        ducc_pet,
     'quack':      ducc_quack,

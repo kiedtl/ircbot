@@ -5,13 +5,36 @@ log full commands
 wikipedia command
 multiple prefixes
 
-don't list aliases with commands (on :help)
-keep aliases in self.aliases, not self.cmd
-on :help <alias>, show help for command
-show aliases on help like so:
-	communist|com, admin|a
+aliases:
+	don't list aliases with commands (on :help)
+	keep aliases in self.aliases, not self.cmd
+	on :help <alias>, show help for command
+	show aliases on help like so:
+		communist|com, admin|a
 
-fix chanstats
+ducc:
+	health points
+		maximum 100
+		decreased when not fed for 8 hours
+		decreased when not watered for 4 hours
+		increased on feeding
+		increased on watering
+		if zero, ducc dies
+	stress level
+		maximum 100
+		decreased on petting
+		decreased (somwhat) on feeding and watering
+		increased when being shot
+		if 100, ducc dies
+	:du[cc] feed
+	:du[cc] water
+	:du[cc] pet
+	:du[cc] shoot
+	:du[cc] bef
+	:du[cc] info
+	schemas:
+		events: id, type, date, by
+		state:  health, stress, last_fed, last_watered
 
 ov:
 	add a certain degree of randomness to baking
@@ -38,6 +61,8 @@ add irc statistics
 	:usrstats  mostactive   [#chan:-current]
 	:chanstats totalchans
 	:chanstats totalusrs    (#chan:-all)
+	fix chanstats
+
 
 merge :chanstats and :usrstats
 write dc(1) tutorial on blog

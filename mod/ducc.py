@@ -8,10 +8,10 @@ async def ducc_update(self, c, n, m):
 
 async def ducc_cure(self, c, n, m):
     """ cure the ducc (need admin privs) """
-    last_state = self.ducc_state.find()[-1]
+    last_state = list(self.ducc_state.find())[-1]
     self.ducc_state.insert(
         dict(last_fed=last_state['last_fed'],
-            health=100, stress=0))
+            health=100, stress=0, alive=True))
 
 async def ducc_set_hp(self, c, n, m):
     """ set the health level of ducc (need admin privs) """

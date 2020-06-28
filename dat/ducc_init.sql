@@ -2,9 +2,7 @@
 -- health points, stress level, etc
 CREATE TABLE state (
 	id           INTEGER NOT NULL,
-	date         INTEGER NOT NULL,
 	last_fed     INTEGER NOT NULL,
-	last_watered INTEGER NOT NULL,
 	health       INTEGER NOT NULL,
 	stress       INTEGER NOT NULL,
 	PRIMARY KEY (id)
@@ -18,4 +16,12 @@ CREATE TABLE events (
 	date    INTEGER NOT NULL,
 	ev_by   TEXT,
 	PRIMARY KEY (id)
+);
+
+-- create the initial values
+INSERT INTO state VALUES (
+	0,     -- id
+	0,     -- last_fed
+	100,   -- health
+	0      -- stress
 );

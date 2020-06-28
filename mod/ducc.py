@@ -2,9 +2,12 @@ import dataset, out, random
 
 modname = 'ducc'
 
+async def ducc_update(self, c, n, m):
+    """ update the duccs state """
+    pass
+
 async def ducc_cure(self, c, n, m):
     """ cure the ducc (need admin privs) """
-    pass
 
 async def ducc_set_hp(self, c, n, m):
     """ set the health level of ducc (need admin privs) """
@@ -54,4 +57,7 @@ async def ducc_handle(self, c, src, msg):
 
 async def init(self):
     self.duccdb = dataset.connect('sqlite:///dat/ducc.db')
+    self.ducc_state = self.duccdb['state']
+
     self.cmd['ducc'] = ducc_handle
+    self.cmd['du']   = ducc_handle

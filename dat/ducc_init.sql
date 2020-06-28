@@ -5,6 +5,7 @@ CREATE TABLE state (
 	last_fed     INTEGER NOT NULL,
 	health       INTEGER NOT NULL,
 	stress       INTEGER NOT NULL,
+	alive        INTEGER NOT NULL,
 	PRIMARY KEY (id)
 );
 
@@ -23,5 +24,6 @@ INSERT INTO state VALUES (
 	0,     -- id
 	0,     -- last_fed
 	100,   -- health
-	0      -- stress
+	0,     -- stress
+	1      -- alive (true!)
 );

@@ -62,7 +62,7 @@ async def ducc_pet(self, c, n, m):
 async def ducc_quack(self, c, n, m):
     """ QUACK! """
     quacks = ['~quack~', 'QUACK!']
-    duccs  = ['\_o<', '\_O<', '(">', '("=']
+    duccs  = ['\_o<', '\_O<', '\_0<', '|\_( o)<']
 
     ducc = f'{random.choice(duccs)} {random.choice(quacks)}'
     await out.msg(self, modname, c, [ducc])

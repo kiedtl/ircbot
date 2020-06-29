@@ -46,6 +46,12 @@ class System(pydle.Client):
                 await self.join(chan)
 
     async def on_message(self, chan, source, msg):
+        # not sure whether it's a pydle bug or irc quirk...
+        # but when PM's are sent, we receive them twice!
+        # once in the <self.nickname> chan and once in the
+        # <source> chan... so just ignore one of them
+        if chan == self.nickname:
+            return
         for i in self.handle_raw:
             await self.handle_raw[i](self, chan,source,msg)
         if source != self.nickname:

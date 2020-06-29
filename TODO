@@ -4,6 +4,8 @@ common: don't require self arg for common.run
 log full commands
 multiple prefixes
 
+compression
+
 aliases:
 	don't list aliases with commands (on :help)
 	keep aliases in self.aliases, not self.cmd

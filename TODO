@@ -55,16 +55,7 @@ evaluation:
 	bc evaluation
 
 add irc statistics
-	:usrstats  loudest      [#chan:-current]
-	:usrstats  uppercase    [#chan:-current]
-	:usrstats  maddest      [#chan:-current]
-	:usrstats  mostactive   [#chan:-current]
-	:chanstats totalchans
-	:chanstats totalusrs    (#chan:-all)
 	fix chanstats
+	merge :chanstats and :usrstats
 
-
-merge :chanstats and :usrstats
 write dc(1) tutorial on blog
-
-a ducc module, like botany but a pet :D

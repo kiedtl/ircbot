@@ -1,6 +1,44 @@
-import dataset, out, random
+import datetime, dataset, out, random
+from datetime import timedelta
+from babel.dates import format_timedelta
 
 modname = 'ducc'
+
+def ducc_hp_to_str(lvl):
+    """ convert health points to string """
+    hp_str = {
+        0:   'dead',
+        7:   'dying',
+        14:  'very ill',
+        35:  'ill',
+        42:  'neglected',
+        70:  'alright',
+        84:  'just fine',
+        100: 'perfectly healthy',
+    }
+
+    while not lvl in hp_str:
+        lvl -= 1
+    return hp_str[lvl]
+
+def ducc_sl_to_str(lvl):
+    """ convert stress level to str """
+    sl_str = {
+        0: 'perfectly happy',
+        7: 'happy',
+        14: 'a little nervous',
+        28: 'nervous',
+        35: 'very nervous',
+        48: 'a bit stressed',
+        56: 'very stress out',
+        70: 'alarmed',
+        95: 'extremely stressed',
+        # 100 == death
+    }
+
+    while not lvl in sl_str:
+        lvl += 1
+    return sl_str[lvl]
 
 async def ducc_update(self, c, n, m):
     """ update the duccs state """
@@ -10,7 +48,7 @@ async def ducc_cure(self, c, n, m):
     """ cure the ducc (need admin privs) """
     last_state = list(self.ducc_state.find())[-1]
     self.ducc_state.insert(
-        dict(last_fed=last_state['last_fed'],
+        dict(last_fed=int(datetime.datetime.now().strftime('%s')),
             health=100, stress=0, alive=True))
 
 async def ducc_feed(self, c, n, m):
@@ -35,15 +73,31 @@ async def ducc_shoot(self, c, n, m):
 
 async def ducc_info(self, c, n, m):
     """ display health, stress, etc """
-    pass
+    state = list(self.ducc_state.find())[-1]
+
+    alive = bool(state['alive'])
+    health = ducc_hp_to_str(state['health'])
+    stress = ducc_sl_to_str(state['stress'])
+
+    last_fed_unix = int(state['last_fed'])
+    last_fed_date = datetime.datetime.utcfromtimestamp(last_fed_unix)
+    since = datetime.datetime.now() - last_fed_date
+    since_delta_fmt = format_timedelta(since, locale='en_US')
+
+    if not alive:
+        await out.msg(self, modname, c, ['the ducc is dead!'])
+        return
+
+    await out.msg(self, modname, c,
+        [f'the ducc is {health} and is feeling {stress}. It was last fed {since_delta_fmt} ago.'])
 
 commands = {
-    'cure':       ducc_cure,
-    'feed':       ducc_feed,
-    'pet':        ducc_pet,
-    'quack':      ducc_quack,
-    'shoot':      ducc_shoot,
-    'info':       ducc_info
+    'cure':  ducc_cure,
+    'feed':  ducc_feed,
+    'pet':   ducc_pet,
+    'quack': ducc_quack,
+    'shoot': ducc_shoot,
+    'info':  ducc_info
 }
 
 async def ducc_handle(self, c, src, msg):

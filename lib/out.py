@@ -11,7 +11,9 @@ last_modname = {}
 async def msg(self, mod, chan, msg):
     # TODO: throttling
     # (if the messages are too big)
-    buf[chan] = msg
+    if chan in buf:
+        del buf[chan]
+    buf[chan] = msg[:] # copy list
     last_modname[chan] = mod
 
     fmt = '{}'

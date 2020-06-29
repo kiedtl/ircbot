@@ -20,9 +20,7 @@ async def msg(self, mod, chan, msg):
     if len(buf[chan]) > 1:
         fmt = fmt + ' (more)'
 
-    await self.message(chan, fmt
-        .format(common.modname(last_modname[chan]),
-            buf[chan].pop(0)))
+    await self.message(chan, fmt.format(buf[chan].pop(0)))
 
 async def more(self, chan):
     if len(buf[chan]) == 0:

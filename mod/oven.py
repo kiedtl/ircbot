@@ -168,7 +168,7 @@ async def bake(self, c, n, m):
     # to come by baking, so prevent it from happening
     # by setting a lower limit on prices
     min_price = -10
-    while output_value not in prices:
+    while output_value not in self.bakedPrice:
         output_value = int(output_value - 1)
         if output_value < min_price:
             await out.msg(self, modname, c, [f'the oven begins to smoke...'])

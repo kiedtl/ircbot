@@ -2,7 +2,6 @@ common: move out of modules, split up
 common: don't require self arg for common.run
 
 log full commands
-wikipedia command
 multiple prefixes
 
 aliases:
@@ -43,6 +42,7 @@ ov:
 	add ":ov bakeall" command
 
 internet:
+	wikipedia command
 	add toot command
 	get reddit/lobsters/hn dicussions
 	distrowatch lookup

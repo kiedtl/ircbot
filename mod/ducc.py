@@ -80,7 +80,7 @@ async def ducc_info(self, c, n, m):
     stress = ducc_sl_to_str(state['stress'])
 
     last_fed_unix = int(state['last_fed'])
-    last_fed_date = datetime.datetime.utcfromtimestamp(last_fed_unix)
+    last_fed_date = datetime.datetime.fromtimestamp(last_fed_unix)
     since = datetime.datetime.now() - last_fed_date
     since_delta_fmt = format_timedelta(since, locale='en_US')
 

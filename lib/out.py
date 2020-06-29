@@ -14,7 +14,9 @@ async def msg(self, mod, chan, msg):
     buf[chan] = msg
     last_modname[chan] = mod
 
-    fmt = '{} {}'
+    fmt = '{}'
+    if len(last_modname[chan]) > 1:
+        fmt = common.modname(last_modname[chan]) + ' ' + fmt
     if len(buf[chan]) > 1:
         fmt = fmt + ' (more)'
 

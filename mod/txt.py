@@ -4,6 +4,13 @@
 
 import config, common, out
 
+async def figlet(self, chan, src, msg):
+    # TODO: throttling, disable in certain channels
+    # TODO: fonts
+    res = common.run(self, ['figlet'], msg)
+    for line in res.split('\n'):
+        await self.message(chan, line)
+
 async def communist(self, chan, src, msg):
     txt = msg.upper()
     await self.message(chan, f'\x038,5 ☭ {txt} ☭ \x0f')
@@ -35,6 +42,7 @@ async def rot13(self, chan, src, msg):
 async def init(self):
     self.cmd['rev13']   = rev13
     self.cmd['rot13']   = rot13
+    self.cmd['figlet']  = figlet
 
     self.cmd['communist'] = communist
     self.cmd['com']       = communist

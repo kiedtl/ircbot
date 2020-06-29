@@ -19,12 +19,15 @@ async def cheat(self, c, n, m):
     if not await self.is_admin(n):
         await out.msg(self, modname, c, ['insufficient privileges'])
         return
-    m = m.split(' ')
-    if len(m) < 2:
+    if len(m.split(' ')) < 2:
         await out.msg(self, modname, c, [f'need username and item.'])
         return
     inv = self.ovendb['inv']
-    inv.insert(dict(name=m[0], item=m[1]))
+
+    data = m.split(' ')
+    user = data[0]
+    for thing in data[1:]:
+        inv.insert(dict(name=user, item=thing))
     await out.msg(self, modname, c, [f'done'])
 
 async def give(self, c, n, m):

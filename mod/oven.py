@@ -126,13 +126,22 @@ async def bake(self, c, n, m):
 
     inv = self.ovendb['inv']
     input = m.split()
-    #await self.message(c, f'DEBUG: bakign items: {input}')
 
+    # check that they have the items
+    items = {}
     for thing in input:
-        its = inv.find_one(name=n, item=thing)
+        if not thing in items:
+            items[thing] = 0
+        items[thing] += 1
 
-        if its == None:
+    for thing in items:
+        found = list(inv.find(name=n, item=thing))
+
+        if len(found) == 0:
             await out.msg(self, modname, c, [f'you don\'t have any {thing}'])
+            return
+        elif len(found) < items[thing]:
+            await out.msg(self, modname, c, [f'you don\t have enough of {thing}'])
             return
 
         # if they try to bake a ducc or a bomb,
@@ -147,6 +156,8 @@ async def bake(self, c, n, m):
 
     # consume the item
     for thing in input:
+        # TODO: delete multiple items at once, using
+        # the data already in items{}
         its = inv.find_one(name=n, item=thing)
         inv.delete(id = its['id'])
 
@@ -162,7 +173,6 @@ async def bake(self, c, n, m):
     # oooo randomize what will pop out
     sum_value = sum(values)
     avg_value = sum_value / len(values)
-    #await self.message(c, f'DEBUG: sum={sum_value}, avg={avg_value}')
     output_value = random.uniform(sum_value, sum_value + avg_value)
 
     # choose the output
@@ -170,7 +180,7 @@ async def bake(self, c, n, m):
     # to come by baking, so prevent it from happening
     # by setting a lower limit on prices
     min_price = -10
-    while output_value not in self.bakedPrice:
+    while output_value not in list(self.bakedPrice.keys()):
         output_value = int(output_value - 1)
         if output_value < min_price:
             await out.msg(self, modname, c, [f'the oven begins to smoke...'])
@@ -276,22 +286,22 @@ async def init(self):
         'skeleton':     -2,
         'bone':         -1,
         'spam':        0.7,
-        'flour':         3,
-        'grass':         4,
-        'pizza':         8,
-        'pancake':      12,
-        'water':        15,
-        'ration':       20,
-        'egg':          20,
-        'rice':         29,
-        'bread':        30,
-        'pie':          31,
-        'bird':         32,
-        'tortilla':     35,
-        'cookie':       44,
-        'cheese':       50,
-        'sandwich':     55,
-        'wafer':        56,
+        'flour':         4,
+        'grass':         8,
+        'pizza':        10,
+        'pancake':      28,
+        'water':        20,
+        'ration':       38,
+        'egg':          30,
+        'rice':         40,
+        'bread':        40,
+        'pie':          58,
+        'bird':         50,
+        'tortilla':     65,
+        'cookie':       74,
+        'cheese':       80,
+        'sandwich':     95,
+        'wafer':       100,
         'ducc':        200,
     }
 

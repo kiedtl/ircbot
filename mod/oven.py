@@ -144,6 +144,7 @@ async def bake(self, c, n, m):
 
     # consume the item
     for thing in input:
+        its = inv.find_one(name=n, item=thing)
         inv.delete(id = its['id'])
 
 
@@ -159,9 +160,7 @@ async def bake(self, c, n, m):
     sum_value = sum(values)
     avg_value = sum_value / len(values)
     #await self.message(c, f'DEBUG: sum={sum_value}, avg={avg_value}')
-    output_value = random.uniform(
-        min(sum_value, avg_value),
-        max(sum_value, avg_value))
+    output_value = random.uniform(sum_value, sum_value + avg_value)
 
     # choose the output
     # we don't want items like bombs or nightshade

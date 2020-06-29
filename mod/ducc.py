@@ -7,7 +7,7 @@ modname = 'ducc'
 def ducc_hp_to_str(lvl):
     """ convert health points to string """
     hp_str = {
-        0:   'dead',
+        # 0 == death
         7:   'dying',
         14:  'very ill',
         35:  'ill',

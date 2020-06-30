@@ -51,9 +51,36 @@ async def ducc_cure(self, c, n, m):
         dict(last_fed=int(datetime.datetime.now().strftime('%s')),
             health=100, stress=0, alive=True))
 
-async def ducc_feed(self, c, n, m):
+async def ducc_feed(self, c, n, msg):
     """ feed the ducc and increase its health points """
-    pass
+    m = msg.split(' ')
+
+    # check items
+    for thing in m:
+        if len(thing) < 1:
+            await out.msg(self, modname, c, [f'you can\'t give air!'])
+            return
+
+        inv = self.ovendb['inv']
+        its = inv.find_one(name=n, item=thing)
+
+        if its == None:
+            await out.msg(self, modname, c,
+                [f'you don\'t have a {thing}! (see :ov inv)'])
+            return
+        if thing not in self.bakedGoods \
+            or self.bakedGoods[thing] < 10 \
+            or thing == 'ducc': # why would a ducc want to eat a ducc??
+                await out.msg(self, modname, c,
+                    [f'the ducc isn\'t interested in that...'])
+                return
+
+    # delete items
+    for thing in m:
+        inv.delete(id=its['id'])
+
+    await out.msg(self, modname, c, [f'you fed the ducc!'])
+    # TODO: increase health points
 
 async def ducc_pet(self, c, n, m):
     """ pet the ducc and decrease its stress level """

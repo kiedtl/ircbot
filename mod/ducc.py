@@ -40,9 +40,52 @@ def ducc_sl_to_str(lvl):
         lvl += 1
     return sl_str[lvl]
 
-async def ducc_update(self, c, n, m):
+async def ducc_update_state(self):
     """ update the duccs state """
-    pass
+    cur_state = list(self.ducc_state.find())[-1]
+    new_state = cur_state
+
+    # check CUR_STATE, and see if the ducc was dead
+    # if so, just return at this point...
+    if not cur_state['alive']:
+        return
+
+    # kay, when was this ducc last fed?
+    # if it was last fed more than 14 hours ago,
+    # decrease its health by 2 and increase it's stress
+    # by 3 for every hour over 14.
+    last_fed_unix = int(cur_state['last_fed'])
+    last_fed_date = datetime.datetime.fromtimestamp(last_fed_unix)
+    hours_since = (datetime.datetime.now() - last_fed_date).seconds / 60 / 60
+
+    if hours_since > 14:
+        # oh noes
+        hours_over_14 = hours_since - 14
+        for i in range(0, hours_over_14):
+            new_state['health'] -= 2
+            new_state['stress'] += 3
+
+    # check the duccs health level. if it's lower
+    # than about 45 then increase stress by 15
+    # for every 10 HP below 45.
+    # oh, and if the duccs health is 0, kill ducc.
+    if cur_state['health'] < 45:
+        hp_under_45 = 45 - cur_state['health']
+        for i in range(0, hp_under_45 / 10):
+            new_state['stress'] += 15
+
+    if cur_state['health'] < 1:
+        new_state['alive'] = False
+
+    # now check stress. if it's 100, kill the ducc.
+    # even duccs can't live when stressed out
+    if cur_state['stress'] > 99:
+        new_state['alive'] = False
+
+    # insert NEW_STATE into db, after only after
+    # incrementing the id
+    new_state['id'] += 1
+    self.ducc_state.insert(new_state)
 
 async def ducc_cure(self, c, n, m):
     """ cure the ducc (need admin privs) """
@@ -154,6 +197,7 @@ async def ducc_handle(self, c, src, msg):
     if len(msg) < 1 or not msg[0] in commands:
         await out.msg(self, modname, c, [self.err_invalid_command])
         return
+    await ducc_update_state(self)
     await commands[msg.pop(0)](self, c, src, ' '.join(msg))
 
 async def init(self):

@@ -89,7 +89,9 @@ async def ducc_update_state(self):
 
 async def ducc_cure(self, c, n, m):
     """ cure the ducc (need admin privs) """
-    # TODO: require admin privs
+    if not await self.is_admin(n):
+        await out.msg(self, modname, c, [f'insufficient privileges'])
+        return
     last_state = list(self.ducc_state.find())[-1]
     self.ducc_state.insert(
         dict(last_fed=int(datetime.datetime.now().strftime('%s')),

@@ -46,6 +46,7 @@ async def ducc_update(self, c, n, m):
 
 async def ducc_cure(self, c, n, m):
     """ cure the ducc (need admin privs) """
+    # TODO: require admin privs
     last_state = list(self.ducc_state.find())[-1]
     self.ducc_state.insert(
         dict(last_fed=int(datetime.datetime.now().strftime('%s')),
@@ -84,7 +85,8 @@ async def ducc_feed(self, c, n, msg):
 
 async def ducc_pet(self, c, n, m):
     """ pet the ducc and decrease its stress level """
-    pass
+    # TODO: decrease stress
+    await ducc_quack(self, c, n, m)
 
 async def ducc_quack(self, c, n, m):
     """ QUACK! """
@@ -96,7 +98,27 @@ async def ducc_quack(self, c, n, m):
 
 async def ducc_shoot(self, c, n, m):
     """ try to kill the ducc :( """
-    pass
+    # TODO: increase stress
+    dodges = True
+    if random.uniform(0, 1000) == 666:
+        dodges = False
+    if dodges:
+        await out.msg(self, modname, c, [f'the ducc dodges!'])
+    else:
+        damage = (random.choices(
+            population=[10, 30, 50, 70, 90],
+            weights=[0.7, 0.2, 0.05, 0.03, 0.01]))[0]
+        damages = {
+            10: 'lightly wounded',
+            30: 'moderately wounded',
+            50: 'heavily wounded',
+            70: 'severely wounded',
+            90: 'almost dead'
+        }
+        await out.msg(self, modname, c,
+            [f'you shot the ducc! the ducc is {damages[damage]}!'])
+        # TODO: remove health
+        # TODO: base damage str on total health after shot, not damage count
 
 async def ducc_info(self, c, n, m):
     """ display health, stress, etc """

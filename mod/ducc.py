@@ -230,3 +230,15 @@ async def init(self):
 
     self.cmd['ducc'] = ducc_handle
     self.cmd['du']   = ducc_handle
+
+    self.help['ducc'] = ['du[cc] [cmd] - a virtual ducc pet! (very WIP, expect bugs!)',
+        'subcommands: cure feed pet quack shoot info',
+        'see \':help ducc <command>\' for more information.']
+    self.help['du'] = self.help['ducc']
+    self.help['ducc cure'] = ['du[cc] cure - completely cure the ducc (admin only)']
+    self.help['ducc feed'] = ['du[cc] feed [item] - feed the ducc <item> from your oven',
+        'run \':ov inv\' to see what you have in your oven. note that the ducc won\'t eat inedible items, spam, or other duccs.']
+    self.help['ducc pet'] = ['du[cc] pet - pet the ducc. has the effect of lowering its stress level.']
+    self.help['ducc quack'] = ['du[cc] quack - \_o< ~quack~']
+    self.help['ducc shoot'] = ['du[cc] shoot - try to shoot the ducc; you might end up killing it though.']
+    self.help['ducc info'] = ['du[cc] info - show the ducc\'s state']

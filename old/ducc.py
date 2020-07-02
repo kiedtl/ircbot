@@ -1,4 +1,4 @@
-import datetime, dataset, out, random
+import datetime, dataset, math, out, random
 from datetime import timedelta
 from babel.dates import format_timedelta
 
@@ -64,7 +64,7 @@ async def ducc_update_state(self):
 
     if hours_since > 14:
         # oh noes
-        hours_over_14 = hours_since - 14
+        hours_over_14 = int(math.floor(hours_since - 14))
         for i in range(0, hours_over_14):
             new_state['health'] -= 2
             new_state['stress'] += 3

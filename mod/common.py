@@ -33,7 +33,7 @@ def get_backlog_msg(self, chan, msg):
     else:
         raise Exception('backlog too short')
 
-def run(self, cmd, stdin):
+def run(cmd, stdin):
     """run command and return it's output"""
     proc = Popen(cmd, stdout=PIPE,
         stderr=STDOUT, stdin=PIPE)

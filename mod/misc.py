@@ -6,7 +6,7 @@ async def list_mods(self, chan, src, msg):
     await out.msg(self, 'modules', chan, [f'loaded: {mods}'])
 
 async def status(self, chan, src, msg):
-    res = common.run(self, ['bin/sysinfo'], '')
+    res = common.run(['bin/sysinfo'], '')
     await out.msg(self, 'status', chan, [f'~team status: {res}'])
 
 async def ping(self, chan, src, msg):

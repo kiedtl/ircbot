@@ -7,7 +7,7 @@ import config, common, out
 async def cmd_with_args(self, chan, cmd, msg):
     # TODO: throttling, disable in certain channels
     cmd = cmd + msg.split(' ')
-    res = common.run(self, cmd, msg)
+    res = common.run(cmd, msg)
     for line in res.split('\n'):
         await self.message(chan, line)
 
@@ -36,7 +36,7 @@ async def rev13(self, chan, src, msg):
             [self.err_backlog_too_short])
         return
 
-    res = common.run(self, ['caesar'], txt[1])
+    res = common.run(['caesar'], txt[1])
     await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
 
 async def rot13(self, chan, src, msg):
@@ -48,7 +48,7 @@ async def rot13(self, chan, src, msg):
             [self.err_backlog_too_short])
         return
 
-    res = common.run(self, ['rot13'], txt[1])
+    res = common.run(['rot13'], txt[1])
     await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
 
 async def init(self):

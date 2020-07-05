@@ -2,7 +2,7 @@ import common, out
 modname = 'fortune'
 
 async def fortune(self, chan, src, msg):
-    fort = common.run(self, ['fortune', '-s'], '')
+    fort = common.run(['fortune', '-s'], '')
     await out.msg(self, modname, chan, [fort])
 
 async def init(self):

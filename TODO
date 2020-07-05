@@ -2,7 +2,6 @@ common: move out of modules, split up
 common: don't require self arg for common.run
 
 DO NOT ACCEPT CMD FROM BOTS
-log full commands
 multiple prefixes
 
 aliases:

@@ -11,6 +11,9 @@ async def cmd_with_args(self, chan, cmd, msg):
     for line in res.split('\n'):
         await self.message(chan, line)
 
+async def qrenco(self, chan, src, msg):
+    await cmd_with_args(self, chan, ['bin/qrenco'], msg)
+
 async def figlet(self, chan, src, msg):
     await cmd_with_args(self, chan, ['figlet'], msg)
 
@@ -58,6 +61,7 @@ async def init(self):
     self.cmd['rev13']     = rev13
     self.cmd['rot13']     = rot13
     self.cmd['toilet']    = toilet
+    self.cmd['qr']        = qrenco
 
     self.cmd['communist'] = communist
     self.cmd['com']       = communist
@@ -70,3 +74,5 @@ async def init(self):
     self.help['toilet'] = ['toilet [args] - use /bin/toilet to generate ascii art']
     self.help['cowsay'] = ['cow{say,think} [args] - use /bin/cow{say,think} to generate ascii art']
     self.help['cowthink'] = self.help['cowsay']
+
+    self.help['qr'] = ['qr [text] - create scannable qr codes (powered by qrenco.de)']

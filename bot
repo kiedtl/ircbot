@@ -17,6 +17,7 @@ class System(pydle.Client):
         self.cmd = {}
         self.handle_raw = {}
         self.help = {}
+        self.users = {}
 
         print('[modules] loading modules...')
         await self.load_mods()
@@ -71,14 +72,25 @@ class System(pydle.Client):
                     print('[cmd] recieved command "{}" from "{}" in "{}"'
                         .format(cmd, source, chan))
 
+    async def resolve(self, nickname):
+        """
+        Cache whois information for nicknames
+        """
+
+        # FIXME: deal with users leaving, joining, or
+        # maybe even changing nicks
+        if not nickname in self.users:
+            info = await self.whois(nickname)
+            self.users[nickname] = info
+        return self.users[nickname]
+
     async def is_admin(self, nickname):
         admin = False
 
         # check the WHOIS info to see if the source has identified.
         # this is a blocking operation, so use yield.
         if nickname in config.admins:
-            info = await self.whois(nickname)
-            admin = info['identified']
+            admin = (await self.resolve(nickname))['identified']
         return admin
 
     async def on_private_message(self, chan, source, msg):

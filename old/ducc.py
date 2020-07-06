@@ -157,7 +157,7 @@ async def ducc_quack(self, c, n, m):
 async def ducc_shoot(self, c, n, m):
     """ try to kill the ducc :( """
     state = list(self.ducc_state)[-1]
-    state['stress'] += 10
+    state['stress'] += 3
     state['id'] += 1
     self.ducc_state.insert(state)
 

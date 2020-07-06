@@ -48,7 +48,7 @@ who | awk \
             user_count+=1
         }
 
-        printf "%d users online, ", user_count
+        printf "%d users online and ", user_count
         printf "%d sessions", sessions
     }
     '

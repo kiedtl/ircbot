@@ -19,7 +19,8 @@ ov:
 
 commands:
 	wikipedia command
-	add toot command
+	karma commands
+	youtube commands (for urls)
 	get reddit/lobsters/hn dicussions
 	distrowatch lookup
 

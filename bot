@@ -69,7 +69,7 @@ class System(pydle.Client):
                     if self.asleep[chan] < time.time() or cmd == 'admin':
                         await self.cmd[cmd](self, chan, source, msg)
                     print('[cmd] recieved command "{}" from "{}" in "{}"'
-                        .format(msg, source, chan))
+                        .format(cmd, source, chan))
 
     async def is_admin(self, nickname):
         admin = False

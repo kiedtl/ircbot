@@ -1,4 +1,5 @@
 common: move out of modules, split up
+common.get_backlog: throw non-generic exception if backlog too short
 
 DO NOT ACCEPT CMD FROM BOTS
 multiple prefixes

@@ -1,7 +1,7 @@
--- karma for each user
+-- karma for each item
 CREATE TABLE karma (
         id       INTEGER NOT NULL,
-        username TEXT    NOT NULL,
+        name     TEXT    NOT NULL,
         amount   INTEGER NOT NULL,
         PRIMARY KEY (id)
 );

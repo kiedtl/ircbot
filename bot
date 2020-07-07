@@ -85,13 +85,12 @@ class System(pydle.Client):
         return self.users[nickname]
 
     async def is_admin(self, nickname):
-        admin = False
+        info = await self.whois(nickname)
+        # check if they are identified
+        if not 'account' in info:
+            return False
 
-        # check the WHOIS info to see if the source has identified.
-        # this is a blocking operation, so use yield.
-        if nickname in config.admins:
-            admin = (await self.resolve(nickname))['identified']
-        return admin
+        return info['account'] in config.admins
 
     async def on_private_message(self, chan, source, msg):
         await self.on_message(source, source, msg)

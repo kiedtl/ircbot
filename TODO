@@ -1,4 +1,5 @@
 the major refactoring that will never get done
+throttling for karma
 
 common: move out of modules, split up
 common.get_backlog: throw non-generic exception if backlog too short
@@ -21,7 +22,6 @@ ov:
 
 commands:
 	wikipedia command
-	karma commands
 	youtube commands (for urls)
 	get reddit/lobsters/hn dicussions
 	distrowatch lookup

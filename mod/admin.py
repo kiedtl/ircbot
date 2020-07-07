@@ -49,7 +49,11 @@ async def aexec(self, code):
 
 async def ev(self, chan, source, msg):
     msg = msg.split(' ')
-    result = await aexec(self, ' '.join(msg))
+    try:
+        result = await aexec(self, ' '.join(msg))
+    except Exception as e:
+        await out.msg(self, modname, chan,
+            [f'exception: {repr(e)}'])
     await out.msg(self, modname, chan,
         [f'result: \'{result}\''])
 

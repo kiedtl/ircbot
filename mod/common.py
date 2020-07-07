@@ -42,6 +42,6 @@ def run(cmd, stdin):
     return out.decode('utf-8').rstrip()
 
 async def init(self):
-    self.err_backlog_too_short = 'error: backlog too short'
-    self.err_invalid_logfile   = 'error: could not open log file'
-    self.err_invalid_command   = 'error: invalid command'
+    self.err_backlog_too_short = 'backlog too short'
+    self.err_invalid_logfile   = 'could not open log file'
+    self.err_invalid_command   = 'invalid command'

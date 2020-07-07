@@ -69,7 +69,8 @@ async def unshorten(self, chan, src, msg):
     await out.msg(self, modname, chan, [f'{res}'])
 
 async def init(self):
-    self.handle_raw['url'] = filterurl
+    # disabled, now that tildebot is a thing
+    #self.handle_raw['url'] = filterurl
 
     self.cmd['0x0'] = shorten_0x0
     self.cmd['ttm'] = shorten_ttm

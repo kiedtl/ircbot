@@ -1,6 +1,6 @@
 # helper funcs to deal with YT
 
-import urllib
+import isodate, urllib
 import googleapiclient.discovery
 import googleapiclient.errors
 
@@ -53,6 +53,7 @@ def video_info(youtube, v_id):
     likes    = int(video['statistics']['likeCount'])
     dislikes = int(video['statistics']['dislikeCount'])
     channel  = video['snippet']['channelTitle']
+    duration = isodate.parse_duration(video['contentDetails']['duration'])
 
     return {
         'title': title,
@@ -61,12 +62,23 @@ def video_info(youtube, v_id):
         'likes': likes,
         'dislikes': dislikes,
         'channel': channel,
+        'duration': duration
     }
 
 def fmt_video_info(info):
     """
     Format video information.
     """
-    return f'{info["title"]} uploaded by {info["channel"]}' + \
+    dur = {}
+    dur['hours'], rem = divmod(info['duration'].seconds, 3600)
+    dur['minutes'], dur['seconds'] = divmod(rem, 60)
+
+    durfmt = f'{dur["seconds"]}s'
+    if dur['minutes'] > 0:
+        durfmt = f'{dur["minutes"]}m ' + durfmt
+    if dur['hours'] > 0:
+        durfmt = f'{dur["hours"]}h ' + durfmt
+
+    return f'{info["title"]} ({durfmt}) uploaded by {info["channel"]}' + \
         f' on {info["uploaded_at"]}, {info["views"]:,} views' + \
         f' ({info["likes"]:,}↑↓{info["dislikes"]:,})'

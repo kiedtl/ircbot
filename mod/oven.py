@@ -116,7 +116,7 @@ async def richest(self, c, n, m):
 
     output = output[:-2] # trim ', '
     await out.msg(self, modname, c,
-        [f'richest users: {output} (total wealth: ${total:.2f}'])
+        [f'richest users: {output} (total wealth: ${total:,.2f})'])
 
 # TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):

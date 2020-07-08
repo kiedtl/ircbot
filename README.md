@@ -21,5 +21,5 @@ Originally based on lickthecheese's
 Copyright (C) 2020 Kiëd Llaentenn, lickthecheese
 
 Licensed under the MIT license. See
-[COPYING](https://github.com/AntonMcClure/kiedtl-ircbot/blob/master/COPYING)
+[COPYING](https://github.com/kiedtl/ircbot/blob/master/COPYING)
 for more information.

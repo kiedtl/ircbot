@@ -19,6 +19,10 @@ class System(pydle.Client):
         self.help = {}
         self.users = {}
 
+        # HACK: avoid executing commands from
+        # channel history playback
+        self.ignore_cmd = 0
+
         print('[modules] loading modules...')
         await self.load_mods()
         print('[irc] joining channels')
@@ -39,6 +43,10 @@ class System(pydle.Client):
             await m.init(self)
             self.modules[i] = m
 
+    async def on_join(self, chan, by):
+        if by == self.nickname:
+            self.ignore_cmd = time.time() + 3
+
     async def on_invite(self, chan, by):
         print('[irc] received invite by {} to {}'.format(by, chan))
 
@@ -52,6 +60,9 @@ class System(pydle.Client):
         # once in the <self.nickname> chan and once in the
         # <source> chan... so just ignore one of them
         if chan == self.nickname:
+            return
+
+        if not time.time() > self.ignore_cmd:
             return
 
         for i in self.handle_raw:

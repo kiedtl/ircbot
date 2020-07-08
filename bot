@@ -53,24 +53,39 @@ class System(pydle.Client):
         # <source> chan... so just ignore one of them
         if chan == self.nickname:
             return
+
         for i in self.handle_raw:
             await self.handle_raw[i](self, chan,source,msg)
-        if source != self.nickname:
-            if msg == '!botlist' or msg == '!rollcall':
-                if config.respond_to_rollcall:
-                    await whoami(self, chan, source, msg)
-                return
-            if not chan in self.asleep:
-                self.asleep[chan] = time.time()
-            if msg[:len(self.prefix)] == self.prefix:
-                msg = msg[len(self.prefix):]
-                cmd = msg.split(' ')[0]
-                msg = msg[len(cmd) + 1:]
-                if cmd in self.cmd:
-                    if self.asleep[chan] < time.time() or cmd == 'admin':
-                        await self.cmd[cmd](self, chan, source, msg)
-                    print('[cmd] recieved command "{}" from "{}" in "{}"'
-                        .format(cmd, source, chan))
+
+        if source == self.nickname:
+            return
+
+        if msg == '!botlist' or msg == '!rollcall':
+            if config.respond_to_rollcall:
+                await whoami(self, chan, source, msg)
+            return
+
+        if not chan in self.asleep:
+            self.asleep[chan] = time.time()
+
+        if not msg[:len(self.prefix)] == self.prefix:
+            return
+
+        msg = msg[len(self.prefix):]
+        cmd = msg.split(' ')[0]
+        msg = msg[len(cmd) + 1:]
+
+        if cmd in self.cmd:
+            print('[cmd] recieved command "{}" from "{}" in "{}"'
+                .format(cmd, source, chan))
+
+            if self.asleep[chan] < time.time() or cmd == 'admin':
+                try:
+                    await self.cmd[cmd](self, chan, source, msg)
+                except Exception as e:
+                    await out.msg(self, 'oops', chan,
+                        ['segmentation fault', repr(e)])
+                    return
 
     async def resolve(self, nickname):
         """

@@ -18,5 +18,8 @@ Originally based on lickthecheese's
 
 ## license
 
-Licensed under a custom license. See [COPYING](COPYING) for more
-information.
+Copyright (C) 2020 Kiëd Llaentenn, lickthecheese
+
+Licensed under the MIT license. See
+[COPYING](https://github.com/kiedtl/ircbot/blob/master/COPYING)
+for more information.

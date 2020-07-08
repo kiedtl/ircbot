@@ -20,7 +20,3 @@ prod_chans = ['#team', '#lickthecheese', '#chaos', '#unruly', '#koth']
 
 # channels that are joined initially
 initial_chans = ['#bots', '#spacehare']
-
-# TODO: make these take effect
-log_dir = 'irc' # directory for irc logs
-mod_dir = 'mod' # directory for modules

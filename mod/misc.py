@@ -15,7 +15,7 @@ async def ping(self, chan, src, msg):
     await out.msg(self, 'ping', chan, [f'{src}: {res}'])
 
 async def whoami(self, chan, src, msg):
-    await out.msg(self, 'who', chan, ['I\'m k, kiedtl\'s bot.'])
+    await out.msg(self, 'who', chan, [f'I\'m {self.nickname}, kiedtl\'s bot.'])
     await out.msg(self, 'who', chan, ['https://github.com/kiedtl/ircbot'])
     await out.msg(self, 'who', chan, 
         ['raves and rants: kiedtl‍＠‍tilde.team'])

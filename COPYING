@@ -1,19 +1,22 @@
-The Useless Content License
-===========================
+MIT License
+===========
 
-- Copyright © 2020 lickthecheese, Kiëd Llaentenn
+- Copyright © 2020 Kiëd Llaentenn, lickthecheese
 
-Permission is granted, free of any charge or fee, to any individual downloading
-or cloning a copy of these useless Python scripts and markdown files, to
-(ab)use, copy, modify, merge, republish, distribute, sublicense, sell, burn,
-blow up, ingest, wear, and/or use for medicinal purposes, without any
-restriction, limitation, or condition whatsoever, including the condition of
-attributation.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights to
+(mis)use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
 
-THIS CONTENT IS PROVIDED BY THE AUTHOR(S) "AS IS", AND ANY WARRANTY, EXPRESS OR
+- The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT ARE DISCLAIMED. IN
-ABSOLUTELY NO CIRCUMSTANCES SHALL THE AUTHOR(S), CONTRIBUTORS, OR USERS OF THIS
-CONTENT BE LIABLE FOR ANY KIND OF CLAIM OR DAMAGES (INCLUDING BUT NOT LIMITED
-TO, LOSS OF DATA, PRODUCTIVITY, OR SANITY) ARISING FROM OR CAUSED BY THE USE OR
-EXISTENCE OF THIS CONTENT.
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

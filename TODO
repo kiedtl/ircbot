@@ -1,5 +1,3 @@
-store irc logs in a sql database
-
 the major refactoring that will never get done
 throttling for karma
 
@@ -23,6 +21,8 @@ ov:
 	add ":ov bakeall" command
 
 commands:
+	youtube search
+	colors for youtube info
 	wikipedia command
 	youtube commands (for urls)
 	get reddit/lobsters/hn dicussions
@@ -35,7 +35,6 @@ evaluation:
 	dc evaluation
 	bc evaluation
 
-add irc statistics
+irc logging, etc
+	store irc logs in a sql database
 	fix chanstats
-
-write dc(1) tutorial on blog

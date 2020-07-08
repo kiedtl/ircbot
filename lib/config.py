@@ -1,4 +1,4 @@
-nickname   = 'k'
+nickname   = 'sigsegv'
 realname   = 'spacehare\'s bot'
 server     = 'localhost'
 tls        = False

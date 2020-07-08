@@ -1,4 +1,4 @@
-# k
+# sigsegv
 
 An IRC bot that lives mainly on the `#bots`, `#team` and `#meta`
 channels of the `irc.tilde.chat` IRC network.

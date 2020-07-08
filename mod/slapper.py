@@ -3,7 +3,7 @@ import time
 import re
 
 async def filterslap(self, chan, src, msg):
-    """detect if message slaps k"""
+    """detect if message slaps this bot"""
     if self.is_slap.match(msg) and src != self.nickname:
         print(f'[misc] slapped by {src} in {chan}')
         if not src in self.slapped:

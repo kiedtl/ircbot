@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# bin/backup-db - export database info for backups
+# (c) Kiëd Llaentenn <kiedtl@tilde.team>
+# See the COPYING file for copyright information.
+
+ts() { date +%Y-%m-%dT%H:%M:%SZ; }
+
+dir="bak/$(ts)"
+mkdir -p "$dir"
+
+for db in dat/*.db; do
+    bkfile="$(basename "$db").sql"
+    sqlite3 "$db" ".dump" > "$dir/$bkfile"
+done
+
+tar -cf - "$dir" | \
+    xz -9qcT0 >"$dir".tar.xz
+rm -rf "$dir"

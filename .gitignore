@@ -5,6 +5,7 @@
 log/
 irc/
 tmp/
+bak/
 
 **/*secrets*
 mod/khuxfsck.py

@@ -4,15 +4,23 @@ import youtube as YT
 import common, out, re, secrets
 
 modname = 'youtube'
-is_yturl = re.compile(r'https?://\S+', re.I)
+is_yturl = re.compile(r'https?://(www\.|m\.)?(youtu.be/|youtube.com/)')
 youtube = YT.authenticate(secrets.yt_key)
 
 async def filteryt(self, chan, src, msg):
     """
     Detect a YT url in chat.
     """
-    if self.yturl_re.match(msg):
-        yt_info(self, chan, src, msg)
+    if not is_yturl.match(msg):
+        return
+    try:
+        v_id = YT.id_from_url(msg)
+    except:
+        return
+
+    info = YT.video_info(youtube, v_id)
+    info_fmted = YT.fmt_video_info(info)
+    await out.msg(self, modname, chan, [info_fmted])
 
 async def yt_info(self, chan, src, msg):
     try:
@@ -34,7 +42,7 @@ async def yt_info(self, chan, src, msg):
 
 async def init(self):
     # disabled, now that tildebot is a thing
-    #self.handle_raw['yturl'] = filteryt
+    self.handle_raw['yturl'] = filteryt
 
     self.cmd['youtube'] = yt_info
     self.cmd['yt'] = yt_info

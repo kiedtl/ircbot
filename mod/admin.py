@@ -15,15 +15,27 @@ async def reloadmods(self, chan, source, msg):
     await out.msg(self, modname, chan,
         ['reloading modules...'])
 
+    oldcmd  = self.cmd
+    oldraw  = self.handle_raw
+    oldhelp = self.help
+
     self.cmd = {}
     self.handle_raw = {}
     self.help = {}
 
-    for i in self.modules:
-        importlib.reload(self.modules[i])
-        await self.modules[i].init(self)
+    try:
+        for i in self.modules:
+            importlib.reload(self.modules[i])
+            await self.modules[i].init(self)
+    except Exception as e:
+        await out.msg(self, modname, chan,
+            [f'segmentation fault', repr(e)])
+        self.cmd = oldcmd
+        self.handle_raw = oldraw
+        self.help = oldhelp
+        return
 
-    await out.msg(self, modname, chan, 
+    await out.msg(self, modname, chan,
         ['{} modules reloaded in {}s'.format(len(self.modules),
             round(time.time() - before, 3))])
 

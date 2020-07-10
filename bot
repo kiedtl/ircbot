@@ -11,6 +11,8 @@ from misc import whoami
 
 class System(pydle.Client):
     async def on_connect(self):
+        await super().on_connect()
+
         print('[irc] connected!')
 
         self.modules = {}
@@ -44,10 +46,14 @@ class System(pydle.Client):
             self.modules[i] = m
 
     async def on_join(self, chan, by):
+        await super().on_join(chan, by)
+
         if by == self.nickname:
             self.ignore_cmd = time.time() + 3
 
     async def on_invite(self, chan, by):
+        await super().on_invite(chan, by)
+
         print('[irc] received invite by {} to {}'.format(by, chan))
 
         if config.join_on_invite:
@@ -55,6 +61,8 @@ class System(pydle.Client):
                 await self.join(chan)
 
     async def on_message(self, chan, source, msg):
+        await super().on_message(chan, source, msg)
+
         # not sure whether it's a pydle bug or irc quirk...
         # but when PM's are sent, we receive them twice!
         # once in the <self.nickname> chan and once in the
@@ -119,9 +127,11 @@ class System(pydle.Client):
         return info['account'] in config.admins
 
     async def on_private_message(self, chan, source, msg):
+        await super().on_private_message(chan, source, msg)
         await self.on_message(source, source, msg)
 
     async def on_user_mode_change(self, modes):
+        await super().on_user_mode_change(modes)
         print('[irc] mode changed: {}'.format(modes))
 
 if __name__ == '__main__':

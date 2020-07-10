@@ -1,3 +1,4 @@
+import out
 from common import nohighlight
 modname = 'user stats'
 

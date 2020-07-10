@@ -1,5 +1,5 @@
 nickname   = 'sigsegv'
-realname   = 'spacehare\'s bot'
+realname   = 'a bot with some useful functions and tons of useless ones'
 server     = 'localhost'
 tls        = False
 tls_verify = False
@@ -12,11 +12,12 @@ prefix = ':'
 admins = ['kiedtl', 'spacehare', 'ben', 'cmccabe',
         'gbmor', 'tomasino', 'ubergeek', 'deepend', 'calamitous']
 
-bannedchans = []
+bannedchans = ['#meta']
 
 # channels that are joined only when the
 # `:admin joins` command is issued
-prod_chans = ['#team', '#lickthecheese', '#chaos', '#unruly', '#koth']
+prod_chans = ['#team', '#lickthecheese', '#chaos', '#unruly',
+    '#koth', '#ricing']
 
 # channels that are joined initially
 initial_chans = ['#bots', '#spacehare']

@@ -4,17 +4,18 @@ import youtube as YT
 import common, out, re, secrets
 
 modname = 'youtube'
-is_yturl = re.compile(r'https?://(www\.|m\.)?(youtu.be/|youtube.com/)')
+is_yturl = re.compile('(?:.*)?(https?://(?:www\.|m\.)?(?:youtu.be/|youtube.com/)(?:[^ ]+)?)')
 youtube = YT.authenticate(secrets.yt_key)
 
 async def filteryt(self, chan, src, msg):
     """
     Detect a YT url in chat.
     """
-    if not is_yturl.match(msg):
+    matches = is_yturl.findall(msg)
+    if len(matches) < 1:
         return
     try:
-        v_id = YT.id_from_url(msg)
+        v_id = YT.id_from_url(matches[0])
     except:
         return
 
@@ -30,8 +31,12 @@ async def yt_info(self, chan, src, msg):
             [self.err_backlog_too_short])
         return
 
+    matches = is_yturl.findall(txt)
+    if len(matches) < 1:
+        await out.msg(self, modname, chan, [f'bad url'])
+        return
     try:
-        v_id = YT.id_from_url(txt)
+        v_id = YT.id_from_url(matches[0])
     except:
         await out.msg(self, modname, chan, [f'bad url'])
         return

@@ -28,7 +28,7 @@ async def backlogger(self, chan, src, msg):
     if msg[:len(self.prefix)] == self.prefix:
         cmd = msg[len(self.prefix):]
         cmd = cmd.split(' ')[0]
-        if cmd in self.cmd:
+        if cmd in self.handle_cmd:
             return
 
     self.backlog[chan].append([src, msg])

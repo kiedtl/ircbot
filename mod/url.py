@@ -72,10 +72,10 @@ async def init(self):
     # disabled, now that tildebot is a thing
     #self.handle_raw['url'] = filterurl
 
-    self.cmd['0x0'] = shorten_0x0
-    self.cmd['ttm'] = shorten_ttm
-    self.cmd['title'] = title
-    self.cmd['unshorten'] = unshorten
+    self.handle_cmd['0x0'] = shorten_0x0
+    self.handle_cmd['ttm'] = shorten_ttm
+    self.handle_cmd['title'] = title
+    self.handle_cmd['unshorten'] = unshorten
 
     self.help['0x0'] = ['shorten [url] - shorten a url with 0x0.st']
     self.help['ttm'] = ['shorten [url] - shorten a url with ttm.sh']

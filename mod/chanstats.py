@@ -71,7 +71,7 @@ async def chanstats_handle(self, chan, source, msg):
     await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
 
 async def init(self):
-    self.cmd['chanstats'] = chanstats_handle
+    self.handle_cmd['chanstats'] = chanstats_handle
     self.help['chanstats'] = ['chanstats - display statistics of various channels',
         'chanstats subcommands: totalmsgs']
     self.help['chanstats totalmsgs'] = ['chanstats totalmsgs [chans] - get total messages for [chans]. [chans] defaults to all channels.']

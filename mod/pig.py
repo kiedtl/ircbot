@@ -61,6 +61,6 @@ async def pigtext(self, ms):
     return f'<{usr}> {"".join(data)} {pig}'
 
 async def init(self):
-    self.cmd['pig'] = pigify
+    self.handle_cmd['pig'] = pigify
     self.help['pig'] = ['pig [num] - pigify the text (more)',
             '(·(oo)·) (･ั(00)･ั)']

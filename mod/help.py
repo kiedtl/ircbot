@@ -6,7 +6,7 @@ async def helpParse(self, c, n, m):
         await out.msg(self, modname, c, self.help[m])
     else:
         commands = ', '.join(
-            [cmd for cmd in sorted(self.cmd) if not ' ' in cmd])
+            [cmd for cmd in sorted(self.handle_cmd) if not ' ' in cmd])
         await out.msg(self, modname, c,
             [f'commands: {commands}'])
 
@@ -15,8 +15,8 @@ async def more(self, c, n, m):
     await out.more(self, c)
 
 async def init(self):
-    self.cmd['help'] = helpParse
-    self.cmd['more'] = more
+    self.handle_cmd['help'] = helpParse
+    self.handle_cmd['more'] = more
     self.help['help'] = ['help command - list commands or show help on command']
     self.help['help command'] = ['help <command> - show more info about a command']
     self.help['more'] = ['more - view more text']

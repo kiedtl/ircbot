@@ -22,10 +22,10 @@ async def whoami(self, chan, src, msg):
     await out.msg(self, 'who', chan, ['for usage info, try :help'])
 
 async def init(self):
-    self.cmd['modules'] = list_mods
-    self.cmd['ping'] = ping
-    self.cmd['who'] = whoami
-    self.cmd['sysinfo'] = status
+    self.handle_cmd['modules'] = list_mods
+    self.handle_cmd['ping'] = ping
+    self.handle_cmd['who'] = whoami
+    self.handle_cmd['sysinfo'] = status
 
     self.help['modules'] = ['modules - list loaded modules']
     self.help['ping'] = ['ping - check if I\'m responding']

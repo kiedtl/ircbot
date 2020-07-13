@@ -43,6 +43,6 @@ async def init(self):
     self.handle_raw['filterkarma'] = filterkarma
     self.karmadb = dataset.connect('sqlite:///dat/pnts.db')['karma']
 
-    self.cmd['karma'] = listkarma
+    self.handle_cmd['karma'] = listkarma
 
     self.help['karma'] = ['karma [thing] - get karma for thing. use <thing>++ or ++<thing> to set karma.']

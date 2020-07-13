@@ -15,11 +15,11 @@ async def reloadmods(self, chan, source, msg):
     await out.msg(self, modname, chan,
         ['reloading modules...'])
 
-    oldcmd  = self.cmd
+    oldcmd  = self.handle_cmd
     oldraw  = self.handle_raw
     oldhelp = self.help
 
-    self.cmd = {}
+    self.handle_cmd = {}
     self.handle_raw = {}
     self.help = {}
 
@@ -30,7 +30,7 @@ async def reloadmods(self, chan, source, msg):
     except Exception as e:
         await out.msg(self, modname, chan,
             [f'segmentation fault', repr(e)])
-        self.cmd = oldcmd
+        self.handle_cmd = oldcmd
         self.handle_raw = oldraw
         self.help = oldhelp
         return
@@ -116,8 +116,8 @@ async def adminHandle(self, chan, source, msg):
             ['insufficient privileges'])
 
 async def init(self):
-    self.cmd['admin'] = adminHandle
-    self.cmd['a'] = self.cmd['admin']
+    self.handle_cmd['admin'] = adminHandle
+    self.handle_cmd['a'] = self.handle_cmd['admin']
 
     self.help['admin'] = ['admin - various bot owner commands',
         'admin subcommands: quit restart reload part join joins eval send sleep wake']

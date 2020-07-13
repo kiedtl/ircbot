@@ -23,5 +23,5 @@ async def owotext(self, msg):
     return f'<{usr}> {msg[1]} {owo}'
 
 async def init(self):
-    self.cmd['owo'] = owoify
+    self.handle_cmd['owo'] = owoify
     self.help['owo'] = ['owo [num] - owoify the text', 'owo owo uwu']

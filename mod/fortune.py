@@ -6,5 +6,5 @@ async def fortune(self, chan, src, msg):
     await out.msg(self, modname, chan, [fort])
 
 async def init(self):
-    self.cmd['fortune'] = fortune
+    self.handle_cmd['fortune'] = fortune
     self.help['fortune'] = ['fortune - get a fortune']

@@ -265,7 +265,7 @@ async def ov_handle(self, c, src, msg):
 async def init(self):
     self.ovendb = dataset.connect('sqlite:///dat/oven.db')
 
-    self.cmd['ov'] = ov_handle
+    self.handle_cmd['ov'] = ov_handle
     self.handle_raw['genGoods'] = generate
 
     self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give owners richest']

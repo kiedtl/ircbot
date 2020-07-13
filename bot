@@ -18,10 +18,15 @@ class System(pydle.Client):
         print('[irc] connected!')
 
         self.modules = {}
-        self.cmd = {}
-        self.handle_raw = {}
         self.help = {}
         self.users = {}
+
+        # handle commands, raw PRIVMSGs,
+        # and messages that match a regex,
+        # respectively.
+        self.handle_cmd = {}
+        self.handle_raw = {}
+        self.handle_reg = {}
 
         # HACK: avoid executing commands from
         # channel history playback
@@ -96,13 +101,13 @@ class System(pydle.Client):
         cmd = msg.split(' ')[0]
         msg = msg[len(cmd) + 1:]
 
-        if cmd in self.cmd:
+        if cmd in self.handle_cmd:
             print('[cmd] recieved command "{}" from "{}" in "{}"'
                 .format(cmd, source, chan))
 
             if self.asleep[chan] < time.time() or cmd == 'admin':
                 try:
-                    await self.cmd[cmd](self, chan, source, msg)
+                    await self.handle_cmd[cmd](self, chan, source, msg)
                 except Exception as e:
                     traceback.print_tb(e.__traceback__)
                     await out.msg(self, 'oops', chan,

@@ -53,8 +53,8 @@ async def search_pape(self, chan, src, msg):
     await out.msg(self, modname, chan, [f'{shortened}'])
 
 async def init(self):
-    self.cmd['rpape'] = random_pape
-    self.cmd['spape'] = search_pape
+    self.handle_cmd['rpape'] = random_pape
+    self.handle_cmd['spape'] = search_pape
 
     self.help['rpape'] = ['rpape - get a random wallpaper from unsplash']
     self.help['spape'] = ['spape [query] - search for a wallpaper on unsplash']

@@ -55,16 +55,16 @@ async def rot13(self, chan, src, msg):
     await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
 
 async def init(self):
-    self.cmd['cowsay']    = cowsay
-    self.cmd['cowthink']  = cowthink
-    self.cmd['figlet']    = figlet
-    self.cmd['rev13']     = rev13
-    self.cmd['rot13']     = rot13
-    self.cmd['toilet']    = toilet
-    self.cmd['qr']        = qrenco
+    self.handle_cmd['cowsay']    = cowsay
+    self.handle_cmd['cowthink']  = cowthink
+    self.handle_cmd['figlet']    = figlet
+    self.handle_cmd['rev13']     = rev13
+    self.handle_cmd['rot13']     = rot13
+    self.handle_cmd['toilet']    = toilet
+    self.handle_cmd['qr']        = qrenco
 
-    self.cmd['communist'] = communist
-    self.cmd['com']       = communist
+    self.handle_cmd['communist'] = communist
+    self.handle_cmd['com']       = communist
 
     self.help['rot13']   = ['rot13 - ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
     self.help['rev13']   = ['rev13 - attempt to decrypt rot13-encrypted messages']

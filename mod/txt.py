@@ -62,14 +62,13 @@ async def init(self):
     self.handle_cmd['rot13']     = rot13
     self.handle_cmd['toilet']    = toilet
     self.handle_cmd['qr']        = qrenco
-
     self.handle_cmd['communist'] = communist
-    self.handle_cmd['com']       = communist
+
+    self.aliases['communist'] = ['com', 'co']
 
     self.help['rot13']   = ['rot13 - ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
     self.help['rev13']   = ['rev13 - attempt to decrypt rot13-encrypted messages']
-    self.help['communist'] = ['communist|com - \x038,5 ☭ SEIZE THE MEANS OF CHAOS PRODUCTION ☭\x04']
-    self.help['com'] = self.help['communist']
+    self.help['communist'] = ['communist - \x038,5 ☭ SEIZE THE MEANS OF CHAOS PRODUCTION ☭\x04']
     self.help['figlet'] = ['figlet [args] - use /bin/figlet to generate ascii art']
     self.help['toilet'] = ['toilet [args] - use /bin/toilet to generate ascii art']
     self.help['cowsay'] = ['cow{say,think} [args] - use /bin/cow{say,think} to generate ascii art']

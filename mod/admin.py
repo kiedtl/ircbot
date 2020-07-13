@@ -1,5 +1,6 @@
 import config
 import common, importlib, out, os, time
+import traceback
 
 modname = 'admin'
 
@@ -18,6 +19,7 @@ async def reloadmods(self, chan, source, msg):
     oldcmd  = self.handle_cmd
     oldraw  = self.handle_raw
     oldreg  = self.handle_reg
+    oldali  = self.aliases
     oldhelp = self.help
 
     self.handle_cmd = {}
@@ -30,11 +32,13 @@ async def reloadmods(self, chan, source, msg):
             importlib.reload(self.modules[i])
             await self.modules[i].init(self)
     except Exception as e:
+        traceback.print_tb(e.__traceback__)
         await out.msg(self, modname, chan,
             [f'segmentation fault', repr(e)])
         self.handle_cmd = oldcmd
         self.handle_raw = oldraw
         self.handle_reg = oldreg
+        self.aliases = oldali
         self.help = oldhelp
         return
 
@@ -120,7 +124,7 @@ async def adminHandle(self, chan, source, msg):
 
 async def init(self):
     self.handle_cmd['admin'] = adminHandle
-    self.handle_cmd['a'] = self.handle_cmd['admin']
+    self.aliases['admin'] = ['a']
 
     self.help['admin'] = ['admin - various bot owner commands',
         'admin subcommands: quit restart reload part join joins eval send sleep wake']

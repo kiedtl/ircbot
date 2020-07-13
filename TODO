@@ -8,11 +8,8 @@ DO NOT ACCEPT CMD FROM BOTS
 multiple prefixes
 
 aliases:
-	don't list aliases with commands (on :help)
-	keep aliases in self.aliases, not self.cmd
-	on :help <alias>, show help for command
-	show aliases on help like so:
-		communist|com, admin|a, blah|bl
+	show aliases in help for individual commands,
+	not in command list
 
 ov:
 	add a certain degree of randomness to baking

@@ -49,6 +49,7 @@ async def init(self):
     # disabled, now that tildebot is a thing
     self.handle_reg['youtube'] = (is_yturl, handle_yt)
     self.handle_cmd['youtube'] = yt_info
-    self.handle_cmd['yt']      = yt_info
 
-    self.help['yt'] = ['yt [num] - display info for a youtube url [num] messages back']
+    self.aliases['youtube'] = ['yt']
+
+    self.help['youtube'] = ['yt [num] - show info for a youtube url [num] messages back']

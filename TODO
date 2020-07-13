@@ -7,6 +7,9 @@ common.get_backlog: throw non-generic exception if backlog too short
 DO NOT ACCEPT CMD FROM BOTS
 multiple prefixes
 
+remove qrenco script; implement in python
+move pig logic into new file/pypy module
+
 aliases:
 	show aliases in help for individual commands,
 	not in command list

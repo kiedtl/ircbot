@@ -19,7 +19,7 @@ class System(pydle.Client):
 
         self.modules = {}
         self.help = {}
-        self.users = {}
+        self.userinfo = {}
         self.aliases = {}
 
         # handle commands, raw PRIVMSGs,
@@ -133,10 +133,9 @@ class System(pydle.Client):
 
         # FIXME: deal with users leaving, joining, or
         # maybe even changing nicks
-        if not nickname in self.users:
-            info = await self.whois(nickname)
-            self.users[nickname] = info
-        return self.users[nickname]
+        if not nickname in self.userinfo:
+            self.userinfo[nickname] = await self.whois(nickname)
+        return self.userinfo[nickname]
 
     async def is_admin(self, nickname):
         info = await self.whois(nickname)

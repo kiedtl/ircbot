@@ -291,7 +291,7 @@ async def init(self):
     self.handle_cmd['ov'] = ov_handle
     self.handle_raw['genGoods'] = generate
 
-    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give owners richest']
+    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give giveall owners richest']
     self.help['ov info'] = ['info <item> - get info for item']
     self.help['ov bake'] = ['bake <item> - bake some stuff']
     self.help['ov cheat'] = ['cheat <user> <item> - you are bad if you use it']

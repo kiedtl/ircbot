@@ -189,7 +189,6 @@ async def bake(self, c, n, m):
         its = inv.find_one(name=n, item=thing)
         inv.delete(id = its['id'])
 
-
     # if item has value, use that, else use a okay value
     values = []
     for thing in input:

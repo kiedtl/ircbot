@@ -2,16 +2,14 @@
 
 import asyncio
 import config
-import misc
-import irc
 import os
 import pydle
 import sys
 import time
 
-global bot
+from misc import whoami
 
-class SIGSEGV(pydle.Client):
+class System(pydle.Client):
     async def on_connect(self):
         await super().on_connect()
 
@@ -83,7 +81,7 @@ class SIGSEGV(pydle.Client):
 
         if msg == '!botlist' or msg == '!rollcall':
             if config.respond_to_rollcall:
-                await misc.whoami(self, chan, source, msg)
+                await whoami(self, chan, source, msg)
             return
 
         if not chan in self.asleep:
@@ -104,7 +102,7 @@ class SIGSEGV(pydle.Client):
                 try:
                     await self.cmd[cmd](self, chan, source, msg)
                 except Exception as e:
-                    await irc.msg('oops', chan,
+                    await out.msg(self, 'oops', chan,
                         ['segmentation fault', repr(e)])
                     return
 
@@ -137,7 +135,7 @@ class SIGSEGV(pydle.Client):
         print('[irc] mode changed: {}'.format(modes))
 
 if __name__ == '__main__':
-    bot = SIGSEGV(config.nickname, realname=config.realname)
-    bot.prefix = config.prefix
-    bot.asleep = {}
-    bot.run(config.server, tls=config.tls, tls_verify=config.tls_verify)
+    client = System(config.nickname, realname=config.realname)
+    client.prefix = config.prefix
+    client.asleep = {}
+    client.run(config.server, tls=config.tls, tls_verify=config.tls_verify)

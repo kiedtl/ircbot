@@ -2,7 +2,7 @@
 # simply piping text into a command
 # and posting the result
 
-import config, common, irc
+import config, common, out
 
 async def cmd_with_args(self, chan, cmd, msg):
     # TODO: throttling, disable in certain channels
@@ -35,24 +35,24 @@ async def rev13(self, chan, src, msg):
     try:
         txt = common.get_backlog_msg(self, chan, msg)
     except:
-        await irc.msg('rev13', chan,
+        await out.msg(self, 'rev13', chan,
             [self.err_backlog_too_short])
         return
 
     res = common.run(['caesar'], txt[1])
-    await irc.msg('rev13', chan, [f'<{txt[0]}> {res}'])
+    await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
 
 async def rot13(self, chan, src, msg):
     txt = []
     try:
         txt = common.get_backlog_msg(self, chan, msg)
     except:
-        await irc.msg('rot13', chan,
+        await out.msg(self, 'rot13', chan,
             [self.err_backlog_too_short])
         return
 
     res = common.run(['rot13'], txt[1])
-    await irc.msg('rev13', chan, [f'<{txt[0]}> {res}'])
+    await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
 
 async def init(self):
     self.cmd['cowsay']    = cowsay

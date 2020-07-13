@@ -1,5 +1,5 @@
 import common
-import irc, random, re
+import out, random, re
 
 modname = 'pig'
 vowels = ['a', 'e', 'i', 'o', 'u']
@@ -22,9 +22,9 @@ async def pigify(self, c, n, m):
     try:
         ms = common.get_backlog_msg(self, c, m)
     except:
-        await irc.msg(modname, c, [f'ymay acklogbay isway ootay ortshay!'])
+        await out.msg(self, modname, c, [f'ymay acklogbay isway ootay ortshay!'])
         return
-    await irc.msg(modname, c, [await pigtext(self, ms)])
+    await out.msg(self, modname, c, [await pigtext(self, ms)])
 
 async def pigtext(self, ms):
     # filter out ZWNJ's

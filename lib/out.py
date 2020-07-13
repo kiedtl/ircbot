@@ -1,7 +1,6 @@
 # some utility functions for outputting
 # information
 
-from __main__ import bot
 import common
 
 # cache output, module name
@@ -9,7 +8,7 @@ import common
 buf = {}
 last_modname = {}
 
-async def msg(mod, chan, msg):
+async def msg(self, mod, chan, msg):
     # TODO: throttling
     # (if the messages are too big)
     if chan in buf:
@@ -23,11 +22,11 @@ async def msg(mod, chan, msg):
     if len(buf[chan]) > 1:
         fmt = fmt + ' (more)'
 
-    await bot.message(chan, fmt.format(buf[chan].pop(0)))
+    await self.message(chan, fmt.format(buf[chan].pop(0)))
 
-async def more(chan):
+async def more(self, chan):
     if len(buf[chan]) == 0:
-        await bot.message(chan, '{} no more text to show'
+        await self.message(chan, '{} no more text to show'
             .format(common.modname('more')))
         return
 
@@ -37,4 +36,4 @@ async def more(chan):
     if len(buf[chan]) > 1:
         fmt = fmt + ' (more)'
 
-    await bot.message(chan, fmt.format(buf[chan].pop(0)))
+    await self.message(chan, fmt.format(buf[chan].pop(0)))

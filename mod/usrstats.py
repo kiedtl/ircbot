@@ -1,4 +1,4 @@
-import irc
+import out
 from common import nohighlight
 modname = 'user stats'
 
@@ -36,7 +36,7 @@ async def get_stats_by_phrase(self, chan, src, msg, phrases, label):
     try:
         logs = get_all_logs(targetchan, msg)
     except:
-        await irc.msg(modname, chan, [self.err_invalid_logfile])
+        await out.msg(self, modname, chan, [self.err_invalid_logfile])
         return
 
     for item in logs:
@@ -55,7 +55,7 @@ async def get_stats_by_phrase(self, chan, src, msg, phrases, label):
             .format(nohighlight(i[0]), i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await irc.msg(modname, chan,
+    await out.msg(self, modname, chan,
         [f'{label} people at {targetchan}: {output}'])
 
 async def noisiest(self, chan, src, msg):
@@ -69,7 +69,7 @@ async def noisiest(self, chan, src, msg):
     try:
         logs = get_all_logs(targetchan, msg)
     except:
-        await irc.msg(modname, chan, [self.err_invalid_logfile])
+        await out.msg(self, modname, chan, [self.err_invalid_logfile])
         return
 
     for item in logs:
@@ -89,7 +89,7 @@ async def noisiest(self, chan, src, msg):
             .format(nohighlight(i[0]), percentage, i[1]))
         ctr += 1
     output = output[:-2] # trim ', '
-    await irc.msg(modname, chan,
+    await out.msg(self, modname, chan,
         [f'top talkers at {targetchan}: {output}'])
 
 async def happiest(self, chan, src, msg):
@@ -117,7 +117,7 @@ commands = {
 async def usrstats_handle(self, chan, src, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await irc.msg(modname, chan, [self.err_invalid_command])
+        await out.msg(self, modname, chan, [self.err_invalid_command])
         return
     await commands[msg.pop(0)](self, chan, src, ' '.join(msg))
 

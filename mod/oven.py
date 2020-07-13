@@ -1,4 +1,4 @@
-import dataset, irc, random
+import dataset, out, random
 from common import nohighlight
 
 modname = 'oven'
@@ -6,21 +6,21 @@ default_price = 7
 
 async def purge(self, c, n, m):
     if not await self.is_admin(n):
-        await irc.msg(modname, c, [f'insufficient privileges'])
+        await out.msg(self, modname, c, [f'insufficient privileges'])
         return
     if len(m) < 1:
-        await irc.msg(modname, c, [f'need username'])
+        await out.msg(self, modname, c, [f'need username'])
         return
     inv = self.ovendb['inv']
     inv.delete(name=m)
-    await irc.msg(modname, c, [f'done'])
+    await out.msg(self, modname, c, [f'done'])
 
 async def cheat(self, c, n, m):
     if not await self.is_admin(n):
-        await irc.msg(modname, c, ['insufficient privileges'])
+        await out.msg(self, modname, c, ['insufficient privileges'])
         return
     if len(m.split(' ')) < 2:
-        await irc.msg(modname, c, [f'need username and item.'])
+        await out.msg(self, modname, c, [f'need username and item.'])
         return
     inv = self.ovendb['inv']
 
@@ -28,24 +28,24 @@ async def cheat(self, c, n, m):
     user = data[0]
     for thing in data[1:]:
         inv.insert(dict(name=user, item=thing))
-    await irc.msg(modname, c, [f'done'])
+    await out.msg(self, modname, c, [f'done'])
 
 async def give(self, c, n, m):
     m = m.split(' ')
     if len(m) < 2:
-        await irc.msg(modname, c, [f'you can\'t give air!'])
+        await out.msg(self, modname, c, [f'you can\'t give air!'])
     inv = self.ovendb['inv']
     its = inv.find_one(name=n, item=m[1])
     if its == None:
-        await irc.msg(modname, c, [f'you don\'t have that!'])
+        await out.msg(self, modname, c, [f'you don\'t have that!'])
     inv.delete(id=its['id'])
     inv.insert(dict(name=m[0], item=its['item']))
-    await irc.msg(modname, c, [f'you have {m[0]} a {m[1]}!'])
+    await out.msg(self, modname, c, [f'you have {m[0]} a {m[1]}!'])
 
 async def info(self, c, n, m):
     query = m.split(' ')[0]
     if len(m) < 1:
-        await irc.msg(modname, c, [f'need item name'])
+        await out.msg(self, modname, c, [f'need item name'])
         return
     inv = self.ovendb['inv']
     items = [ i['item'] for i in inv.find(item = query) ]
@@ -56,13 +56,13 @@ async def info(self, c, n, m):
         price = self.bakedGoods[query] / 10
     total_price = instances * price
 
-    await irc.msg(modname, c,
+    await out.msg(self, modname, c,
         [f'there exist {instances} {query}s, each with a value of ${price:.2f} and a combined value of ${total_price:.2f}'])
 
 async def owners(self, c, n, m):
     query = m.split(' ')[0]
     if len(m) < 1:
-        await irc.msg(modname, c, [f'need item name.'])
+        await out.msg(self, modname, c, [f'need item name.'])
         return
     inv = self.ovendb['inv']
 
@@ -86,7 +86,7 @@ async def owners(self, c, n, m):
         ctr += 1
 
     output = output[:-2] # trim ', '
-    await irc.msg(modname, c, [f'top {query} owners: {output}'])
+    await out.msg(self, modname, c, [f'top {query} owners: {output}'])
 
 async def richest(self, c, n, m):
     inv = self.ovendb['inv']
@@ -115,13 +115,13 @@ async def richest(self, c, n, m):
         ctr += 1
 
     output = output[:-2] # trim ', '
-    await irc.msg(modname, c,
+    await out.msg(self, modname, c,
         [f'richest users: {output} (total wealth: ${total:,.2f})'])
 
 # TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):
     if len(m) < 1:
-        await irc.msg(modname, c, [f'you can\'t bake air!'])
+        await out.msg(self, modname, c, [f'you can\'t bake air!'])
         return
 
     inv = self.ovendb['inv']
@@ -138,19 +138,19 @@ async def bake(self, c, n, m):
         found = list(inv.find(name=n, item=thing))
 
         if len(found) == 0:
-            await irc.msg(modname, c, [f'you don\'t have any {thing}'])
+            await out.msg(self, modname, c, [f'you don\'t have any {thing}'])
             return
         elif len(found) < items[thing]:
-            await irc.msg(modname, c, [f'you don\t have enough of {thing}'])
+            await out.msg(self, modname, c, [f'you don\t have enough of {thing}'])
             return
 
         # if they try to bake a ducc or a bomb,
         # destroy their stuff
         if thing == 'ducc' or thing == 'bomb':
             if thing == 'ducc':
-                await irc.msg(modname, c, [f'{n} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'])
+                await out.msg(self, modname, c, [f'{n} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'])
 
-            await irc.msg(modname, c, [f'the oven explodes!'])
+            await out.msg(self, modname, c, [f'the oven explodes!'])
             inv.delete(name=n)
             return
 
@@ -183,13 +183,13 @@ async def bake(self, c, n, m):
     while output_value not in list(self.bakedPrice.keys()):
         output_value = int(output_value - 1)
         if output_value < min_price:
-            await irc.msg(modname, c, [f'the oven begins to smoke...'])
+            await out.msg(self, modname, c, [f'the oven begins to smoke...'])
             return
 
     newitem = self.bakedPrice[output_value]
     inv.insert(dict(name=n, item=newitem))
 
-    await irc.msg(modname, c, [f'you bake your items, and out pops a {newitem}!'])
+    await out.msg(self, modname, c, [f'you bake your items, and out pops a {newitem}!'])
 
 async def invsee(self, c, n, m):
     m = m.split(' ')[0]
@@ -198,7 +198,7 @@ async def invsee(self, c, n, m):
     inv = self.ovendb['inv']
     it = [ i['item'] for i in inv.find(name = m) ]
     if len(it) < 1:
-        await irc.msg(modname, c, [f'you look into the oven and see nothing'])
+        await out.msg(self, modname, c, [f'you look into the oven and see nothing'])
     else:
         price = sum([self.bakedGoods[i]
             for i in it if i in self.bakedGoods]) / 10
@@ -211,7 +211,7 @@ async def invsee(self, c, n, m):
         for i in sorted(itemstats.items(), key=lambda i: i[1], reverse=True):
             output += f'{i[0]} (×{i[1]}), '
         output += f'with a combined value of ${price:.2f}'
-        await irc.msg(modname, c, [output])
+        await out.msg(self, modname, c, [output])
 
 async def generate(self, c, n, m):
     if int(random.uniform(1, 50)) == 1:
@@ -252,7 +252,7 @@ commands = {
 async def ov_handle(self, c, src, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await irc.msg(modname, c, [self.err_invalid_command])
+        await out.msg(self, modname, c, [self.err_invalid_command])
         return
     await commands[msg.pop(0)](self, c, src, ' '.join(msg))
 

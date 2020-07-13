@@ -1,4 +1,4 @@
-import datetime, dataset, math, irc, random
+import datetime, dataset, math, out, random
 from datetime import timedelta
 from babel.dates import format_timedelta
 
@@ -96,13 +96,13 @@ async def ducc_update_state(self):
 async def ducc_cure(self, c, n, m):
     """ cure the ducc (need admin privs) """
     if not await self.is_admin(n):
-        await irc.msg(modname, c, [f'insufficient privileges'])
+        await out.msg(self, modname, c, [f'insufficient privileges'])
         return
     last_state = list(self.ducc_state)[-1]
     self.ducc_state.insert(
         dict(last_fed=int(datetime.datetime.now().strftime('%s')),
             health=100, stress=0, alive=True))
-    await irc.msg(modname, c, [f'done'])
+    await out.msg(self, modname, c, [f'done'])
 
 async def ducc_feed(self, c, n, msg):
     """ feed the ducc and increase its health points """
@@ -111,20 +111,20 @@ async def ducc_feed(self, c, n, msg):
     # check items
     for thing in m:
         if len(thing) < 1:
-            await irc.msg(modname, c, [f'you can\'t give air!'])
+            await out.msg(self, modname, c, [f'you can\'t give air!'])
             return
 
         inv = self.ovendb['inv']
         its = inv.find_one(name=n, item=thing)
 
         if its == None:
-            await irc.msg(modname, c,
+            await out.msg(self, modname, c,
                 [f'you don\'t have a {thing}! (see :ov inv)'])
             return
         if thing not in self.bakedGoods \
             or self.bakedGoods[thing] < 10 \
             or thing == 'ducc': # why would a ducc want to eat a ducc??
-                await irc.msg(modname, c,
+                await out.msg(self, modname, c,
                     [f'the ducc isn\'t interested in that...'])
                 return
 
@@ -136,7 +136,7 @@ async def ducc_feed(self, c, n, msg):
     state['health'] += self.bakedGoods[thing] / 10
     state['id'] += 1
     self.ducc_state.insert(state)
-    await irc.msg(modname, c, [f'you fed the ducc!'])
+    await out.msg(self, modname, c, [f'you fed the ducc!'])
 
 async def ducc_pet(self, c, n, m):
     """ pet the ducc and decrease its stress level """
@@ -152,7 +152,7 @@ async def ducc_quack(self, c, n, m):
     duccs  = ['\_o<', '\_O<', '\_0<', '|\_( o)<']
 
     ducc = f'{random.choice(duccs)} {random.choice(quacks)}'
-    await irc.msg(modname, c, [ducc])
+    await out.msg(self, modname, c, [ducc])
 
 async def ducc_shoot(self, c, n, m):
     """ try to kill the ducc :( """
@@ -165,7 +165,7 @@ async def ducc_shoot(self, c, n, m):
     if random.uniform(0, 1000) == 666:
         dodges = False
     if dodges:
-        await irc.msg(modname, c, [f'the ducc dodges!'])
+        await out.msg(self, modname, c, [f'the ducc dodges!'])
     else:
         damage = (random.choices(
             population=[10, 30, 50, 70, 90],
@@ -184,7 +184,7 @@ async def ducc_shoot(self, c, n, m):
         state['id'] += 1
         self.ducc_state.insert(state)
 
-        await irc.msg(modname, c,
+        await out.msg(self, modname, c,
             [f'you shot the ducc! the ducc is {damages[damage]}!'])
 
 async def ducc_info(self, c, n, m):
@@ -201,10 +201,10 @@ async def ducc_info(self, c, n, m):
     since_delta_fmt = format_timedelta(since, locale='en_US')
 
     if not alive:
-        await irc.msg(modname, c, ['the ducc is dead!'])
+        await out.msg(self, modname, c, ['the ducc is dead!'])
         return
 
-    await irc.msg(modname, c,
+    await out.msg(self, modname, c,
         [f'the ducc is {health} and is feeling {stress}. It was last fed {since_delta_fmt} ago.'])
 
 commands = {
@@ -219,7 +219,7 @@ commands = {
 async def ducc_handle(self, c, src, msg):
     msg = msg.split(' ')
     if len(msg) < 1 or not msg[0] in commands:
-        await irc.msg(modname, c, [self.err_invalid_command])
+        await out.msg(self, modname, c, [self.err_invalid_command])
         return
     await ducc_update_state(self)
     await commands[msg.pop(0)](self, c, src, ' '.join(msg))

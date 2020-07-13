@@ -1,25 +1,25 @@
 # :modules, :who, and :ping etc commands
-import common, irc, random
+import common, out, random
 
 async def list_mods(self, chan, src, msg):
     mods = ', '.join(sorted(list(self.modules.keys())))
-    await irc.msg('modules', chan, [f'loaded: {mods}'])
+    await out.msg(self, 'modules', chan, [f'loaded: {mods}'])
 
 async def status(self, chan, src, msg):
     res = common.run(['bin/sysinfo'], '')
-    await irc.msg('status', chan, [f'~team status: {res}'])
+    await out.msg(self, 'status', chan, [f'~team status: {res}'])
 
 async def ping(self, chan, src, msg):
     res = random.choice(['you rang?', 'yes?', 'pong!',
         'what?', 'hmmm?', 'at your service!'])
-    await irc.msg('ping', chan, [f'{src}: {res}'])
+    await out.msg(self, 'ping', chan, [f'{src}: {res}'])
 
 async def whoami(self, chan, src, msg):
-    await irc.msg('who', chan, [f'I\'m {self.nickname}, kiedtl\'s bot.'])
-    await irc.msg('who', chan, ['https://github.com/kiedtl/ircbot'])
-    await irc.msg('who', chan, 
+    await out.msg(self, 'who', chan, [f'I\'m {self.nickname}, kiedtl\'s bot.'])
+    await out.msg(self, 'who', chan, ['https://github.com/kiedtl/ircbot'])
+    await out.msg(self, 'who', chan, 
         ['raves and rants: kiedtl‍＠‍tilde.team'])
-    await irc.msg('who', chan, ['for usage info, try :help'])
+    await out.msg(self, 'who', chan, ['for usage info, try :help'])
 
 async def init(self):
     self.cmd['modules'] = list_mods

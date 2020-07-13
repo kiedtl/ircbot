@@ -147,7 +147,7 @@ async def bake(self, c, n, m):
             await out.msg(self, modname, c, [f'you don\'t have any {thing}'])
             return
         elif len(found) < items[thing]:
-            await out.msg(self, modname, c, [f'you don\t have enough of {thing}'])
+            await out.msg(self, modname, c, [f'you don\'t have enough of {thing}'])
             return
 
         # if they try to bake a ducc or a bomb,

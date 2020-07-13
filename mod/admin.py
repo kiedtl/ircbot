@@ -1,5 +1,5 @@
 import config
-import common, importlib, out, os, time
+import common, importlib, irc, os, time
 
 modname = 'admin'
 
@@ -12,7 +12,7 @@ async def restart(self, chan, source, msg):
 
 async def reloadmods(self, chan, source, msg):
     before = time.time()
-    await out.msg(self, modname, chan,
+    await irc.msg(modname, chan,
         ['reloading modules...'])
 
     oldcmd  = self.cmd
@@ -28,14 +28,14 @@ async def reloadmods(self, chan, source, msg):
             importlib.reload(self.modules[i])
             await self.modules[i].init(self)
     except Exception as e:
-        await out.msg(self, modname, chan,
+        await irc.msg(modname, chan,
             [f'segmentation fault', repr(e)])
         self.cmd = oldcmd
         self.handle_raw = oldraw
         self.help = oldhelp
         return
 
-    await out.msg(self, modname, chan,
+    await irc.msg(modname, chan,
         ['{} modules reloaded in {}s'.format(len(self.modules),
             round(time.time() - before, 3))])
 
@@ -64,9 +64,9 @@ async def ev(self, chan, source, msg):
     try:
         result = await aexec(self, ' '.join(msg))
     except Exception as e:
-        await out.msg(self, modname, chan,
+        await irc.msg(modname, chan,
             [f'segmentation fault: {repr(e)}'])
-    await out.msg(self, modname, chan,
+    await irc.msg(modname, chan,
         [f'result: \'{result}\''])
 
 async def send(self, c, n, m):
@@ -81,12 +81,12 @@ async def shutup(self, c, n, m):
         except:
             duration = 5
     self.asleep[c] = time.time() + (duration * 60)
-    await out.msg(self, modname, chan,
+    await irc.msg(modname, chan,
         [f'disabled for {duration}m'])
 
 async def wake(self, c, n, m):
     self.asleep[c] = time.time()
-    await out.msg(self, modname, chan, ['I\'m back!'])
+    await irc.msg(modname, chan, ['I\'m back!'])
 
 commands = {
     'quit': quit,
@@ -105,14 +105,14 @@ async def adminHandle(self, chan, source, msg):
     if await self.is_admin(source):
         msg = msg.split(' ')
         if len(msg) < 1 or not msg[0] in commands:
-            await out.msg(self, modname, chan,
+            await irc.msg(modname, chan,
                 [self.err_invalid_command])
             return
         print('{} recieved {} signal from {}'
             .format(common.modname('admin'), msg[0], source))
         await commands[msg.pop(0)](self, chan, source, ' '.join(msg))
     else:
-        await out.msg(self, modname, chan,
+        await irc.msg(modname, chan,
             ['insufficient privileges'])
 
 async def init(self):

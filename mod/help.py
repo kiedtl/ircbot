@@ -1,13 +1,13 @@
-import out
+import irc
 modname = 'help'
 
 async def helpParse(self, c, n, m):
     if m in self.help:
-        await out.msg(self, modname, c, self.help[m])
+        await irc.msg(modname, c, self.help[m])
     else:
         commands = ', '.join(
             [cmd for cmd in sorted(self.cmd) if not ' ' in cmd])
-        await out.msg(self, modname, c,
+        await irc.msg(modname, c,
             [f'commands: {commands}'])
 
 async def more(self, c, n, m):

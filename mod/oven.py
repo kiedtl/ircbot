@@ -34,13 +34,34 @@ async def give(self, c, n, m):
     m = m.split(' ')
     if len(m) < 2:
         await out.msg(self, modname, c, [f'you can\'t give air!'])
+        return
     inv = self.ovendb['inv']
     its = inv.find_one(name=n, item=m[1])
     if its == None:
         await out.msg(self, modname, c, [f'you don\'t have that!'])
+        return
     inv.delete(id=its['id'])
     inv.insert(dict(name=m[0], item=its['item']))
-    await out.msg(self, modname, c, [f'you have {m[0]} a {m[1]}!'])
+    receiver = nohighlight(m[0])
+    await out.msg(self, modname, c,
+        [f'you gave {receiver} a {m[1]}!'])
+
+async def giveall(self, c, n, m):
+    m = m.split(' ')
+    if len(m) < 2:
+        await out.msg(self, modname, c, [f'you can\'t give air!'])
+        return
+    inv = self.ovendb['inv']
+    its = list(inv.find(name=n, item=m[1]))
+    if len(its) < 1:
+        await out.msg(self, modname, c, [f'you don\'t have that!'])
+        return
+    for i in its:
+        inv.delete(id=i['id'])
+        inv.insert(dict(name=m[0], item=i['item']))
+    receiver = nohighlight(m[0])
+    await out.msg(self, modname, c,
+        [f'you gave {receiver} your {m[1]}(s)!'])
 
 async def info(self, c, n, m):
     query = m.split(' ')[0]
@@ -196,7 +217,8 @@ async def bake(self, c, n, m):
     newitem = self.bakedPrice[output_value]
     inv.insert(dict(name=n, item=newitem))
 
-    await out.msg(self, modname, c, [f'you bake your items, and out pops a {newitem}!'])
+    await out.msg(self, modname, c,
+        [f'you bake your items, and out pops a {newitem}!'])
 
 async def invsee(self, c, n, m):
     m = m.split(' ')[0]
@@ -252,6 +274,7 @@ commands = {
     'goods': invsee,
     'purge': purge,
     'give': give,
+    'giveall': giveall,
     'owners': owners,
     'richest': richest
 }
@@ -279,8 +302,9 @@ async def init(self):
 
     self.help['ov purge'] = ['purge <user> - clear someone\'s inventory']
     self.help['ov give'] = ['give <user> <item> - give someone something from your inventory']
+    self.help['ov giveall'] = ['giveall <user> <item> - give someone all of an item from your inventory']
     self.help['ov owners'] = ['owners <item> - see which users own an item']
-    self.help['ov richest'] = ['richest - see which users own the most valuable items']
+    self.help['ov richest'] = ['richest [item] - see which users own the most valuable items']
 
     self.bakedGoods = {
         nohighlight('khuxkm'): 10,

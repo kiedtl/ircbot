@@ -47,7 +47,7 @@ async def yt_info(self, chan, src, msg):
 
 async def init(self):
     # disabled, now that tildebot is a thing
-    self.handle_raw['youtube'] = (is_yturl, handle_yt)
+    self.handle_reg['youtube'] = (is_yturl, handle_yt)
     self.handle_cmd['youtube'] = yt_info
     self.handle_cmd['yt']      = yt_info
 

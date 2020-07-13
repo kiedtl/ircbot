@@ -126,8 +126,9 @@ async def richest(self, c, n, m):
 
 # TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):
-    if len(m) < 1:
-        await out.msg(self, modname, c, [f'you can\'t bake air!'])
+    if len(m) < 2:
+        await out.msg(self, modname, c,
+            [f'you need at least 2 items'])
         return
 
     inv = self.ovendb['inv']

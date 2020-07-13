@@ -7,7 +7,7 @@ modname = 'youtube'
 is_yturl = re.compile('(?:.*)?(https?://(?:www\.|m\.)?(?:youtu.be/|youtube.com/)(?:[^ ]+)?)')
 youtube = YT.authenticate(secrets.yt_key)
 
-async def filteryt(self, chan, src, msg):
+async def handle_yt(self, chan, src, msg):
     """
     Detect a YT url in chat.
     """
@@ -47,9 +47,8 @@ async def yt_info(self, chan, src, msg):
 
 async def init(self):
     # disabled, now that tildebot is a thing
-    #self.handle_raw['yturl'] = filteryt
-
+    self.handle_raw['youtube'] = (is_yturl, handle_yt)
     self.handle_cmd['youtube'] = yt_info
-    self.handle_cmd['yt'] = yt_info
+    self.handle_cmd['yt']      = yt_info
 
     self.help['yt'] = ['yt [num] - display info for a youtube url [num] messages back']

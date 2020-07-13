@@ -2,20 +2,19 @@ import common
 import time
 import re
 
-async def filterslap(self, chan, src, msg):
-    """detect if message slaps this bot"""
-    if self.is_slap.match(msg) and src != self.nickname:
-        print(f'[misc] slapped by {src} in {chan}')
-        if not src in self.slapped:
-            self.slapped[src] = 0
-        if not self.slapped[src] + 21600 < time.time():
-            return
-        else:
-            await self.message(chan, f';slap {src}')
-            self.slapped[src] = time.time()
+async def handle_slap(self, chan, src, msg):
+    print(f'[misc] slapped by {src} in {chan}')
+    if not src in self.slapped:
+        self.slapped[src] = 0
+    if not self.slapped[src] + 21600 < time.time():
+        return
+    else:
+        await self.message(chan, f';slap {src}')
+        self.slapped[src] = time.time()
 
 async def init(self):
-    self.handle_raw['filterslap'] = filterslap
+    is_slap = re.compile(f'^;slap ' + self.nickname)
+    self.handle_reg['slapper'] = (is_slap, handle_slap)
 
     # keeps track of the last time a user
     # was slapped
@@ -23,5 +22,3 @@ async def init(self):
     # the same 6 hour period, we lose points
     # instead of getting them
     self.slapped = {}
-
-    self.is_slap = re.compile('^;slap\ ' + self.nickname + '$')

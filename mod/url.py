@@ -4,17 +4,16 @@ import common, re, urllib, nullptr, out
 from bs4 import BeautifulSoup as BS
 modname = 'url'
 
-async def filterurl(self, chan, src, msg):
+async def handle_url(self, chan, src, msg):
     """
     Detect a url in chat.
     """
-    if self.url_re.match(msg):
-        try:
-            http = urllib.request.urlopen(msg)
-            data = BS(http)
-        except:
-            return
-        await out.msg(self, modname, chan, [data.title.string])
+    try:
+        http = urllib.request.urlopen(msg)
+        data = BS(http)
+    except:
+        return
+    await out.msg(self, modname, chan, [data.title.string])
 
 async def title(self, chan, src, msg):
     try:
@@ -69,8 +68,10 @@ async def unshorten(self, chan, src, msg):
     await out.msg(self, modname, chan, [f'{res}'])
 
 async def init(self):
+    url_re = re.compile(r'https?://\S+', re.I)
+
     # disabled, now that tildebot is a thing
-    #self.handle_raw['url'] = filterurl
+    #self.handle_reg['url'] = (url_re, handle_url)
 
     self.handle_cmd['0x0'] = shorten_0x0
     self.handle_cmd['ttm'] = shorten_ttm
@@ -80,5 +81,3 @@ async def init(self):
     self.help['0x0'] = ['shorten [url] - shorten a url with 0x0.st']
     self.help['ttm'] = ['shorten [url] - shorten a url with ttm.sh']
     self.help['unshorten'] = ['unshorten [url] - try to unshorten a url']
-
-    self.url_re = re.compile(r'https?://\S+', re.I)

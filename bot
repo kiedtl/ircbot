@@ -81,7 +81,7 @@ class System(pydle.Client):
             return
 
         for i in self.handle_raw:
-            await self.handle_raw[i](self, chan,source,msg)
+            await self.handle_raw[i](self, chan, source, msg)
 
         if source == self.nickname:
             return
@@ -94,6 +94,12 @@ class System(pydle.Client):
         if not chan in self.asleep:
             self.asleep[chan] = time.time()
 
+        for i in self.handle_reg:
+            # (<regex>, <function>)
+            if not self.handle_reg[i][0].match(msg):
+                continue
+            await self.handle_reg[i][1](self, chan, source, msg)
+
         if not msg[:len(self.prefix)] == self.prefix:
             return
 
@@ -101,18 +107,20 @@ class System(pydle.Client):
         cmd = msg.split(' ')[0]
         msg = msg[len(cmd) + 1:]
 
-        if cmd in self.handle_cmd:
-            print('[cmd] recieved command "{}" from "{}" in "{}"'
-                .format(cmd, source, chan))
+        if not cmd in self.handle_cmd:
+            return
 
-            if self.asleep[chan] < time.time() or cmd == 'admin':
-                try:
-                    await self.handle_cmd[cmd](self, chan, source, msg)
-                except Exception as e:
-                    traceback.print_tb(e.__traceback__)
-                    await out.msg(self, 'oops', chan,
-                        ['segmentation fault', repr(e)])
-                    return
+        print('[cmd] recieved command "{}" from "{}" in "{}"'
+            .format(cmd, source, chan))
+
+        if self.asleep[chan] < time.time() or cmd == 'admin':
+            try:
+                await self.handle_cmd[cmd](self, chan, source, msg)
+            except Exception as e:
+                traceback.print_tb(e.__traceback__)
+                await out.msg(self, 'oops', chan,
+                    ['segmentation fault', repr(e)])
+                return
 
     async def resolve(self, nickname):
         """

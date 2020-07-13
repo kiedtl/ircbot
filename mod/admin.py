@@ -17,10 +17,12 @@ async def reloadmods(self, chan, source, msg):
 
     oldcmd  = self.handle_cmd
     oldraw  = self.handle_raw
+    oldreg  = self.handle_reg
     oldhelp = self.help
 
     self.handle_cmd = {}
     self.handle_raw = {}
+    self.handle_reg = {}
     self.help = {}
 
     try:
@@ -32,6 +34,7 @@ async def reloadmods(self, chan, source, msg):
             [f'segmentation fault', repr(e)])
         self.handle_cmd = oldcmd
         self.handle_raw = oldraw
+        self.handle_reg = oldreg
         self.help = oldhelp
         return
 

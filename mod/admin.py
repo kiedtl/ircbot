@@ -73,6 +73,7 @@ async def ev(self, chan, source, msg):
     except Exception as e:
         await out.msg(self, modname, chan,
             [f'segmentation fault: {repr(e)}'])
+        return
     await out.msg(self, modname, chan,
         [f'result: \'{result}\''])
 

@@ -3,9 +3,11 @@
 import asyncio
 import config
 import os
+import out
 import pydle
 import sys
 import time
+import traceback
 
 from misc import whoami
 
@@ -102,6 +104,7 @@ class System(pydle.Client):
                 try:
                     await self.cmd[cmd](self, chan, source, msg)
                 except Exception as e:
+                    traceback.print_tb(e.__traceback__)
                     await out.msg(self, 'oops', chan,
                         ['segmentation fault', repr(e)])
                     return

@@ -93,7 +93,13 @@ async def richest(self, c, n, m):
 
     total = 0
     stats = {}
-    for item in list(inv.find()):
+
+    if len(m) > 0:
+        results = inv.find(item=m)
+    else:
+        results = inv.find()
+
+    for item in list(results):
         price = default_price
         if item['item'] in self.bakedGoods:
             price = self.bakedGoods[item['item']] / 10

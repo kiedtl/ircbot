@@ -1,8 +1,9 @@
-# random commands that involve
-# simply piping text into a command
-# and posting the result
+# simple text manipulation stuff
 
-import config, common, out
+import caesar
+import config
+import common
+import out
 
 async def cmd_with_args(self, chan, cmd, msg):
     # TODO: throttling, disable in certain channels
@@ -30,35 +31,32 @@ async def communist(self, chan, src, msg):
     txt = msg.upper()
     await self.message(chan, f'\x038,5 ☭ {txt} ☭ \x0f')
 
-async def rev13(self, chan, src, msg):
-    txt = []
-    try:
-        txt = common.get_backlog_msg(self, chan, msg)
-    except:
-        await out.msg(self, 'rev13', chan,
-            [self.err_backlog_too_short])
-        return
-
-    res = common.run(['caesar'], txt[1])
-    await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
-
 async def rot13(self, chan, src, msg):
-    txt = []
-    try:
-        txt = common.get_backlog_msg(self, chan, msg)
-    except:
-        await out.msg(self, 'rot13', chan,
-            [self.err_backlog_too_short])
+    res = caesar.rot(13)(msg)
+    await out.msg(self, 'caesar', chan, [f'{res}'])
+
+async def rot_n(self, chan, src, msg):
+    args = msg.split(' ', 2)
+    if len(args) < 2:
+        await out.msg(self, 'caesar', chan,
+            ['need rot number and message'])
         return
 
-    res = common.run(['rot13'], txt[1])
-    await out.msg(self, 'rev13', chan, [f'<{txt[0]}> {res}'])
+    try:
+        rotn = int(args[0])
+    except:
+        await out.msg(self, 'caesar', chan,
+            ['need rot number and message'])
+        return
+
+    res = caesar.rot(rotn)(args[1])
+    await out.msg(self, 'caesar', chan, [f'{res}'])
 
 async def init(self):
     self.handle_cmd['cowsay']    = cowsay
     self.handle_cmd['cowthink']  = cowthink
     self.handle_cmd['figlet']    = figlet
-    self.handle_cmd['rev13']     = rev13
+    self.handle_cmd['rot']       = rot_n
     self.handle_cmd['rot13']     = rot13
     self.handle_cmd['toilet']    = toilet
     self.handle_cmd['qr']        = qrenco
@@ -66,8 +64,8 @@ async def init(self):
 
     self.aliases['communist'] = ['com', 'co']
 
-    self.help['rot13']   = ['rot13 - ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
-    self.help['rev13']   = ['rev13 - attempt to decrypt rot13-encrypted messages']
+    self.help['rot13']   = ['rot13 [message] - ebg13 grkg jvgu gur /ova/ebg13 hgvyvgl']
+    self.help['rot']     = ['rot [rotation] [message] - shift letters in message']
     self.help['communist'] = ['communist - \x038,5 ☭ SEIZE THE MEANS OF CHAOS PRODUCTION ☭\x04']
     self.help['figlet'] = ['figlet [args] - use /bin/figlet to generate ascii art']
     self.help['toilet'] = ['toilet [args] - use /bin/toilet to generate ascii art']

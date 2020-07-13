@@ -18,6 +18,12 @@ def modname(name):
     """Get a stylized version of module name"""
     return '[\x032{}\x0f]'.format(name)
 
+def get_backlog_or_msg(self, chan, msg):
+    if msg == '':
+        return msg
+    else:
+        return get_backlog_msg(self, chan, msg)
+
 def get_backlog_msg(self, chan, msg):
     """get message from backlog"""
 

@@ -1,8 +1,6 @@
 the major refactoring that will never get done
 throttling for karma
 
-do not require self as arguments
-
 common: move out of modules, split up
 common.get_backlog: throw non-generic exception if backlog too short
 

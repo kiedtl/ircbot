@@ -35,5 +35,3 @@ evaluation:
 irc logging, etc
 	store irc logs in a sql database
 	fix chanstats
-
-check-deps script

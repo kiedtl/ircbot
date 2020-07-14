@@ -1,3 +1,5 @@
+# REQUIRE exe fortune
+
 import common, out
 modname = 'fortune'
 

@@ -1,5 +1,11 @@
 # simple text manipulation stuff
 
+# REQUIRE exe qrencode
+# REQUIRE exe figlet
+# REQUIRE exe toilet
+# REQUIRE exe cowsay
+# REQUIRE exe cowthink
+
 import caesar
 import config
 import common

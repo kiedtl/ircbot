@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# check-deps: verify that all the dependencies
+# for sigsegv are installed
+#
+# (c) Kiëd Llaentenn
+# See the license for more information.
+
+pip="$(pip list)"
+
+chk_exe() {
+    type $1 2>/dev/null >&2 || {
+        >&2 printf '%-50s MISSING\n' $1;
+        continue;
+    }
+
+    printf '%-50s FOUND\n' $1;
+}
+
+chk_file() {
+    [ -f "$1" ] || {
+        printf '%-50s MISSING\n' $1;
+        continue;
+    }
+
+    printf '%-50s FOUND\n' $1;
+}
+
+chk_lib() {
+    o="$(echo "$pip" | grep "$1")"
+    [ "$(echo "$o" | wc -l)" -gt 0 ] || {
+        printf '%-50s MISSING\n' $1;
+        continue;
+    }
+
+    printf '%-50s FOUND\n' $1;
+}
+
+printf '=== basic stuff\n'
+chk_exe python3
+chk_exe sh
+chk_exe sqlite3
+chk_exe pip
+printf '\n'
+
+grep -lR "REQUIRE" lib/ mod/ | \
+    while read -r m; do
+        printf '=== %s\n' "$m"
+        while read -r c req type name ; do
+            if [ "$c" = "#" ] && [ "$req" = "REQUIRE" ]
+            then
+                case "$type" in
+                    *exe*)  chk_exe  "$name" ;;
+                    *file*) chk_file "$name" ;;
+                    *lib*)  chk_lib  "$name" ;;
+                esac
+            fi
+        done < "$m"
+        printf '\n'
+    done

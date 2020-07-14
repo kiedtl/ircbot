@@ -1,5 +1,8 @@
-# :modules, :who, and :ping etc commands
-import common, out, random
+# REQUIRE file bin/sysinfo
+
+import common
+import out
+import random
 
 async def list_mods(self, chan, src, msg):
     mods = ', '.join(sorted(list(self.modules.keys())))

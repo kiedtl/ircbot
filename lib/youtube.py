@@ -1,5 +1,9 @@
 # helper funcs to deal with YT
 
+# REQUIRE lib isodate
+# REQUIRE lib googleapiclient
+# REQUIRE lib urllib
+
 import isodate, urllib
 import googleapiclient.discovery
 import googleapiclient.errors

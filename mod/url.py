@@ -1,7 +1,11 @@
 # url-based functions
 
+# REQUIRE lib bs4
+# REQUIRE lib urllib
+
 import common, re, urllib, nullptr, out
 from bs4 import BeautifulSoup as BS
+
 modname = 'url'
 
 async def handle_url(self, chan, src, msg):

@@ -4,9 +4,39 @@ from common import nohighlight
 modname = 'oven'
 DEFAULT_PRICE = 7
 
+admin_commands = {
+    'cheat': cheat,
+    'purge': purge
+}
+
+commands = {
+    'bake': bake,
+    'inv': invsee,
+    'items': invsee,
+    'goods': invsee,
+    'give': give,
+    'giveall': giveall,
+    'richest': richest,
+    'info': info,
+    'owners': owners
+}
+
 ovendb   = dataset.connect('sqlite:///dat/oven.db')
 oveninv  = ovendb['inv']
 ovenqed  = ovendb['qed']
+
+# TODO: add the rest of msgs here
+msgs = {
+    'INV_EMPTY': 'you look into the oven and see nothing',
+    'BAKE_RESULT': 'you bake your items, and out pops a {}!',
+    'BAKE_SMOKING': 'the oven begins to smoke...',
+    'BAKE_EXPLODE': 'the oven explodes!',
+    'BAKE_MURDER': '{} brutally murders the ducc amidst its terrified quaccs and stuffs it into the oven.',
+    'BAKE_NEED_TWO': 'you need at least two items',
+    'DONT_HAVE_ENOUGH': 'you don\'t have enough of {}',
+    'DONT_HAVE_ANY': 'you don\'t have any {}',
+    'USER_NOT_FOUND': 'that user doesn\'t exist',
+}
 
 baked_goods = {
     nohighlight('khuxkm'): 10,
@@ -41,12 +71,14 @@ baked_goods = {
 baked_price = dict((v, k)
     for k, v in baked_goods.items())
 
+
 class NotEnoughItems(Exception):
     """
     There isn't enough of an item in
     someone's inventory.
     """
     pass
+
 
 class TriedBakeDucc(Exception):
     """
@@ -60,6 +92,7 @@ class TriedBakeBomb(Exception):
     """
     pass
 
+
 class InventoryNotFound(Exception):
     """
     Someone tried to transfer an item,
@@ -67,11 +100,13 @@ class InventoryNotFound(Exception):
     """
     pass
 
+
 class SmokingOven(Exception):
     """
     The oven begins to smoke!
     """
     pass
+
 
 def _destroy_item(nick, item, count):
     """
@@ -86,12 +121,14 @@ def _destroy_item(nick, item, count):
     for i in range(0, count):
         oveninv.delete(id=found[i]['id'])
 
+
 def _create_item(nick, item, count):
     """
     Create an item and give it to a user.
     """
     for i in range(0, count):
         oveninv.insert(dict(name=nick, item=item))
+
 
 def _transfer_item(giver, recipient, item, count):
     """
@@ -113,6 +150,7 @@ def _transfer_item(giver, recipient, item, count):
         oveninv.insert(
             dict(name=recipient, item=item['item']))
 
+
 def _count_item(nick, item):
     """
     Check how many of <item> there exist in
@@ -120,6 +158,7 @@ def _count_item(nick, item):
     """
     found = oveninv.find(name=nick, item=item)
     return len(list(found))
+
 
 def _bake_items(nick, items):
     for thing in items:
@@ -166,22 +205,19 @@ def _bake_items(nick, items):
 
     newitem = baked_price[output_value]
 
+    _create_item(nick, newitem, 1)
     return newitem
 
+
 async def purge(self, c, n, m):
-    if not await self.is_admin(n):
-        await out.msg(self, modname, c, [f'insufficient privileges'])
-        return
     if len(m) < 1:
         await out.msg(self, modname, c, [f'need username'])
         return
     oveninv.delete(name=m)
     await out.msg(self, modname, c, [f'done'])
 
+
 async def cheat(self, c, n, m):
-    if not await self.is_admin(n):
-        await out.msg(self, modname, c, ['insufficient privileges'])
-        return
     if len(m.split(' ')) < 2:
         await out.msg(self, modname, c, [f'need username and item.'])
         return
@@ -192,6 +228,7 @@ async def cheat(self, c, n, m):
         _create_item(user, thing, 1)
     await out.msg(self, modname, c, [f'done'])
 
+
 async def give(self, c, n, m):
     m = m.split(' ')
     if len(m) < 2:
@@ -199,18 +236,21 @@ async def give(self, c, n, m):
         return
 
     if _count_item(n, m[1]) < 1:
-        await out.msg(self, modname, c, [f'you don\'t have that!'])
+        await out.msg(self, modname, c,
+            [msgs['DONT_HAVE_ANY'].format(m[1])])
         return
 
     try:
         _transfer_item(n, m[0], m[1], 1)
     except InventoryNotFound:
-        await out.msg(self, modname, c, [f'that user doesn\'t exist.'])
+        await out.msg(self, modname, c,
+            [msgs['USER_NOT_FOUND']])
         return
 
     receiver = nohighlight(m[0])
     await out.msg(self, modname, c,
         [f'you gave {receiver} a {m[1]}!'])
+
 
 async def giveall(self, c, n, m):
     m = m.split(' ')
@@ -221,18 +261,22 @@ async def giveall(self, c, n, m):
     itemcount = _count_item(n, m[1])
 
     if itemcount < 1:
-        await out.msg(self, modname, c, [f'you don\'t have that!'])
+        await out.msg(self, modname, c,
+            [msgs['DONT_HAVE_ANY'].format(m[1])])
         return
 
     try:
         _transfer_item(n, m[0], m[1], itemcount)
     except InventoryNotFound:
-        await out.msg(self, modname, c, [f'that user doesn\'t exist.'])
+        await out.msg(self, modname, c,
+            [msgs['USER_NOT_FOUND']])
         return
 
     receiver = nohighlight(m[0])
+    # TODO: pluralize properly
     await out.msg(self, modname, c,
         [f'you gave {receiver} your {m[1]}(s)!'])
+
 
 async def info(self, c, n, m):
     query = m.split(' ')[0]
@@ -249,6 +293,7 @@ async def info(self, c, n, m):
 
     await out.msg(self, modname, c,
         [f'there exist {instances} {query}s, each with a value of ${price:.2f} and a combined value of ${total_price:.2f}'])
+
 
 async def owners(self, c, n, m):
     query = m.split(' ')[0]
@@ -277,6 +322,7 @@ async def owners(self, c, n, m):
 
     output = output[:-2] # trim ', '
     await out.msg(self, modname, c, [f'top {query} owners: {output}'])
+
 
 async def richest(self, c, n, m):
     total = 0
@@ -312,12 +358,12 @@ async def richest(self, c, n, m):
     await out.msg(self, modname, c,
         [f'richest users: {output} (total wealth: ${total:,.2f})'])
 
+
 async def bake(self, c, n, m):
     _input = m.split()
 
     if len(_input) < 2:
-        await out.msg(self, modname, c,
-            [f'you need at least 2 items'])
+        await out.msg(self, modname, c, [msgs['BAKE_NEED_TWO']])
         return
 
     items = {}
@@ -331,11 +377,11 @@ async def bake(self, c, n, m):
         found = _count_item(n, thing)
         if found == 0:
             await out.msg(self, modname, c,
-                [f'you don\'t have any {thing}'])
+                [msgs['DONT_HAVE_ANY'].format(thing)])
             return
         elif found < items[thing]:
             await out.msg(self, modname, c,
-                [f'you don\'t have enough of {thing}'])
+                [msgs['DONT_HAVE_ENOUGH'].format(thing)])
             return
 
     try:
@@ -344,25 +390,21 @@ async def bake(self, c, n, m):
         pass # FIXME
     except TriedBakeDucc:
         await out.msg(self, modname, c,
-            [f'{n} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'])
-        await out.msg(self, modname, c,
-            [f'the oven explodes!'])
+            [msgs['BAKE_MURDER'].format(n)])
+        await out.msg(self, modname, c, [msgs['BAKE_EXPLODE']])
         oveninv.delete(name=n)
         return
     except TriedBakeBomb:
-        await out.msg(self, modname, c,
-            [f'the oven explodes!'])
+        await out.msg(self, modname, c, [msgs['BAKE_EXPLODE']])
         oveninv.delete(name=n)
         return
     except SmokingOven:
-        await out.msg(self, modname, c,
-            [f'the oven begins to smoke...'])
+        await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
         return
 
-    _create_item(n, newitem, 1)
-
     await out.msg(self, modname, c,
-        [f'you bake your items, and out pops a {newitem}!'])
+        [msgs['BAKE_RESULT'].format(newitem)])
+
 
 async def invsee(self, c, n, m):
     m = m.split(' ')[0]
@@ -371,8 +413,7 @@ async def invsee(self, c, n, m):
 
     it = [ i['item'] for i in oveninv.find(name = m) ]
     if len(it) < 1:
-        await out.msg(self, modname, c,
-            [f'you look into the oven and see nothing'])
+        await out.msg(self, modname, c, [msgs['INV_EMPTY']])
     else:
         price = sum([baked_goods[i]
             for i in it if i in baked_goods]) / 10
@@ -386,6 +427,7 @@ async def invsee(self, c, n, m):
             output += f'{i[0]} (×{i[1]}), '
         output += f'with a combined value of ${price:.2f}'
         await out.msg(self, modname, c, [output])
+
 
 async def generate(self, c, n, m):
     if int(random.uniform(1, 50)) == 1:
@@ -407,30 +449,26 @@ async def generate(self, c, n, m):
         if ovenqed.find_one(name=n) == None:
             ovenqed.insert(dict(name=n))
 
-commands = {
-    'info': info,
-    'bake': bake,
-    'cheat': cheat,
-    'inv': invsee,
-    'items': invsee,
-    'goods': invsee,
-    'purge': purge,
-    'give': give,
-    'giveall': giveall,
-    'owners': owners,
-    'richest': richest
-}
 
 async def ov_handle(self, c, src, msg):
     msg = msg.split(' ')
-    if len(msg) < 1 or not msg[0] in commands:
+    if len(msg) < 1 or (not msg[0] in commands and \
+            not msg[0] in admin_commands):
         await out.msg(self, modname, c, [self.err_invalid_command])
         return
-    await commands[msg.pop(0)](self, c, src, ' '.join(msg))
+    if msg[0] in admin_commands:
+        if not await self.is_admin(src):
+            await out.msg(self, modname, c,
+                ['insufficient privileges'])
+            return
+        await admin_commands[msg.pop(0)](self, c, src, ' '.join(msg))
+    elif msg[0] in commands:
+        await commands[msg.pop(0)](self, c, src, ' '.join(msg))
+
 
 async def init(self):
     self.handle_cmd['ov'] = ov_handle
-    self.handle_raw['genGoods'] = generate
+    self.handle_raw['oven'] = generate
 
     self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give giveall owners richest']
     self.help['ov info'] = ['info <item> - get info for item']

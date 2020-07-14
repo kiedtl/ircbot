@@ -2,7 +2,171 @@ import dataset, out, random
 from common import nohighlight
 
 modname = 'oven'
-default_price = 7
+DEFAULT_PRICE = 7
+
+ovendb   = dataset.connect('sqlite:///dat/oven.db')
+oveninv  = ovendb['inv']
+ovenqed  = ovendb['qed']
+
+baked_goods = {
+    nohighlight('khuxkm'): 10,
+    nohighlight('jan6'):   10,
+
+    'bomb':        -400,
+    'ricin':       -200,
+    'nightshade':  -100,
+    'roadkill':     -10,
+    'skeleton':      -2,
+    'bone':          -1,
+    'spam':           2,
+    'grass':          4,
+    'flour':          8,
+    'pizza':         10,
+    'pancake':       28,
+    'water':         20,
+    'ration':        38,
+    'egg':           30,
+    'rice':          40,
+    'bread':         40,
+    'pie':           58,
+    'bird':          50,
+    'tortilla':      65,
+    'cookie':        74,
+    'cheese':        80,
+    'sandwich':      95,
+    'wafer':        100,
+    'ducc':         200,
+}
+
+baked_price = dict((v, k)
+    for k, v in baked_goods.items())
+
+class NotEnoughItems(Exception):
+    """
+    There isn't enough of an item in
+    someone's inventory.
+    """
+    pass
+
+class TriedBakeDucc(Exception):
+    """
+    Someone tried to bake a ducc!
+    """
+    pass
+
+class TriedBakeBomb(Exception):
+    """
+    Someone tried to bake a bomb!!
+    """
+    pass
+
+class InventoryNotFound(Exception):
+    """
+    Someone tried to transfer an item,
+    but the inventory doesn't exist.
+    """
+    pass
+
+class SmokingOven(Exception):
+    """
+    The oven begins to smoke!
+    """
+    pass
+
+def _destroy_item(nick, item, count):
+    """
+    Destroy an item in a user's inventory.
+    """
+    found = list(oveninv.find(name=nick, item=item))
+
+    if len(found) < count:
+        raise NotEnoughItems(
+            f'need {count} of {item}, found {len(found)}')
+
+    for i in range(0, count):
+        oveninv.delete(id=found[i]['id'])
+
+def _create_item(nick, item, count):
+    """
+    Create an item and give it to a user.
+    """
+    for i in range(0, count):
+        oveninv.insert(dict(name=nick, item=item))
+
+def _transfer_item(giver, recipient, item, count):
+    """
+    Take item from <giver>'s inventory and place
+    it into <recipient>'s inventory.
+    """
+    if ovenqed.find_one(name=recipient) == None:
+        raise InventoryNotFound()
+
+    found = list(oveninv.find(name=giver, item=item))
+
+    if len(found) < count:
+        raise NotEnoughItems(
+            f'need {count} of {item}, found {len(found)}')
+
+    for i in range(0, count):
+        item = found[i]
+        oveninv.delete(id=item['id'])
+        oveninv.insert(
+            dict(name=recipient, item=item['item']))
+
+def _count_item(nick, item):
+    """
+    Check how many of <item> there exist in
+    <nick>'s inventory.
+    """
+    found = oveninv.find(name=nick, item=item)
+    return len(list(found))
+
+def _bake_items(nick, items):
+    for thing in items:
+        found = _count_item(nick, thing)
+
+        if found < items[thing]:
+            raise NotEnoughItems(
+                f'need {items[thing]} of {thing}, found {found}')
+
+        if thing == 'ducc':
+            raise TriedBakeDucc()
+        elif thing == 'bomb':
+            raise TriedBakeBomb()
+
+    # consume the item
+    for item in items:
+        _destroy_item(nick, item, items[item])
+
+    # if item has value, use that, else use a okay value
+    values = []
+    for thing in items:
+        for i in range(0, items[thing]):
+            if thing in list(baked_goods.keys()):
+                values.append(baked_goods[thing])
+            else:
+                values.append(DEFAULT_PRICE)
+
+    # oooo randomize what will pop out
+    sum_value = sum(values)
+    avg_value = sum_value / len(values)
+    output_value = random.uniform(sum_value,
+        sum_value + avg_value)
+
+    # choose the output
+    # we don't want items like bombs or nightshade
+    # to come by baking, so prevent it from happening
+    # by setting a lower limit on prices
+    min_price = -10
+    while output_value not in list(baked_price.keys()):
+        output_value = int(output_value - 1)
+        if output_value < min_price:
+            raise SmokingOven()
+            return
+
+    newitem = baked_price[output_value]
+
+    return newitem
 
 async def purge(self, c, n, m):
     if not await self.is_admin(n):
@@ -11,8 +175,7 @@ async def purge(self, c, n, m):
     if len(m) < 1:
         await out.msg(self, modname, c, [f'need username'])
         return
-    inv = self.ovendb['inv']
-    inv.delete(name=m)
+    oveninv.delete(name=m)
     await out.msg(self, modname, c, [f'done'])
 
 async def cheat(self, c, n, m):
@@ -22,12 +185,11 @@ async def cheat(self, c, n, m):
     if len(m.split(' ')) < 2:
         await out.msg(self, modname, c, [f'need username and item.'])
         return
-    inv = self.ovendb['inv']
 
     data = m.split(' ')
     user = data[0]
     for thing in data[1:]:
-        inv.insert(dict(name=user, item=thing))
+        _create_item(user, thing, 1)
     await out.msg(self, modname, c, [f'done'])
 
 async def give(self, c, n, m):
@@ -35,13 +197,13 @@ async def give(self, c, n, m):
     if len(m) < 2:
         await out.msg(self, modname, c, [f'you can\'t give air!'])
         return
-    inv = self.ovendb['inv']
-    its = inv.find_one(name=n, item=m[1])
-    if its == None:
+
+    if _count_item(n, m[1]) < 1:
         await out.msg(self, modname, c, [f'you don\'t have that!'])
         return
-    inv.delete(id=its['id'])
-    inv.insert(dict(name=m[0], item=its['item']))
+
+    _transfer_item(n, m[0], m[1], 1)
+
     receiver = nohighlight(m[0])
     await out.msg(self, modname, c,
         [f'you gave {receiver} a {m[1]}!'])
@@ -51,14 +213,15 @@ async def giveall(self, c, n, m):
     if len(m) < 2:
         await out.msg(self, modname, c, [f'you can\'t give air!'])
         return
-    inv = self.ovendb['inv']
-    its = list(inv.find(name=n, item=m[1]))
-    if len(its) < 1:
+
+    itemcount = _count_item(n, m[1])
+
+    if itemcount < 1:
         await out.msg(self, modname, c, [f'you don\'t have that!'])
         return
-    for i in its:
-        inv.delete(id=i['id'])
-        inv.insert(dict(name=m[0], item=i['item']))
+
+    _transfer_item(n, m[0], m[1], itemcount)
+
     receiver = nohighlight(m[0])
     await out.msg(self, modname, c,
         [f'you gave {receiver} your {m[1]}(s)!'])
@@ -68,13 +231,12 @@ async def info(self, c, n, m):
     if len(m) < 1:
         await out.msg(self, modname, c, [f'need item name'])
         return
-    inv = self.ovendb['inv']
-    items = [ i['item'] for i in inv.find(item = query) ]
+    items = [ i['item'] for i in oveninv.find(item = query) ]
 
     instances = len(items)
     price = 0
-    if query in self.bakedGoods:
-        price = self.bakedGoods[query] / 10
+    if query in baked_goods:
+        price = baked_goods[query] / 10
     total_price = instances * price
 
     await out.msg(self, modname, c,
@@ -85,11 +247,10 @@ async def owners(self, c, n, m):
     if len(m) < 1:
         await out.msg(self, modname, c, [f'need item name.'])
         return
-    inv = self.ovendb['inv']
 
     total = 0
     stats = {}
-    for item in list(inv.find(item = query)):
+    for item in list(oveninv.find(item = query)):
         if not item['name'] in stats:
             stats[item['name']] = 0
         stats[item['name']] += 1
@@ -110,20 +271,18 @@ async def owners(self, c, n, m):
     await out.msg(self, modname, c, [f'top {query} owners: {output}'])
 
 async def richest(self, c, n, m):
-    inv = self.ovendb['inv']
-
     total = 0
     stats = {}
 
     if len(m) > 0:
-        results = inv.find(item=m)
+        results = oveninv.find(item=m)
     else:
-        results = inv.find()
+        results = oveninv.find()
 
     for item in list(results):
-        price = default_price
-        if item['item'] in self.bakedGoods:
-            price = self.bakedGoods[item['item']] / 10
+        price = DEFAULT_PRICE
+        if item['item'] in baked_goods:
+            price = baked_goods[item['item']] / 10
 
         if not item['name'] in stats:
             stats[item['name']] = 0
@@ -145,76 +304,54 @@ async def richest(self, c, n, m):
     await out.msg(self, modname, c,
         [f'richest users: {output} (total wealth: ${total:,.2f})'])
 
-# TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):
-    if len(m.split()) < 2:
+    _input = m.split()
+
+    if len(_input) < 2:
         await out.msg(self, modname, c,
             [f'you need at least 2 items'])
         return
 
-    inv = self.ovendb['inv']
-    input = m.split()
-
-    # check that they have the items
     items = {}
-    for thing in input:
+    for thing in _input:
         if not thing in items:
             items[thing] = 0
         items[thing] += 1
 
+    # verify that they have enough items
     for thing in items:
-        found = list(inv.find(name=n, item=thing))
-
-        if len(found) == 0:
-            await out.msg(self, modname, c, [f'you don\'t have any {thing}'])
+        found = _count_item(n, thing)
+        if found == 0:
+            await out.msg(self, modname, c,
+                [f'you don\'t have any {thing}'])
             return
-        elif len(found) < items[thing]:
-            await out.msg(self, modname, c, [f'you don\'t have enough of {thing}'])
-            return
-
-        # if they try to bake a ducc or a bomb,
-        # destroy their stuff
-        if thing == 'ducc' or thing == 'bomb':
-            if thing == 'ducc':
-                await out.msg(self, modname, c, [f'{n} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'])
-
-            await out.msg(self, modname, c, [f'the oven explodes!'])
-            inv.delete(name=n)
+        elif found < items[thing]:
+            await out.msg(self, modname, c,
+                [f'you don\'t have enough of {thing}'])
             return
 
-    # consume the item
-    for thing in input:
-        # TODO: delete multiple items at once, using
-        # the data already in items{}
-        its = inv.find_one(name=n, item=thing)
-        inv.delete(id = its['id'])
+    try:
+        newitem = _bake_items(n, items)
+    except NotEnoughItems:
+        pass # FIXME
+    except TriedBakeDucc:
+        await out.msg(self, modname, c,
+            [f'{n} brutally murders the ducc amidst its terrified quacks and stuffs it into the oven.'])
+        await out.msg(self, modname, c,
+            [f'the oven explodes!'])
+        oveninv.delete(name=n)
+        return
+    except TriedBakeBomb:
+        await out.msg(self, modname, c,
+            [f'the oven explodes!'])
+        oveninv.delete(name=n)
+        return
+    except SmokingOven:
+        await out.msg(self, modname, c,
+            [f'the oven begins to smoke...'])
+        return
 
-    # if item has value, use that, else use a okay value
-    values = []
-    for thing in input:
-        if thing in list(self.bakedGoods.keys()):
-            values.append(self.bakedGoods[thing])
-        else:
-            values.append(default_price)
-
-    # oooo randomize what will pop out
-    sum_value = sum(values)
-    avg_value = sum_value / len(values)
-    output_value = random.uniform(sum_value, sum_value + avg_value)
-
-    # choose the output
-    # we don't want items like bombs or nightshade
-    # to come by baking, so prevent it from happening
-    # by setting a lower limit on prices
-    min_price = -10
-    while output_value not in list(self.bakedPrice.keys()):
-        output_value = int(output_value - 1)
-        if output_value < min_price:
-            await out.msg(self, modname, c, [f'the oven begins to smoke...'])
-            return
-
-    newitem = self.bakedPrice[output_value]
-    inv.insert(dict(name=n, item=newitem))
+    _create_item(n, newitem, 1)
 
     await out.msg(self, modname, c,
         [f'you bake your items, and out pops a {newitem}!'])
@@ -223,13 +360,14 @@ async def invsee(self, c, n, m):
     m = m.split(' ')[0]
     if len(m) < 1:
         m = n.strip()
-    inv = self.ovendb['inv']
-    it = [ i['item'] for i in inv.find(name = m) ]
+
+    it = [ i['item'] for i in oveninv.find(name = m) ]
     if len(it) < 1:
-        await out.msg(self, modname, c, [f'you look into the oven and see nothing'])
+        await out.msg(self, modname, c,
+            [f'you look into the oven and see nothing'])
     else:
-        price = sum([self.bakedGoods[i]
-            for i in it if i in self.bakedGoods]) / 10
+        price = sum([baked_goods[i]
+            for i in it if i in baked_goods]) / 10
         itemstats = {}
         for i in it:
             if not i in itemstats:
@@ -243,26 +381,23 @@ async def invsee(self, c, n, m):
 
 async def generate(self, c, n, m):
     if int(random.uniform(1, 50)) == 1:
-        inv = self.ovendb['inv']
-
         # ensure that items with a high price
         # have a very low chance of being given
         # items with a low or negative price
         # have a high chance of being given
         choices = []
-        for item in self.bakedGoods:
+        for item in baked_goods:
             # probability of getting an item
-            prob = int(((max(list(self.bakedPrice.keys())) + 2)
-                - abs(self.bakedGoods[item])))
+            prob = int(((max(list(baked_price.keys())) + 2)
+                - abs(baked_goods[item])))
             for i in range(0, prob):
                 choices.append(item)
         random.shuffle(choices)
 
-        inv.insert(dict(name = n,
+        oveninv.insert(dict(name = n,
             item = random.choice(choices)))
-        qed = self.ovendb['qed']
-        if qed.find_one(name=n) == None:
-            qed.insert(dict(name=n))
+        if ovenqed.find_one(name=n) == None:
+            ovenqed.insert(dict(name=n))
 
 commands = {
     'info': info,
@@ -286,8 +421,6 @@ async def ov_handle(self, c, src, msg):
     await commands[msg.pop(0)](self, c, src, ' '.join(msg))
 
 async def init(self):
-    self.ovendb = dataset.connect('sqlite:///dat/oven.db')
-
     self.handle_cmd['ov'] = ov_handle
     self.handle_raw['genGoods'] = generate
 
@@ -304,35 +437,3 @@ async def init(self):
     self.help['ov giveall'] = ['giveall <user> <item> - give someone all of an item from your inventory']
     self.help['ov owners'] = ['owners <item> - see which users own an item']
     self.help['ov richest'] = ['richest [item] - see which users own the most valuable items']
-
-    self.bakedGoods = {
-        nohighlight('khuxkm'): 10,
-        nohighlight('jan6'):   10,
-
-        'bomb':        -400,
-        'ricin':       -200,
-        'nightshade':  -100,
-        'roadkill':     -10,
-        'skeleton':      -2,
-        'bone':          -1,
-        'spam':           2,
-        'grass':          4,
-        'flour':          8,
-        'pizza':         10,
-        'pancake':       28,
-        'water':         20,
-        'ration':        38,
-        'egg':           30,
-        'rice':          40,
-        'bread':         40,
-        'pie':           58,
-        'bird':          50,
-        'tortilla':      65,
-        'cookie':        74,
-        'cheese':        80,
-        'sandwich':      95,
-        'wafer':        100,
-        'ducc':         200,
-    }
-
-    self.bakedPrice = dict((v,k) for k,v in self.bakedGoods.items())

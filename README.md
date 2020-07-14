@@ -1,10 +1,7 @@
 # sigsegv
 
-An IRC bot that lives mainly on the `#bots`, `#team` and `#meta`
+An IRC bot that lives mainly on the `#bots`, `#team` and `#chaos`
 channels of the `irc.tilde.chat` IRC network.
-
-Not directly useful; but currently provides some basic utilities
-to get statistics for various channels.
 
 ## faq
 - **Q**: why does this implement features already present in BitBot?
@@ -15,6 +12,8 @@ to get statistics for various channels.
 
 Originally based on lickthecheese's
 [`owo` IRC bot](https://github.com/lickthecheese/oirc-bot).
+The code has more differences than similarities by now,
+though.
 
 ## license
 

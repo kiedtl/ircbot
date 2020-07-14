@@ -11,7 +11,7 @@ import traceback
 
 from misc import whoami
 
-class System(pydle.Client):
+class SIGSEGV(pydle.Client):
     async def on_connect(self):
         await super().on_connect()
 
@@ -154,7 +154,7 @@ class System(pydle.Client):
         print('[irc] mode changed: {}'.format(modes))
 
 if __name__ == '__main__':
-    client = System(config.nickname, realname=config.realname)
+    client = SIGSEGV(config.nickname, realname=config.realname)
     client.prefix = config.prefix
     client.asleep = {}
     client.run(config.server, tls=config.tls, tls_verify=config.tls_verify)

@@ -4,23 +4,6 @@ from common import nohighlight
 modname = 'oven'
 DEFAULT_PRICE = 7
 
-admin_commands = {
-    'cheat': cheat,
-    'purge': purge
-}
-
-commands = {
-    'bake': bake,
-    'inv': invsee,
-    'items': invsee,
-    'goods': invsee,
-    'give': give,
-    'giveall': giveall,
-    'richest': richest,
-    'info': info,
-    'owners': owners
-}
-
 ovendb   = dataset.connect('sqlite:///dat/oven.db')
 oveninv  = ovendb['inv']
 ovenqed  = ovendb['qed']
@@ -36,6 +19,9 @@ msgs = {
     'DONT_HAVE_ENOUGH': 'you don\'t have enough of {}',
     'DONT_HAVE_ANY': 'you don\'t have any {}',
     'USER_NOT_FOUND': 'that user doesn\'t exist',
+    'FOOD_NOM_NOM': 'nom nom nom',
+    'DUCK_GONE_GONE': 'you lose your hold on the ducc and it flies away!',
+    'POIS_BOOM_BOOM': 'not a good idea...', # poison
 }
 
 baked_goods = {
@@ -65,7 +51,7 @@ baked_goods = {
     'cheese':        80,
     'sandwich':      95,
     'wafer':        100,
-    'ducc':         200,
+    'ducc':         400,
 }
 
 baked_price = dict((v, k)
@@ -106,6 +92,13 @@ class SmokingOven(Exception):
     The oven begins to smoke!
     """
     pass
+
+
+def _get_price(item):
+    if item in baked_goods:
+        return baked_goods[item]
+    else:
+        return DEFAULT_PRICE
 
 
 def _destroy_item(nick, item, count):
@@ -181,10 +174,7 @@ def _bake_items(nick, items):
     values = []
     for thing in items:
         for i in range(0, items[thing]):
-            if thing in list(baked_goods.keys()):
-                values.append(baked_goods[thing])
-            else:
-                values.append(DEFAULT_PRICE)
+            values.append(_get_price(thing))
 
     # oooo randomize what will pop out
     sum_value = sum(values)
@@ -193,10 +183,7 @@ def _bake_items(nick, items):
         sum_value + avg_value)
 
     # choose the output
-    # we don't want items like bombs or nightshade
-    # to come by baking, so prevent it from happening
-    # by setting a lower limit on prices
-    min_price = -10
+    min_price = min(baked_price.keys())
     while output_value not in list(baked_price.keys()):
         output_value = int(output_value - 1)
         if output_value < min_price:
@@ -286,9 +273,7 @@ async def info(self, c, n, m):
     items = [ i['item'] for i in oveninv.find(item = query) ]
 
     instances = len(items)
-    price = 0
-    if query in baked_goods:
-        price = baked_goods[query] / 10
+    price = _get_price(query) / 10
     total_price = instances * price
 
     await out.msg(self, modname, c,
@@ -406,6 +391,29 @@ async def bake(self, c, n, m):
         [msgs['BAKE_RESULT'].format(newitem)])
 
 
+async def eat(self, c, n, m):
+    if len(m) < 1:
+        await out.msg(self, modname, c, [f'need item'])
+        return
+
+    item = m.split()[0]
+
+    if _count_item(n, item) < 1:
+        await out.msg(self, modname, c,
+            [msgs['DONT_HAVE_ANY'].format(thing)])
+        return
+
+    if item == 'ducc':
+        await out.msg(self, modname, c, [msgs['DUCK_GONE_GONE']])
+    elif item == 'bomb' or _get_price(item) < 0:
+        await out.msg(self, modname, c, [msgs['POIS_BOOM_BOOM']])
+        return
+    else:
+        await out.msg(self, modname, c, [msgs['FOOD_NOM_NOM']])
+
+    _destroy_item(n, item, 1)
+
+
 async def invsee(self, c, n, m):
     m = m.split(' ')[0]
     if len(m) < 1:
@@ -464,6 +472,25 @@ async def ov_handle(self, c, src, msg):
         await admin_commands[msg.pop(0)](self, c, src, ' '.join(msg))
     elif msg[0] in commands:
         await commands[msg.pop(0)](self, c, src, ' '.join(msg))
+
+
+admin_commands = {
+    'cheat': cheat,
+    'purge': purge
+}
+
+commands = {
+    'eat': eat,
+    'bake': bake,
+    'inv': invsee,
+    'items': invsee,
+    'goods': invsee,
+    'give': give,
+    'giveall': giveall,
+    'richest': richest,
+    'info': info,
+    'owners': owners
+}
 
 
 async def init(self):

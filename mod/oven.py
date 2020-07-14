@@ -1,4 +1,4 @@
-import dataset, out, random
+import time, dataset, out, random
 from common import nohighlight
 
 modname = 'oven'
@@ -390,6 +390,50 @@ async def bake(self, c, n, m):
     await out.msg(self, modname, c,
         [msgs['BAKE_RESULT'].format(newitem)])
 
+async def bakeall(self, c, n, m):
+    item = m.split()[0]
+
+    if len(item) < 1:
+        await out.msg(self, modname, c, ['need item'])
+        return
+
+    found = _count_item(n, item)
+    if found == 0:
+        await out.msg(self, modname, c,
+            [msgs['DONT_HAVE_ANY'].format(item)])
+        return
+    elif found < 2:
+        await out.msg(self, modname, c,
+            [msgs['DONT_HAVE_ENOUGH'].format(item)])
+        return
+
+    items = { item: found }
+
+    # TODO: pluralize properly
+    await out.msg(self, modname, c, [f'baking {found} {item}s...'])
+
+    before = time.time()
+    try:
+        newitem = _bake_items(n, items)
+    except NotEnoughItems:
+        pass # FIXME
+    except TriedBakeDucc:
+        await out.msg(self, modname, c,
+            [msgs['BAKE_MURDER'].format(n)])
+        await out.msg(self, modname, c, [msgs['BAKE_EXPLODE']])
+        oveninv.delete(name=n)
+        return
+    except TriedBakeBomb:
+        await out.msg(self, modname, c, [msgs['BAKE_EXPLODE']])
+        oveninv.delete(name=n)
+        return
+    except SmokingOven:
+        await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
+        return
+    await self.message(c, f'done in {time.time() - before}')
+
+    await out.msg(self, modname, c,
+        [msgs['BAKE_RESULT'].format(newitem)])
 
 async def eat(self, c, n, m):
     if len(m) < 1:
@@ -485,6 +529,7 @@ admin_commands = {
 commands = {
     'eat': eat,
     'bake': bake,
+    'bakeall': bakeall,
     'inv': invsee,
     'items': invsee,
     'goods': invsee,

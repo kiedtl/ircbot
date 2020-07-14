@@ -202,7 +202,11 @@ async def give(self, c, n, m):
         await out.msg(self, modname, c, [f'you don\'t have that!'])
         return
 
-    _transfer_item(n, m[0], m[1], 1)
+    try:
+        _transfer_item(n, m[0], m[1], 1)
+    except InventoryNotFound:
+        await out.msg(self, modname, c, [f'that user doesn\'t exist.'])
+        return
 
     receiver = nohighlight(m[0])
     await out.msg(self, modname, c,
@@ -220,7 +224,11 @@ async def giveall(self, c, n, m):
         await out.msg(self, modname, c, [f'you don\'t have that!'])
         return
 
-    _transfer_item(n, m[0], m[1], itemcount)
+    try:
+        _transfer_item(n, m[0], m[1], itemcount)
+    except InventoryNotFound:
+        await out.msg(self, modname, c, [f'that user doesn\'t exist.'])
+        return
 
     receiver = nohighlight(m[0])
     await out.msg(self, modname, c,

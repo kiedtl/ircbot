@@ -123,7 +123,7 @@ async def usrstats_handle(self, chan, src, msg):
 
 async def init(self):
     self.handle_cmd['usrstats'] = usrstats_handle
-    self.help['usrstats'] = ['usrstats - display statistics on various users (more for subcommands)', 'usrstats subcommands: noisiest happiest saddest angriest']
+    self.help['usrstats'] = ['usrstats - display statistics on various users', 'usrstats subcommands: noisiest happiest saddest angriest']
     self.help['usrstats noisiest'] = ['usrstats noisiest [chan] - get the top talkers for [chan] (default: current)']
     self.help['usrstats happiest'] = ['usrstats happiest [chan] - get the users who type "lol", "lmao", ":)", ":D", etc in their messages the most on [chan]. (default: current)']
     self.help['usrstats saddest'] = ['usrstats saddest [chan] - get the users who type ":/", ":(", etc in their messages the most on [chan]. (default: current)']

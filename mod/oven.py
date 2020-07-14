@@ -459,9 +459,12 @@ async def generate(self, c, n, m):
 
 
 async def ov_handle(self, c, src, msg):
-    msg = msg.split(' ')
-    if len(msg) < 1 or (not msg[0] in commands and \
-            not msg[0] in admin_commands):
+    msg = msg.split()
+    if len(msg) < 1:
+        await out.msg(self, modname, c,
+            [f'need subcommand (see :help ov)'])
+        return
+    if not msg[0] in commands and not msg[0] in admin_commands:
         await out.msg(self, modname, c, [self.err_invalid_command])
         return
     if msg[0] in admin_commands:
@@ -497,7 +500,7 @@ async def init(self):
     self.handle_cmd['ov'] = ov_handle
     self.handle_raw['oven'] = generate
 
-    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly (more for subcommands)', 'ov subcommands: info bake cheat items|inv|goods purge give giveall owners richest']
+    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly', 'ov subcommands: info bake cheat items|inv|goods purge give giveall owners richest']
     self.help['ov info'] = ['info <item> - get info for item']
     self.help['ov bake'] = ['bake <item> - bake some stuff']
     self.help['ov cheat'] = ['cheat <user> <item> - you are bad if you use it']

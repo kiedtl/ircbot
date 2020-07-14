@@ -1,14 +1,11 @@
-the major refactoring that will never get done
 throttling for karma
 
 common: move out of modules, split up
 common.get_backlog: throw non-generic exception if backlog too short
 
-DO NOT ACCEPT CMD FROM BOTS
 multiple prefixes
 
 remove qrenco script; implement in python
-move pig logic into new file/pypy module
 
 aliases:
 	show aliases in help for individual commands,
@@ -17,19 +14,19 @@ aliases:
 ov:
 	add a certain degree of randomness to baking
 	give based on users, not nicks
-	don't give stuff to bots
 	add ":ov bakeall" command
+	add a bunch of helper functions to make life easier
 
 commands:
 	youtube search
 	colors for youtube info
 	wikipedia command
-	youtube commands (for urls)
 	get reddit/lobsters/hn dicussions
 	distrowatch lookup
+	oxford dictionary
 
 evaluation:
-	common lisp evaluation
+	(common) lisp evaluation
 	sed evaluation
 	python evaluation
 	dc evaluation

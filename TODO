@@ -5,7 +5,7 @@ common.get_backlog: throw non-generic exception if backlog too short
 
 multiple prefixes
 
-remove qrenco script; implement in python
+qr: use libqrenco to implement in python
 
 aliases:
 	show aliases in help for individual commands,

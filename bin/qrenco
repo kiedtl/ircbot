@@ -1,9 +1,0 @@
-#!/bin/sh
-#
-# http://github.com/mitchweaver/bin
-#
-# create scannable qr codes in terminal
-# used for the :qr command
-
-read inp
-echo "$inp" | curl -sSL -F-=\<- qrenco.de

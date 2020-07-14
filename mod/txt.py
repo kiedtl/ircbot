@@ -13,7 +13,8 @@ async def cmd_with_args(self, chan, cmd, msg):
         await self.message(chan, line)
 
 async def qrenco(self, chan, src, msg):
-    await cmd_with_args(self, chan, ['bin/qrenco'], msg)
+    await cmd_with_args(self, chan,
+        ['qrencode', '-o', '-', '-t', 'UTF8'], msg)
 
 async def figlet(self, chan, src, msg):
     await cmd_with_args(self, chan, ['figlet'], msg)
@@ -72,4 +73,4 @@ async def init(self):
     self.help['cowsay'] = ['cow{say,think} [args] - use /bin/cow{say,think} to generate ascii art']
     self.help['cowthink'] = self.help['cowsay']
 
-    self.help['qr'] = ['qr [text] - create scannable qr codes (powered by qrenco.de)']
+    self.help['qr'] = ['qr [text] - print a scannable qr code from text']

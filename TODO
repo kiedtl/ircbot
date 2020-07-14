@@ -5,17 +5,13 @@ common.get_backlog: throw non-generic exception if backlog too short
 
 multiple prefixes
 
-qr: use libqrenco to implement in python
-
 aliases:
 	show aliases in help for individual commands,
 	not in command list
 
 ov:
-	add a certain degree of randomness to baking
 	give based on users, not nicks
 	add ":ov bakeall" command
-	add a bunch of helper functions to make life easier
 
 commands:
 	youtube search

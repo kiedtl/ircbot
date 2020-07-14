@@ -111,8 +111,8 @@ def _destroy_item(nick, item, count):
         raise NotEnoughItems(
             f'need {count} of {item}, found {len(found)}')
 
-    for i in range(0, count):
-        oveninv.delete(id=found[i]['id'])
+    oveninv.delete(
+        id=[i['id'] for i in found[:count]])
 
 
 def _create_item(nick, item, count):
@@ -412,7 +412,6 @@ async def bakeall(self, c, n, m):
     # TODO: pluralize properly
     await out.msg(self, modname, c, [f'baking {found} {item}s...'])
 
-    before = time.time()
     try:
         newitem = _bake_items(n, items)
     except NotEnoughItems:
@@ -430,7 +429,6 @@ async def bakeall(self, c, n, m):
     except SmokingOven:
         await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
         return
-    await self.message(c, f'done in {time.time() - before}')
 
     await out.msg(self, modname, c,
         [msgs['BAKE_RESULT'].format(newitem)])

@@ -147,7 +147,7 @@ async def richest(self, c, n, m):
 
 # TODO: combine multiple loops for speedup
 async def bake(self, c, n, m):
-    if len(m) < 2:
+    if len(m.split()) < 2:
         await out.msg(self, modname, c,
             [f'you need at least 2 items'])
         return
@@ -316,8 +316,8 @@ async def init(self):
         'skeleton':      -2,
         'bone':          -1,
         'spam':           2,
-        'flour':          4,
-        'grass':          8,
+        'grass':          4,
+        'flour':          8,
         'pizza':         10,
         'pancake':       28,
         'water':         20,

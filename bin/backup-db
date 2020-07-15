@@ -4,16 +4,31 @@
 # (c) Kiëd Llaentenn <kiedtl@tilde.team>
 # See the COPYING file for copyright information.
 
+die() { printf '%s' "$*"; exit 1; }
 ts() { date +%Y-%m-%dT%H:%M:%SZ; }
 
+before=$(date +%s)
 dir="bak/$(ts)"
-mkdir -p "$dir"
+
+mkdir -p "$dir" || \
+    die could not create directory
 
 for db in dat/*.db; do
     bkfile="$(basename "$db").sql"
     sqlite3 "$db" ".dump" > "$dir/$bkfile"
-done
+done || \
+    die could not create backups
 
 tar -cf - "$dir" | \
-    xz -9qcT0 >"$dir".tar.xz
-rm -rf "$dir"
+    xz -9qcT0 >"$dir".tar.xz || \
+        die could not compress
+rm -rf "$dir" || \
+    die could not remove file
+
+[ "$1" = "-v" ] && {
+    printf 'done in %s seconds\n' \
+        "$(($(date +%s) - before))"
+    printf 'file: %s.tar.xz\n' "$dir";
+}
+
+exit 0

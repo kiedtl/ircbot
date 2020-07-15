@@ -126,17 +126,6 @@ class SIGSEGV(pydle.Client):
                         ['segmentation fault', repr(e)])
                     return
 
-    async def resolve(self, nickname):
-        """
-        Cache whois information for nicknames
-        """
-
-        # FIXME: deal with users leaving, joining, or
-        # maybe even changing nicks
-        if not nickname in self.userinfo:
-            self.userinfo[nickname] = await self.whois(nickname)
-        return self.userinfo[nickname]
-
     async def is_admin(self, nickname):
         info = await self.whois(nickname)
         # check if they are identified

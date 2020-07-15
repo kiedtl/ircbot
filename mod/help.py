@@ -16,17 +16,18 @@ async def show_help(self, c, n, m):
     if len(m) < 1:
         cmdnames = []
         # we want to display aliases for commands, too!
-        for cmd in sorted(self.handle_cmd):
-            aliases = {k for k, v in self.aliases.items() if cmd in k}
-            if len(aliases) > 0:
-                suff = '/'.join(self.aliases[list(aliases)[0]])
-                cmdnames.append(cmd + '/' + suff)
-            else:
-                cmdnames.append(cmd)
+        #for cmd in sorted(self.handle_cmd):
+        #    aliases = {k for k, v in self.aliases.items() if cmd in k}
+        #    if len(aliases) > 0:
+        #        suff = '/'.join(self.aliases[list(aliases)[0]])
+        #        cmdnames.append(cmd + '/' + suff)
+        #    else:
+        #        cmdnames.append(cmd)
 
-        commands = ', '.join(cmdnames)
+        commands = ', '.join(self.handle_cmd)
         await out.msg(self, modname, c,
             [f'commands: {commands}'])
+        return
 
     # list of aliases that might match command
     aliases = {k for k, v in self.aliases.items() if m in v}

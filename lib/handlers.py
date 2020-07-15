@@ -72,8 +72,19 @@ def register(self, modname, func):
 
         data['args'].append(arg)
 
+    # register aliases
+    aliases = []
+    if 'aliases' in data:
+        aliases = data['aliases'].split()
+        self.aliases[data['name']] = aliases
+
     # format help string with name and args
-    help_string = data['name'] + ' '
+    if 'aliases' in data and len(aliases) > 0:
+        help_string = data['name'] \
+            + '/' + '/'.join(aliases) + ' '
+    else:
+        help_string = data['name'] + ' '
+
     for arg in data['args']:
         if arg['optional']:
             help_string += f'[{arg["name"]}] '
@@ -83,11 +94,6 @@ def register(self, modname, func):
 
     # register help messages
     self.help[data['name']] = [help_string] + data['help'][1:]
-
-    # register aliases
-    if 'aliases' in data:
-        self.aliases[data['name']] = [al
-            for al in data['aliases'].split()]
 
     # register handlers
     if 'hook' in data:

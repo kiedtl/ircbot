@@ -1,7 +1,19 @@
+import handlers
 import out
+
 modname = 'help'
 
-async def helpParse(self, c, n, m):
+async def show_help(self, c, n, m):
+    '''
+    :name: help
+    :hook: cmd
+    :help: list commands or show help on command
+    :args: @command:str
+    :aliases: h he
+    '''
+
+    # TODO: fuzzy match commands
+    # TODO: move aliases to self.commands
     aliases = {k for k, v in self.aliases.items() if m in v}
 
     if m in self.help:
@@ -25,12 +37,17 @@ async def helpParse(self, c, n, m):
             [f'commands: {commands}'])
 
 async def more(self, c, n, m):
+    '''
+    :name: more
+    :hook: cmd
+    :help: view more text
+    :args:
+    :aliases: m
+    '''
+
     # TODO: move to separate module
     await out.more(self, c)
 
 async def init(self):
-    self.handle_cmd['help'] = helpParse
-    self.handle_cmd['more'] = more
-
-    self.help['help'] = ['help [command] - list commands or show help on command']
-    self.help['more'] = ['more - view more text']
+    handlers.register(self, modname, show_help)
+    handlers.register(self, modname, more)

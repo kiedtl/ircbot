@@ -5,6 +5,8 @@ common.get_backlog: throw non-generic exception if backlog too short
 
 multiple prefixes
 
+use requests, not urllib
+
 bot:
 	implement needs/arg parser
 	filter out messages tagged with @batch

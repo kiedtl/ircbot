@@ -1,6 +1,8 @@
 # some helper functions to deal
 # with 0x0.st-esque websites
 
+# REQUIRE lib requests
+
 import requests
 
 def shorten(url, nullptr = 'https://0x0.st/'):

@@ -5,29 +5,31 @@ common.get_backlog: throw non-generic exception if backlog too short
 
 multiple prefixes
 
-aliases:
-	show aliases in help for individual commands,
-	not in command list
+bot:
+	implement needs/arg parser
+	filter out messages tagged with @batch
+
 
 ov:
 	give based on users, not nicks
-	add ":ov bakeall" command
 
 commands:
-	youtube search
-	colors for youtube info
 	wikipedia command
 	get reddit/lobsters/hn dicussions
 	distrowatch lookup
 	oxford dictionary
 
+youtube:
+	youtube search
+	colors for youtube info
+
 evaluation:
-	(common) lisp evaluation
+	wolfram|alpha evaluation
 	sed evaluation
 	python evaluation
-	dc evaluation
-	bc evaluation
+	dc/bc evaluation
+	common lisp evaluation
 
 irc logging, etc
 	store irc logs in a sql database
-	fix chanstats
+	fix chanstats/usrstats

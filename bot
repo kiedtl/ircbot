@@ -68,15 +68,8 @@ class SIGSEGV(pydle.Client):
             if chan not in config.bannedchans:
                 await self.join(chan)
 
-    async def on_message(self, chan, source, msg):
+    async def on_channel_message(self, chan, source, msg):
         await super().on_message(chan, source, msg)
-
-        # not sure whether it's a pydle bug or irc quirk...
-        # but when PM's are sent, we receive them twice!
-        # once in the <self.nickname> chan and once in the
-        # <source> chan... so just ignore one of them
-        if chan == self.nickname:
-            return
 
         if not time.time() > self.ignore_cmd:
             return
@@ -136,7 +129,7 @@ class SIGSEGV(pydle.Client):
 
     async def on_private_message(self, chan, source, msg):
         await super().on_private_message(chan, source, msg)
-        await self.on_message(source, source, msg)
+        await self.on_channel_message(source, source, msg)
 
     async def on_user_mode_change(self, modes):
         await super().on_user_mode_change(modes)

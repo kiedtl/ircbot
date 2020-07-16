@@ -88,7 +88,6 @@ async def submission_info(self, chan, src, msg):
 
     results = EXTRACTID.findall(msg)[0]
     rd_id = results[0] or results[1]
-    await self.message(chan, f'DEBUG: results="{results}", rd_id="{rd_id}"')
 
     if rd_id == '':
         await out.msg(self, modname, chan, [f'bad url'])

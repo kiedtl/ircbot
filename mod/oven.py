@@ -178,12 +178,17 @@ def _bake_items(nick, items):
     avg_value = sum_value / len(values)
     output_value = random.uniform(sum_value,
         sum_value + avg_value)
+    initial_output_value = output_value
 
     # choose the output
     min_price = min(baked_price.keys())
+    max_price = max(baked_price.keys())
     while output_value not in list(baked_price.keys()):
-        output_value = int(output_value - 1)
-        if output_value < min_price:
+        if initial_output_value < 0:
+            output_value = int(output_value + 1)
+        else:
+            output_value = int(output_value - 1)
+        if output_value < min_price or output_value > max_price:
             raise SmokingOven()
             return
 

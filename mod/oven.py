@@ -29,11 +29,8 @@ baked_goods = {
     nohighlight('jan6'):   10,
 
     'bomb':        -400,
-    'ricin':       -200,
-    'nightshade':  -100,
     'roadkill':     -10,
-    'skeleton':      -2,
-    'bone':          -1,
+    'bone':         -10,
     'spam':           2,
     'grass':          4,
     'flour':          8,

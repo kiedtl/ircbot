@@ -580,7 +580,7 @@ async def init(self):
     self.handle_cmd['ov'] = ov_handle
     self.handle_raw['oven'] = generate
 
-    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly', 'ov subcommands: info bake cheat items|inv|goods purge give giveall owners richest']
+    self.help['ov'] = ['ov <command> - a worthless ripoff of badger by lickthecheese and Yours Truly', 'ov subcommands: info bake cheat items|inv|goods purge give giveall owners richest recipe']
     self.help['ov info'] = ['info <item> - get info for item']
     self.help['ov bake'] = ['bake <item> - bake some stuff']
     self.help['ov cheat'] = ['cheat <user> <item> - you are bad if you use it']
@@ -593,3 +593,4 @@ async def init(self):
     self.help['ov giveall'] = ['giveall <user> <item> - give someone all of an item from your inventory']
     self.help['ov owners'] = ['owners <item> - see which users own an item']
     self.help['ov richest'] = ['richest [item] - see which users own the most valuable items']
+    self.help['ov recipe'] = ['recipe <items> - drop a few hints as to what the outcome of a baking session might be']

@@ -163,10 +163,6 @@ def _bake_items(nick, items):
         elif thing == 'bomb':
             raise TriedBakeBomb()
 
-    # consume the item
-    for item in items:
-        _destroy_item(nick, item, items[item])
-
     # if item has value, use that, else use a okay value
     values = []
     for thing in items:
@@ -346,6 +342,38 @@ async def richest(self, c, n, m):
         [f'richest users: {output} (total wealth: ${total:,.2f})'])
 
 
+async def recipe(self, c, n, m):
+    _input = m.split()
+
+    if len(_input) < 2:
+        await out.msg(self, modname, c, [msgs['BAKE_NEED_TWO']])
+        return
+
+    items = {}
+    for thing in _input:
+        if not thing in items:
+            items[thing] = 0
+        items[thing] += 1
+
+    try:
+        newitem = _bake_items(n, items)
+    except TriedBakeDucc:
+        await out.msg(self, modname, c,
+            ['baking a ducc?? how could you?!'])
+        return
+    except TriedBakeBomb:
+        await out.msg(self, modname, c,
+            ['baking bombs aren\'t a good idea...'])
+        return
+    except SmokingOven:
+        await out.msg(self, modname, c,
+            ['something doesn\'t seem right...'])
+        return
+
+    await out.msg(self, modname, c,
+        [f'those items *might* give a {newitem}...'])
+
+
 async def bake(self, c, n, m):
     _input = m.split()
 
@@ -389,6 +417,10 @@ async def bake(self, c, n, m):
         await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
         return
 
+    # consume the item
+    for item in items:
+        _destroy_item(n, item, items[item])
+
     await out.msg(self, modname, c,
         [msgs['BAKE_RESULT'].format(newitem)])
 
@@ -416,8 +448,6 @@ async def bakeall(self, c, n, m):
 
     try:
         newitem = _bake_items(n, items)
-    except NotEnoughItems:
-        pass # FIXME
     except TriedBakeDucc:
         await out.msg(self, modname, c,
             [msgs['BAKE_MURDER'].format(n)])
@@ -431,6 +461,10 @@ async def bakeall(self, c, n, m):
     except SmokingOven:
         await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
         return
+
+    # consume the item
+    for item in items:
+        _destroy_item(n, item, items[item])
 
     await out.msg(self, modname, c,
         [msgs['BAKE_RESULT'].format(newitem)])
@@ -528,6 +562,7 @@ admin_commands = {
 
 commands = {
     'eat': eat,
+    'recipe': recipe,
     'bake': bake,
     'bakeall': bakeall,
     'inv': invsee,

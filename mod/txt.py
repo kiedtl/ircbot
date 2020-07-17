@@ -43,7 +43,7 @@ async def rot13(self, chan, src, msg):
     await out.msg(self, 'caesar', chan, [f'{res}'])
 
 async def rot_n(self, chan, src, msg):
-    args = msg.split(' ', 2)
+    args = msg.split(' ', 1)
     if len(args) < 2:
         await out.msg(self, 'caesar', chan,
             ['need rot number and message'])

@@ -21,16 +21,12 @@ msgs = {
     'USER_NOT_FOUND': 'that user doesn\'t exist',
     'FOOD_NOM_NOM': 'nom nom nom',
     'DUCK_GONE_GONE': 'you lose your hold on the ducc and it flies away!',
-    'POIS_BOOM_BOOM': 'not a good idea...', # poison
 }
 
 baked_goods = {
     nohighlight('khuxkm'): 10,
     nohighlight('jan6'):   10,
 
-    'bomb':        -400,
-    'roadkill':     -10,
-    'bone':         -10,
     'spam':           2,
     'grass':          4,
     'flour':          8,
@@ -69,12 +65,6 @@ class TriedBakeDucc(Exception):
     """
     pass
 
-class TriedBakeBomb(Exception):
-    """
-    Someone tried to bake a bomb!!
-    """
-    pass
-
 
 class InventoryNotFound(Exception):
     """
@@ -86,7 +76,7 @@ class InventoryNotFound(Exception):
 
 class SmokingOven(Exception):
     """
-    The oven begins to smoke!
+    Something's wrong...
     """
     pass
 
@@ -150,6 +140,50 @@ def _count_item(nick, item):
     return len(list(found))
 
 
+def _get_baking_results(items):
+    total = 0
+
+    # if item has value, use that, else use a okay value
+    values = []
+    for thing in items:
+        for i in range(0, items[thing]):
+            values.append(_get_price(thing))
+        total += 1
+
+    # oooo randomize what will pop out
+    sum_value = sum(values)
+    avg_value = sum_value / len(values)
+    output_value = random.uniform(sum_value,
+        sum_value + avg_value)
+
+    # choose the output
+    max_price = max(baked_price.keys())
+    min_price = min(baked_price.keys())
+
+    newitems = []
+
+    remaining = output_value
+    while remaining > min_price:
+        while output_value not in list(baked_price.keys()):
+            output_value = int(output_value - 1)
+            if output_value < min_price:
+                while output_value not in list(baked_price.keys()):
+                    output_value = int(output_value - 1)
+                break
+            elif output_value > max_price:
+                while output_value not in list(baked_price.keys()):
+                    output_value = int(output_value - 1)
+                break
+
+        newitems.append(baked_price[output_value])
+        remaining = round(remaining - output_value)
+        output_value = remaining
+
+        if len(newitems) == total:
+            break
+
+    return newitems
+
 def _bake_items(nick, items):
     for thing in items:
         found = _count_item(nick, thing)
@@ -160,38 +194,18 @@ def _bake_items(nick, items):
 
         if thing == 'ducc':
             raise TriedBakeDucc()
-        elif thing == 'bomb':
-            raise TriedBakeBomb()
 
-    # if item has value, use that, else use a okay value
-    values = []
-    for thing in items:
-        for i in range(0, items[thing]):
-            values.append(_get_price(thing))
+    newitems = _get_baking_result(items)
 
-    # oooo randomize what will pop out
-    sum_value = sum(values)
-    avg_value = sum_value / len(values)
-    output_value = random.uniform(sum_value,
-        sum_value + avg_value)
-    initial_output_value = output_value
+    # consume the item
+    for item in items:
+        _destroy_item(n, item, items[item])
 
-    # choose the output
-    min_price = min(baked_price.keys())
-    max_price = max(baked_price.keys())
-    while output_value not in list(baked_price.keys()):
-        if initial_output_value < 0:
-            output_value = int(output_value + 1)
-        else:
-            output_value = int(output_value - 1)
-        if output_value < min_price or output_value > max_price:
-            raise SmokingOven()
-            return
+    # create the items
+    for newitem in newitems:
+        _create_item(n, newitem, 1)
 
-    newitem = baked_price[output_value]
-
-    _create_item(nick, newitem, 1)
-    return newitem
+    return newitems
 
 
 async def purge(self, c, n, m):
@@ -356,14 +370,10 @@ async def recipe(self, c, n, m):
         items[thing] += 1
 
     try:
-        newitem = _bake_items(n, items)
+        newitems = _get_baking_results(items)
     except TriedBakeDucc:
         await out.msg(self, modname, c,
             ['baking a ducc?? how could you?!'])
-        return
-    except TriedBakeBomb:
-        await out.msg(self, modname, c,
-            ['baking bombs aren\'t a good idea...'])
         return
     except SmokingOven:
         await out.msg(self, modname, c,
@@ -371,7 +381,7 @@ async def recipe(self, c, n, m):
         return
 
     await out.msg(self, modname, c,
-        [f'those items *might* give a {newitem}...'])
+        [f'those items *might* give a {newitems}...'])
 
 
 async def bake(self, c, n, m):
@@ -400,7 +410,7 @@ async def bake(self, c, n, m):
             return
 
     try:
-        newitem = _bake_items(n, items)
+        newitems = _bake_items(n, items)
     except NotEnoughItems:
         pass # FIXME
     except TriedBakeDucc:
@@ -409,20 +419,12 @@ async def bake(self, c, n, m):
         await out.msg(self, modname, c, [msgs['BAKE_EXPLODE']])
         oveninv.delete(name=n)
         return
-    except TriedBakeBomb:
-        await out.msg(self, modname, c, [msgs['BAKE_EXPLODE']])
-        oveninv.delete(name=n)
-        return
     except SmokingOven:
         await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
         return
 
-    # consume the item
-    for item in items:
-        _destroy_item(n, item, items[item])
-
     await out.msg(self, modname, c,
-        [msgs['BAKE_RESULT'].format(newitem)])
+        [msgs['BAKE_RESULT'].format(newitems)])
 
 async def bakeall(self, c, n, m):
     item = m.split()[0]
@@ -447,14 +449,10 @@ async def bakeall(self, c, n, m):
     await out.msg(self, modname, c, [f'baking {found} {item}s...'])
 
     try:
-        newitem = _bake_items(n, items)
+        newitems = _bake_items(n, items)
     except TriedBakeDucc:
         await out.msg(self, modname, c,
             [msgs['BAKE_MURDER'].format(n)])
-        await out.msg(self, modname, c, [msgs['BAKE_EXPLODE']])
-        oveninv.delete(name=n)
-        return
-    except TriedBakeBomb:
         await out.msg(self, modname, c, [msgs['BAKE_EXPLODE']])
         oveninv.delete(name=n)
         return
@@ -462,12 +460,8 @@ async def bakeall(self, c, n, m):
         await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
         return
 
-    # consume the item
-    for item in items:
-        _destroy_item(n, item, items[item])
-
     await out.msg(self, modname, c,
-        [msgs['BAKE_RESULT'].format(newitem)])
+        [msgs['BAKE_RESULT'].format(newitems)])
 
 async def eat(self, c, n, m):
     if len(m) < 1:
@@ -483,9 +477,6 @@ async def eat(self, c, n, m):
 
     if item == 'ducc':
         await out.msg(self, modname, c, [msgs['DUCK_GONE_GONE']])
-    elif item == 'bomb' or _get_price(item) < 0:
-        await out.msg(self, modname, c, [msgs['POIS_BOOM_BOOM']])
-        return
     else:
         await out.msg(self, modname, c, [msgs['FOOD_NOM_NOM']])
 

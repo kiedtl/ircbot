@@ -516,7 +516,7 @@ async def invsee(self, c, n, m):
 
 
 async def generate(self, c, n, m):
-    if int(random.uniform(1, 50)) == 1:
+    if int(random.uniform(1, 50)) == 25:
         # ensure that items with a high price
         # have a very low chance of being given
         # items with a low or negative price

@@ -15,7 +15,7 @@ class SIGSEGV(pydle.Client):
     async def on_connect(self):
         await super().on_connect()
 
-        print('[irc] connected!')
+        self.log('[irc] connected!')
 
         self.modules = {}
         self.help = {}
@@ -33,21 +33,21 @@ class SIGSEGV(pydle.Client):
         # channel history playback
         self.ignore_cmd = 0
 
-        print('[modules] loading modules...')
+        self.log('[modules] loading modules...')
         await self.load_mods()
-        print('[irc] joining channels')
+        self.log('[irc] joining channels')
         for i in config.initial_chans:
             await self.join(i)
-        print('[irc] done!')
+        self.log('[irc] done!')
 
         if config.set_botmode:
-            print('[irc] attempting to set mode +B')
+            self.log('[irc] attempting to set mode +B')
             await self.set_mode(self.nickname, '+B')
 
     async def load_mods(self):
         for i in [s for s in os.listdir('mod') if '.py' in s]:
             i = i[:-3]
-            print('[modules] loading', i)
+            self.log('[modules] loading', i)
             m = __import__('mod.' + i)
             m = eval('m.' + i)
             await m.init(self)
@@ -62,7 +62,7 @@ class SIGSEGV(pydle.Client):
     async def on_invite(self, chan, by):
         await super().on_invite(chan, by)
 
-        print('[irc] received invite by {} to {}'.format(by, chan))
+        self.log('[irc] received invite by {} to {}'.format(by, chan))
 
         if config.join_on_invite:
             if chan not in config.bannedchans:
@@ -107,7 +107,7 @@ class SIGSEGV(pydle.Client):
             cmd = list(matches)[0]
 
         if cmd in self.handle_cmd:
-            print('[cmd] recieved command "{}" from "{}" in "{}"'
+            self.log('[cmd] recieved command "{}" from "{}" in "{}"'
                 .format(cmd, source, chan))
 
             if self.asleep[chan] < time.time() or cmd == 'admin':
@@ -133,11 +133,12 @@ class SIGSEGV(pydle.Client):
 
     async def on_user_mode_change(self, modes):
         await super().on_user_mode_change(modes)
-        print('[irc] mode changed: {}'.format(modes))
+        self.log('[irc] mode changed: {}'.format(modes))
 
-    def log(mod, txt):
+    def log(self, mod, txt):
         now = datetime.datetime.now()
         fmt = datetime.datetime.strftime(now, '%Y-%M-%dT%H:%m:%SZ')
+        print(f'{fmt}: [{mod}]: {txt}')
 
 if __name__ == '__main__':
     client = SIGSEGV(config.nickname, realname=config.realname)

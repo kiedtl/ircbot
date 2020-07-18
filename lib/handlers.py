@@ -10,6 +10,9 @@ from getopt import gnu_getopt
 import out
 
 async def execute(self, func, chan, src, msg):
+    # TODO; ensure that all non-positional arguments
+    # are there
+
     '''
     Ensure that all the necessary arguments
     are in place, parse non-positional arguments,

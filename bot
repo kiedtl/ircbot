@@ -3,6 +3,7 @@
 import asyncio
 import config
 import datetime
+import handlers
 import os
 import out
 import pydle
@@ -18,6 +19,7 @@ class SIGSEGV(pydle.Client):
 
         self.log('irc', 'connected!')
 
+        self.fndata = {}
         self.modules = {}
         self.help = {}
         self.userinfo = {}
@@ -110,13 +112,15 @@ class SIGSEGV(pydle.Client):
         if cmd in self.handle_cmd:
             self.log('irc', 'recieved command "{} {}" from "{}" in "{}"'
                 .format(cmd, msg, source, chan))
+            func = self.handle_cmd[cmd]
 
             if self.asleep[chan] < time.time() or cmd == 'admin':
                 try:
-                    await self.handle_cmd[cmd](self, chan, source, msg)
+                    await handlers.execute(self, func, chan, source, msg)
                 except Exception as e:
                     traceback.print_tb(e.__traceback__)
-                    await out.msg(self, 'oops', chan,
+                    module = self.fndata[func]['module']
+                    await out.msg(self, module, chan,
                         ['segmentation fault', repr(e)])
                     return
 

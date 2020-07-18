@@ -3,7 +3,7 @@ import out
 
 modname = 'help'
 
-async def show_help(self, c, n, m):
+async def show_help(self, ch, src, msg, args, opts):
     '''
     :name: help
     :hook: cmd
@@ -13,7 +13,7 @@ async def show_help(self, c, n, m):
     '''
 
     # list commands if no arguments
-    if len(m) < 1:
+    if len(args) < 1:
         cmdnames = []
         # we want to display aliases for commands, too!
         #for cmd in sorted(self.handle_cmd):
@@ -25,7 +25,7 @@ async def show_help(self, c, n, m):
         #        cmdnames.append(cmd)
 
         commands = ', '.join(self.handle_cmd)
-        await out.msg(self, modname, c,
+        await out.msg(self, modname, ch,
             [f'commands: {commands}'])
         return
 
@@ -33,22 +33,22 @@ async def show_help(self, c, n, m):
     aliases = {k for k, v in self.aliases.items() if m in v}
 
     if m in self.help:
-        await out.msg(self, modname, c, self.help[m])
+        await out.msg(self, modname, ch, self.help[msg])
     elif len(aliases) > 0:
         a = list(aliases)[0]
-        await out.msg(self, modname, c, self.help[a])
+        await out.msg(self, modname, ch, self.help[a])
     else:
         # fuzzy search when all else fails
         # TODO: fuzzy search aliases
         for cmd in sorted(self.handle_cmd.keys()):
-            if cmd.startswith(m):
-                await out.msg(self, modname, c,
-                    [f'no help for \'{m}\', did you mean \'{cmd}\'?'])
+            if cmd.startswith(msg):
+                await out.msg(self, modname, ch,
+                    [f'no help for \'{msg}\', did you mean \'{cmd}\'?'])
                 return
 
-        await out.msg(self, modname, c, [f'no help for \'{m}\''])
+        await out.msg(self, modname, ch, [f'no help for \'{msg}\''])
 
-async def more(self, c, n, m):
+async def more(self, ch, src, msg, args, opts):
     '''
     :name: more
     :hook: cmd
@@ -58,7 +58,7 @@ async def more(self, c, n, m):
     '''
 
     # TODO: move to separate module
-    await out.more(self, c)
+    await out.more(self, ch)
 
 async def init(self):
     handlers.register(self, modname, show_help)

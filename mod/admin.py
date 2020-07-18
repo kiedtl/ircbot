@@ -16,16 +16,19 @@ async def reloadmods(self, chan, source, msg):
     await out.msg(self, modname, chan,
         ['reloading modules...'])
 
+    fndata  = self.fndata
     oldcmd  = self.handle_cmd
     oldraw  = self.handle_raw
     oldreg  = self.handle_reg
     oldali  = self.aliases
     oldhelp = self.help
 
+    self.fndata     = {}
     self.handle_cmd = {}
     self.handle_raw = {}
     self.handle_reg = {}
-    self.help = {}
+    self.aliases    = {}
+    self.help       = {}
 
     try:
         for i in self.modules:
@@ -35,11 +38,12 @@ async def reloadmods(self, chan, source, msg):
         traceback.print_tb(e.__traceback__)
         await out.msg(self, modname, chan,
             [f'segmentation fault', repr(e)])
+        self.fndata     = fndata
         self.handle_cmd = oldcmd
         self.handle_raw = oldraw
         self.handle_reg = oldreg
-        self.aliases = oldali
-        self.help = oldhelp
+        self.aliases    = oldali
+        self.help       = oldhelp
         return
 
     await out.msg(self, modname, chan,

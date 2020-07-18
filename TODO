@@ -7,7 +7,6 @@ bot:
 	common: move out of modules, split up
 	get_backlog: throw non-generic exception if backlog too short
 	use requests, not urllib
-	implement arg parser
 	filter out messages tagged with @batch
 
 
@@ -20,6 +19,9 @@ index irc logs
 
 multiple prefixes
 
+reddit: search via subreddit
+more: split up
+
 
 NEW FUNCTIONALITY
 -----------------
@@ -27,13 +29,13 @@ NEW FUNCTIONALITY
 commands:
 	wikipedia command
 	get lobsters/hn dicussions
-	distrowatch lookup
 	youtube search
+	distrowatch lookup
 	oxford dictionary
 
 evaluation:
+	python evaluation
 	wolfram|alpha evaluation
 	sed evaluation
-	python evaluation
 	dc/bc evaluation
 	common lisp evaluation

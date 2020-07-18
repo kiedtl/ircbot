@@ -1,6 +1,42 @@
+# REQUIRE lib getopt
+
+#
 # helper functions to deal with
 # handlers.
 #
+
+import getopt
+from getopt import gnu_getopt
+import out
+
+async def execute(self, func, chan, src, msg):
+    '''
+    Ensure that all the necessary arguments
+    are in place, parse non-positional arguments,
+    and run function.
+    '''
+    if func not in self.fndata:
+        await func(self, chan, src, msg)
+        return
+
+    shortopts = ''
+
+    # create list of short opts
+    for arg in self.fndata[func]['args']:
+        if 'option' in arg:
+            shortopts += arg['option']
+            shortopts += ':'
+        elif 'flag' in arg:
+            shortopts += arg['flag']
+
+    try:
+        opts, args = gnu_getopt(msg.split(), shortopts)
+    except getopt.GetoptError as err:
+        await out.msg(self, self.fndata[func]['module'],
+            chan, [f'{err}'])
+        return
+
+    await func(self, chan, src, msg, args, opts)
 
 def register(self, modname, func):
     '''
@@ -66,6 +102,19 @@ def register(self, modname, func):
         else:
             arg['optional'] = False
 
+        # is it a flag?
+        # flags follow this syntax when defined
+        # in a function docstring:
+        #   [&/*]<shortopt_char>:<opt_name>:<type>
+        # if the prefix is '&', it takes an argument,
+        # if the prefix is '*', if doesn't take args.
+        if raw_arg[0] == '&':
+            arg['option'] = raw_arg[1]
+            raw_arg = raw_arg[3:]
+        elif raw_arg[0] == '*':
+            arg['flag'] = raw_arg[1]
+            raw_arg = raw_arg[3:]
+
         name, _, _type = raw_arg.partition(':')
         arg['name'] = name
         arg['type'] = _type
@@ -104,6 +153,9 @@ def register(self, modname, func):
         elif data['hook'] == 'reg':
             reg = re.compile(data['hook_regex'])
             self.handle_reg[data['name']] = (reg, func)
+
+    # register rest of data
+    self.fndata[func] = data
 
     func.registered = True
     return

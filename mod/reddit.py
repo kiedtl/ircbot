@@ -13,12 +13,12 @@ EXTRACTID = re.compile('(?:https?://)?(?:www\.|old\.|new\.)?(?:reddit.com/r/[a-z
 
 # TODO: sortby, subreddit, etc
 
-async def submissions_search(self, chan, src, msg):
+async def submissions_search(self, chan, src, msg, args, opts):
     '''
     :name: rds
     :hook: cmd
     :help: search for posts on reddit.
-    :args: keywords:list
+    :args: keywords:list &s:subreddit:str
     '''
     if len(msg) < 1:
         await out.msg(self, modname, chan, [f'need search terms'])
@@ -42,7 +42,7 @@ async def submissions_search(self, chan, src, msg):
 
     await out.msg(self, modname, chan, results)
 
-async def submissions_for_url(self, chan, src, msg):
+async def submissions_for_url(self, chan, src, msg, args, opts):
     '''
     :name: rdu
     :hook: cmd
@@ -73,7 +73,7 @@ async def submissions_for_url(self, chan, src, msg):
 
     await out.msg(self, modname, chan, results)
 
-async def submission_info(self, chan, src, msg):
+async def submission_info(self, chan, src, msg, args, opts):
     '''
     :name: rdi
     :hook: cmd

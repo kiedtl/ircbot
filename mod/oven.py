@@ -24,9 +24,9 @@ msgs = {
 }
 
 baked_goods = {
-    nohighlight('khuxkm'): 30,
-    nohighlight('jan6'):   30,
-    nohighlight('login'):  30,
+    nohighlight('khuxkm'): 50,
+    nohighlight('jan6'):   50,
+    nohighlight('login'):  50,
 
     'spam':           2,
     'grass':          4,

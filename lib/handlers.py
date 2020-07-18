@@ -140,6 +140,10 @@ def register(self, modname, func):
     for arg in data['args']:
         if arg['optional']:
             help_string += f'[{arg["name"]}] '
+        elif 'flag' in arg:
+            help_string += f'[-{arg["flag"]} ({arg["name"]})] '
+        elif 'option' in arg:
+            help_string += f'[-{arg["option"]} {arg["name"]}] '
         else:
             help_string += f'<{arg["name"]}> '
     help_string += '- ' + data['help'][0]

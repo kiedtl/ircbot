@@ -24,8 +24,9 @@ msgs = {
 }
 
 baked_goods = {
-    nohighlight('khuxkm'): 10,
-    nohighlight('jan6'):   10,
+    nohighlight('khuxkm'): 30,
+    nohighlight('jan6'):   30,
+    nohighlight('login'):  30,
 
     'spam':           2,
     'grass':          4,
@@ -559,8 +560,8 @@ commands = {
     'inv': invsee,
     'items': invsee,
     'goods': invsee,
-    'give': give,
-    'giveall': giveall,
+#    'give': give,
+#    'giveall': giveall,
     'richest': richest,
     'info': info,
     'owners': owners

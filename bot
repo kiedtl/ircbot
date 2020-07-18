@@ -135,6 +135,10 @@ class SIGSEGV(pydle.Client):
         await super().on_user_mode_change(modes)
         print('[irc] mode changed: {}'.format(modes))
 
+    def log(mod, txt):
+        now = datetime.datetime.now()
+        fmt = datetime.datetime.strftime(now, '%Y-%M-%dT%H:%m:%SZ')
+
 if __name__ == '__main__':
     client = SIGSEGV(config.nickname, realname=config.realname)
     client.prefix = config.prefix

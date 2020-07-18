@@ -195,15 +195,15 @@ def _bake_items(nick, items):
         if thing == 'ducc':
             raise TriedBakeDucc()
 
-    newitems = _get_baking_result(items)
+    newitems = _get_baking_results(items)
 
     # consume the item
     for item in items:
-        _destroy_item(n, item, items[item])
+        _destroy_item(nick, item, items[item])
 
     # create the items
     for newitem in newitems:
-        _create_item(n, newitem, 1)
+        _create_item(nick, newitem, 1)
 
     return newitems
 
@@ -365,16 +365,16 @@ async def recipe(self, c, n, m):
 
     items = {}
     for thing in _input:
+        if thing == 'ducc':
+            await out.msg(self, modname, c,
+                ['baking a ducc? how could you?!'])
+            return
         if not thing in items:
             items[thing] = 0
         items[thing] += 1
 
     try:
         newitems = _get_baking_results(items)
-    except TriedBakeDucc:
-        await out.msg(self, modname, c,
-            ['baking a ducc?? how could you?!'])
-        return
     except SmokingOven:
         await out.msg(self, modname, c,
             ['something doesn\'t seem right...'])

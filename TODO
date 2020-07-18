@@ -13,8 +13,17 @@ bot:
 ov:
 	give based on users, not nicks
 
-youtube:
-	colors for youtube info
+
+
+CHANGES
+-------
+
+store irc logs in a sql database
+	fix chanstats/usrstats
+index irc logs
+
+multiple prefixes
+
 
 
 NEW FUNCTIONALITY
@@ -33,11 +42,3 @@ evaluation:
 	python evaluation
 	dc/bc evaluation
 	common lisp evaluation
-
-CHANGES
--------
-
-store irc logs in a sql database
-	fix chanstats/usrstats
-
-multiple prefixes

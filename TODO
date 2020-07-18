@@ -1,32 +1,31 @@
-thouroughly test oven
+FIXES
+-----
 
-arg parsing
 throttling for karma
 
-common: move out of modules, split up
-common.get_backlog: throw non-generic exception if backlog too short
-
-multiple prefixes
-
-use requests, not urllib
-
 bot:
-	implement needs/arg parser
+	common: move out of modules, split up
+	get_backlog: throw non-generic exception if backlog too short
+	use requests, not urllib
+	implement arg parser
 	filter out messages tagged with @batch
-
 
 ov:
 	give based on users, not nicks
 
+youtube:
+	colors for youtube info
+
+
+NEW FUNCTIONALITY
+-----------------
+
 commands:
 	wikipedia command
-	get reddit/lobsters/hn dicussions
+	get lobsters/hn dicussions
 	distrowatch lookup
-	oxford dictionary
-
-youtube:
 	youtube search
-	colors for youtube info
+	oxford dictionary
 
 evaluation:
 	wolfram|alpha evaluation
@@ -35,6 +34,10 @@ evaluation:
 	dc/bc evaluation
 	common lisp evaluation
 
-irc logging, etc
-	store irc logs in a sql database
+CHANGES
+-------
+
+store irc logs in a sql database
 	fix chanstats/usrstats
+
+multiple prefixes

@@ -10,9 +10,6 @@ from getopt import gnu_getopt
 import out
 
 async def execute(self, func, chan, src, msg):
-    # TODO; ensure that all non-positional arguments
-    # are there
-
     '''
     Ensure that all the necessary arguments
     are in place, parse non-positional arguments,
@@ -39,7 +36,17 @@ async def execute(self, func, chan, src, msg):
             chan, [f'{err}'])
         return
 
-    await func(self, chan, src, msg, args, opts)
+    # ensure all non-optional arguments are in place
+    non_optional = [a for a in self.fndata[func]['args']
+        if not a['optional'] and 'option' not in a and 'flag' not in a]
+    for i in range(0, len(non_optional)):
+        if i > len(args):
+            name = self.fndata[func]['args'][i]['name']
+            await out.msg(self, self.fndata[func]['module'],
+                chan, [f'need argument {name}'])
+            return
+
+    await func(self, chan, src, msg, args, dict(opts))
 
 def register(self, modname, func):
     '''

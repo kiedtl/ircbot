@@ -2,6 +2,7 @@
 
 import asyncio
 import config
+import datetime
 import os
 import out
 import pydle
@@ -15,7 +16,7 @@ class SIGSEGV(pydle.Client):
     async def on_connect(self):
         await super().on_connect()
 
-        self.log('[irc] connected!')
+        self.log('irc', 'connected!')
 
         self.modules = {}
         self.help = {}
@@ -33,21 +34,21 @@ class SIGSEGV(pydle.Client):
         # channel history playback
         self.ignore_cmd = 0
 
-        self.log('[modules] loading modules...')
+        self.log('modules', 'loading modules...')
         await self.load_mods()
-        self.log('[irc] joining channels')
+        self.log('irc', 'joining channels')
         for i in config.initial_chans:
             await self.join(i)
-        self.log('[irc] done!')
+        self.log('irc', 'done!')
 
         if config.set_botmode:
-            self.log('[irc] attempting to set mode +B')
+            self.log('irc', 'attempting to set mode +B')
             await self.set_mode(self.nickname, '+B')
 
     async def load_mods(self):
         for i in [s for s in os.listdir('mod') if '.py' in s]:
             i = i[:-3]
-            self.log('[modules] loading', i)
+            self.log('modules', f'loading {i}')
             m = __import__('mod.' + i)
             m = eval('m.' + i)
             await m.init(self)
@@ -62,7 +63,7 @@ class SIGSEGV(pydle.Client):
     async def on_invite(self, chan, by):
         await super().on_invite(chan, by)
 
-        self.log('[irc] received invite by {} to {}'.format(by, chan))
+        self.log('irc', 'received invite by {} to {}'.format(by, chan))
 
         if config.join_on_invite:
             if chan not in config.bannedchans:
@@ -107,8 +108,8 @@ class SIGSEGV(pydle.Client):
             cmd = list(matches)[0]
 
         if cmd in self.handle_cmd:
-            self.log('[cmd] recieved command "{}" from "{}" in "{}"'
-                .format(cmd, source, chan))
+            self.log('irc', 'recieved command "{} {}" from "{}" in "{}"'
+                .format(cmd, msg, source, chan))
 
             if self.asleep[chan] < time.time() or cmd == 'admin':
                 try:
@@ -133,7 +134,7 @@ class SIGSEGV(pydle.Client):
 
     async def on_user_mode_change(self, modes):
         await super().on_user_mode_change(modes)
-        self.log('[irc] mode changed: {}'.format(modes))
+        self.log('irc', 'mode changed: {}'.format(modes))
 
     def log(self, mod, txt):
         now = datetime.datetime.now()

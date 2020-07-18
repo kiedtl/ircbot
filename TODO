@@ -10,10 +10,6 @@ bot:
 	implement arg parser
 	filter out messages tagged with @batch
 
-ov:
-	give based on users, not nicks
-
-
 
 CHANGES
 -------
@@ -23,7 +19,6 @@ store irc logs in a sql database
 index irc logs
 
 multiple prefixes
-
 
 
 NEW FUNCTIONALITY

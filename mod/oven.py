@@ -508,6 +508,13 @@ async def invsee(self, c, n, m):
 
 
 async def generate(self, c, n, m):
+    # award items to users based on their
+    # account
+    if self.users[n]['account'] == None:
+        return
+    else:
+        n = self.users[n]['account']
+
     if int(random.uniform(1, 50)) == 25:
         # ensure that items with a high price
         # have a very low chance of being given
@@ -529,6 +536,11 @@ async def generate(self, c, n, m):
 
 
 async def ov_handle(self, c, src, msg):
+    if self.users[src]['account'] == None:
+        await out.msg(self, modname, c,
+            [f'you must be registered.'])
+        return
+
     msg = msg.split()
     if len(msg) < 1:
         await out.msg(self, modname, c,

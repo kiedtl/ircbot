@@ -4,6 +4,10 @@ import config
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
 
+class BacklogTooShort(Exception):
+    pass
+
+
 def loadlogs(chan):
     logf = open('irc/{}.log'.format(chan))
     res = logf.read().split('\n')
@@ -28,7 +32,7 @@ def get_backlog_msg(self, chan, msg):
     """get message from backlog"""
 
     if len(msg) < 1:
-        msg = '1'
+        msg = '0'
     try:
         back = int(msg) + 0
     except:
@@ -37,7 +41,7 @@ def get_backlog_msg(self, chan, msg):
     if chan in self.backlog and len(self.backlog[chan]) >= back:
         return self.backlog[chan][0-back]
     else:
-        raise Exception('backlog too short')
+        raise BacklogTooShort('backlog too short')
 
 def run(cmd, stdin):
     """run command and return it's output"""

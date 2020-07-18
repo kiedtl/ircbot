@@ -1,10 +1,11 @@
+# TODO: use requests instead of urlllib
 # helper funcs to deal with YT
 
 # REQUIRE lib isodate
 # REQUIRE lib googleapiclient
 # REQUIRE lib urllib
 
-import isodate, urllib
+import isodate, urllib, fmt
 import googleapiclient.discovery
 import googleapiclient.errors
 
@@ -83,6 +84,10 @@ def fmt_video_info(info):
     if dur['hours'] > 0:
         durfmt = f'{dur["hours"]}h ' + durfmt
 
-    return f'{info["title"]} ({durfmt}) uploaded by {info["channel"]}' + \
+    title    = fmt.bold(info['title'])
+    dislikes = fmt.red(f'{info["dislikes"]:,}')
+    likes    = fmt.green(f'{info["likes"]:,}')
+
+    return f'{title} ({durfmt}) uploaded by {info["channel"]}' + \
         f' on {info["uploaded_at"]}, {info["views"]:,} views' + \
-        f' ({info["likes"]:,}↑↓{info["dislikes"]:,})'
+        f' ({likes}↑↓{dislikes})'

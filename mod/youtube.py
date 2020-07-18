@@ -4,7 +4,7 @@ import youtube as YT
 import common, out, re, secrets
 
 modname = 'youtube'
-is_yturl = re.compile('(?:.*)?(https?://(?:www\.|m\.)?(?:youtu.be/|youtube.com/)(?:[^ ]+)?)')
+is_yturl = re.compile('(?:.*)?(https?\://(?:www\.|m\.)?(?:youtu.be/|youtube.com/)(?:[^ ]+)?)')
 youtube = YT.authenticate(secrets.yt_key)
 
 async def handle_yt(self, chan, src, msg):
@@ -33,7 +33,7 @@ async def yt_info(self, chan, src, msg):
 
     matches = is_yturl.findall(txt)
     if len(matches) < 1:
-        await out.msg(self, modname, chan, [f'bad url'])
+        await out.msg(self, modname, chan, [f'no url in {txt}'])
         return
     try:
         v_id = YT.id_from_url(matches[0])

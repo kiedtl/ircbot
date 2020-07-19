@@ -10,6 +10,8 @@ bot:
 	get_backlog: throw non-generic exception if backlog too short
 	use requests, not urllib
 	filter out messages tagged with @batch
+	add a better way to restart/reload/stop bot remotely (UNIX sockets?)
+		update systemd unit and add to repo.
 
 documentation on the bot's internals.
 

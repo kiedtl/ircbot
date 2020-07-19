@@ -1,8 +1,20 @@
 import config
 import common, importlib, out, os, time
 import traceback
+import pprint
 
 modname = 'admin'
+
+async def dump(self, chan, source, msg):
+    '''
+    dump the contents of self to a file
+    for debugging purposes.
+    '''
+    with open(msg, 'w') as f:
+        pprint.pprint(vars(self), stream=f)
+        pprint.pprint('\n\n\n',   stream=f)
+        pprint.pprint(dir(self),  stream=f)
+    await out.msg(self, modname, chan, ['done'])
 
 async def quit(self, chan, source, msg):
     await self.quit()
@@ -101,6 +113,7 @@ async def wake(self, c, n, m):
     await out.msg(self, modname, chan, ['I\'m back!'])
 
 commands = {
+    'coredump': dump,
     'quit': quit,
     'restart': restart,
     'reload': reloadmods,
@@ -133,6 +146,7 @@ async def init(self):
 
     self.help['admin'] = ['admin - various bot owner commands',
         'admin subcommands: quit restart reload part join joins eval send sleep wake']
+    self.help['admin coredump'] = ['admin coredump <file> - dump contents of self to file']
     self.help['admin quit'] = ['admin quit <message> - shutdown bot']
     self.help['admin restart'] = ['admin restart <message> - restart bot']
     self.help['admin reload'] = ['admin reload - reload modules and configs']

@@ -121,7 +121,10 @@ class SIGSEGV(pydle.Client):
                     await handlers.execute(self, func, chan, source, msg)
                 except Exception as e:
                     traceback.print_tb(e.__traceback__)
-                    module = self.fndata[func]['module']
+                    if func in self.fndata:
+                        module = self.fndata[func]['module']
+                    else:
+                        module = 'oops'
                     await out.msg(self, module, chan,
                         ['segmentation fault', repr(e)])
                     return

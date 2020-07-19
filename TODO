@@ -18,6 +18,11 @@ bot:
 
 documentation on the bot's internals.
 
+chat:
+	ignore stuff from bots
+
+fix backlogger
+
 
 CHANGES
 -------

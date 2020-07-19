@@ -4,6 +4,7 @@ import random
 import re
 import time
 
+WSPLIT = re.compile(r'[!-/:-@\[-`{-~\ 0-9]+')
 MODNAME = 'chat'
 LEARNDELAY = 4
 ENMUL = 25
@@ -19,7 +20,7 @@ async def rec(self, m):
     end  = chatdb['end']
     pre = ''
 
-    words = m.split(' ')
+    words = WSPLIT.split(m)
     for w in words:
         if pre == '':
             beg.insert(dict(word=w))
@@ -91,14 +92,14 @@ async def learn(self, c, n, m):
         m = m[len(self.nickname):]
         await go(self, c, n, m)
     else:
-        if len(re.split('\W', m)) > 1:
+        if len(WSPLIT.split(m)) > 1:
             if self.learntime + LEARNDELAY < time.time():
                 await rec(self, m)
                 self.learntime = time.time()
 
 async def go(self, c, n, m):
         await rec(self, m)
-        words = m.split(' ')
+        words = WSPLIT.split(m)
         await self.message(c, ' '.join(await genOut(self, await getNoun(self, words, c))))
 
 async def init(self):

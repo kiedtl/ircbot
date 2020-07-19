@@ -1,3 +1,5 @@
+TODO: rsync backups
+
 FIXES
 -----
 
@@ -9,6 +11,8 @@ bot:
 	use requests, not urllib
 	filter out messages tagged with @batch
 
+documentation on the bot's internals.
+
 
 CHANGES
 -------
@@ -18,9 +22,6 @@ store irc logs in a sql database
 index irc logs
 
 multiple prefixes
-
-reddit: search via subreddit
-more: split up
 
 
 NEW FUNCTIONALITY
@@ -39,3 +40,5 @@ evaluation:
 	sed evaluation
 	dc/bc evaluation
 	common lisp evaluation
+
+nlp module!

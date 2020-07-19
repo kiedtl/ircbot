@@ -20,7 +20,7 @@ async def submissions_search(self, chan, src, msg, args, opts):
     :name: rds
     :hook: cmd
     :help: search for posts on reddit.
-    :args: &s:subreddit:str @keywords:list
+    :args: &s:subreddit:str keywords:list
     '''
     await out.msg(self, modname, chan, ['searching...'])
 
@@ -52,7 +52,7 @@ async def submissions_for_url(self, chan, src, msg, args, opts):
     :name: rdu
     :hook: cmd
     :help: search for posts for url on reddit.
-    :args: @url:str
+    :args: &s:subreddit:str @url:str
     '''
     # TODO: check backlog too
     # TODO: ensure that url is valid

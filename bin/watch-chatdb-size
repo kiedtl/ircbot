@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# (c) Kiëd Llaentenn <kiedtl@tilde.team>
+# See the COPYING file for copyright information.
+
+getsz() {
+    /bin/ls -l dat/chat.db | \
+        awk -v "d=$(date +%s)" '{ print d " " $5 }'
+}
+
+while :; do
+    getsz >> log/chatdb-sizelog
+    sleep 60
+done

@@ -74,6 +74,8 @@ class SIGSEGV(pydle.Client):
     async def on_channel_message(self, chan, source, msg):
         await super().on_message(chan, source, msg)
 
+        # ignore channel playback on channels that have
+        # mode +H (only on ircv3 servers)
         if not time.time() > self.ignore_cmd:
             return
 

@@ -145,7 +145,7 @@ async def init(self):
     self.aliases['admin'] = ['a']
 
     self.help['admin'] = ['admin - various bot owner commands',
-        'admin subcommands: quit restart reload part join joins eval send sleep wake']
+        'admin subcommands: coredump quit restart reload part join joins eval send sleep wake']
     self.help['admin coredump'] = ['admin coredump <file> - dump contents of self to file']
     self.help['admin quit'] = ['admin quit <message> - shutdown bot']
     self.help['admin restart'] = ['admin restart <message> - restart bot']

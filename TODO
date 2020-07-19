@@ -14,6 +14,7 @@ bot:
 	add a better way to restart/reload/stop bot remotely (UNIX sockets?)
 		update systemd unit and add to repo.
 	do not crash if exception was thrown in a handle_raw
+	log via self.log(), not print()
 
 documentation on the bot's internals.
 

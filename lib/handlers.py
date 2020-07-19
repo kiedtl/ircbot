@@ -9,6 +9,26 @@ import getopt
 from getopt import gnu_getopt
 import out
 
+# TODO: documentation on how this whole file,
+# works, so when I inevitably leave this project
+# to rot for a month I won't come back completely
+# confused.
+#
+# FIXME: so, when we check to make sure that
+# all the required arguments to a command are there,
+# we use the *very* naive method of checking
+# that the number of arguments is greater than
+# the amount of required arguments.
+#
+# however... some arguments actually take
+# *more than one* value, which makes this dumb
+# method fall to pieces.
+#
+# example: the keywords arguments of :rds
+# (see mod/reddit.py). it's type is "list",
+# which means that it takes a list of strings as
+# its argument.
+
 async def execute(self, func, chan, src, msg):
     '''
     Ensure that all the necessary arguments
@@ -36,15 +56,20 @@ async def execute(self, func, chan, src, msg):
             chan, [f'{err}'])
         return
 
+    # -------------------------------
+    #     ***MESSY MESSY MESSY***
+    # -------------------------------
+
     # ensure all non-optional arguments are in place
     non_optional = [a for a in self.fndata[func]['args']
         if not a['optional'] and 'option' not in a and 'flag' not in a]
-    for i in range(0, len(non_optional)):
-        if i > len(args):
-            name = self.fndata[func]['args'][i]['name']
-            await out.msg(self, self.fndata[func]['module'],
-                chan, [f'need argument {name}'])
-            return
+
+    if len(args) < len(non_optional):
+        # all the required arguments aren't there!
+        name = non_optional[len(args)]['name']
+        await out.msg(self, self.fndata[func]['module'],
+            chan, [f'need argument {name}'])
+        return
 
     await func(self, chan, src, msg, args, dict(opts))
 

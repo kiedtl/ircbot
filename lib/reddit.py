@@ -8,17 +8,25 @@ import requests
 
 PUSHSHIFT = 'https://api.pushshift.io/reddit/search/submission/'
 
+# TODO: refactor to remove duplicated code
+
 def search_by_id(rd_id, subreddit=''):
-    data = requests.get(f'{PUSHSHIFT}?ids={rd_id}&sort_type=score')
+    query = f'{PUSHSHIFT}?ids={rd_id}&sort_type=score'
+    if subreddit != '':
+        query += f'&subreddit={subreddit}'
+    data = requests.get(query)
     return sorted(data.json()['data'],
         key=lambda x: x['score'], reverse=True)
 
 def search_by_keywords(terms, subreddit=''):
-    data = requests.get(f'{PUSHSHIFT}?title={terms}&sort_type=score')
+    query = f'{PUSHSHIFT}?title={terms}&sort_type=score'
+    if subreddit != '':
+        query += f'&subreddit={subreddit}'
+    data = requests.get(query)
     return sorted(data.json()['data'],
         key=lambda x: x['score'], reverse=True)
 
-def search_by_url(url, subreddit=''):
+def search_by_url(url):
     data = requests.get(f'{PUSHSHIFT}?url={url}&sort_type=score')
     return sorted(data.json()['data'],
         key=lambda x: x['score'], reverse=True)

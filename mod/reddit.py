@@ -1,4 +1,6 @@
 # reddit stuff
+# TODO: STOP USING PUSHOVER and
+# USE REDDIT'S API for HEAVEN's SAKE
 
 import handlers
 import fmt
@@ -8,25 +10,28 @@ import reddit
 
 modname = 'reddit'
 
-PUSHSHIFT = 'https://api.pushshift.io/reddit/search/submission'
 EXTRACTID = re.compile('(?:https?://)?(?:www\.|old\.|new\.)?(?:reddit.com/r/[a-zA-Z0-9]+/comments/([a-zA-Z0-9]+)/.*)|(?:redd.it/([a-zA-Z0-9]+))')
 
-# TODO: sortby, subreddit, etc
+# TODO: auto show info for rd url
+# TODO: search only in subreddit
 
 async def submissions_search(self, chan, src, msg, args, opts):
     '''
     :name: rds
     :hook: cmd
     :help: search for posts on reddit.
-    :args: keywords:list &s:subreddit:str
+    :args: &s:subreddit:str @keywords:list
     '''
-    if len(msg) < 1:
-        await out.msg(self, modname, chan, [f'need search terms'])
-        return
-
     await out.msg(self, modname, chan, ['searching...'])
 
-    posts = reddit.search_by_keywords(msg)
+    if 's' in opts:
+        sub = opts['s']
+        if sub.startswith('r/'):
+            sub = sub[2:]
+        posts = reddit.search_by_keywords(msg, subreddit=sub)
+    else:
+        posts = reddit.search_by_keywords(msg)
+
     if len(posts) == 0:
         await out.msg(self, modname, chan, ['no results found'])
         return
@@ -57,7 +62,14 @@ async def submissions_for_url(self, chan, src, msg, args, opts):
 
     await out.msg(self, modname, chan, ['searching...'])
 
-    posts = reddit.search_by_url(msg)
+    if 's' in opts:
+        sub = opts['s']
+        if sub.startswith('r/'):
+            sub = sub[2:]
+        posts = reddit.search_by_url(msg, subreddit=sub)
+    else:
+        posts = reddit.search_by_url(msg)
+
     if len(posts) == 0:
         await out.msg(self, modname, chan, ['no results found'])
         return

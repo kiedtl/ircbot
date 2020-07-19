@@ -163,25 +163,26 @@ def register(self, modname, func):
         self.aliases[data['name']] = aliases
 
     # format help string with name and args
-    if 'aliases' in data and len(aliases) > 0:
-        help_string = data['name'] \
-            + '/' + '/'.join(aliases) + ' '
-    else:
-        help_string = data['name'] + ' '
-
-    for arg in data['args']:
-        if arg['optional']:
-            help_string += f'[{arg["name"]}] '
-        elif 'flag' in arg:
-            help_string += f'[-{arg["flag"]} ({arg["name"]})] '
-        elif 'option' in arg:
-            help_string += f'[-{arg["option"]} {arg["name"]}] '
+    if len(data['help']) > 0:
+        if 'aliases' in data and len(aliases) > 0:
+            help_string = data['name'] \
+                + '/' + '/'.join(aliases) + ' '
         else:
-            help_string += f'<{arg["name"]}> '
-    help_string += '- ' + data['help'][0]
+            help_string = data['name'] + ' '
 
-    # register help messages
-    self.help[data['name']] = [help_string] + data['help'][1:]
+        for arg in data['args']:
+            if arg['optional']:
+                help_string += f'[{arg["name"]}] '
+            elif 'flag' in arg:
+                help_string += f'[-{arg["flag"]} ({arg["name"]})] '
+            elif 'option' in arg:
+                help_string += f'[-{arg["option"]} {arg["name"]}] '
+            else:
+                help_string += f'<{arg["name"]}> '
+        help_string += '- ' + data['help'][0]
+
+        # register help messages
+        self.help[data['name']] = [help_string] + data['help'][1:]
 
     # register handlers
     if 'hook' in data:

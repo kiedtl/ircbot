@@ -4,9 +4,9 @@ An IRC bot that lives mainly on the `#bots`, `#team` and `#chaos`
 channels of the `irc.tilde.chat` IRC network.
 
 ## faq
-- **Q**: why does this implement features already present in BitBot?
+- **Q**: why does this implement features already present in other bots?
 	- **A**: so that I can use this on servers/channels without
-	BitBot.
+	those bots.
 
 ## credits
 

@@ -18,8 +18,6 @@ bot:
 
 documentation on the bot's internals.
 
-sysinfo: don't count those with tmux/whatever
-
 chat:
 	ignore stuff from bots
 
@@ -52,5 +50,3 @@ evaluation:
 	sed evaluation
 	dc/bc evaluation
 	common lisp evaluation
-
-nlp module!

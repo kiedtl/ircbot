@@ -1,5 +1,7 @@
 import dataset
-import handlers
+import humanize
+import os
+#import handlers
 import random
 import re
 import time
@@ -13,7 +15,11 @@ qtime = {}
 cstate = {}
 chatdb = dataset.connect('sqlite:///dat/chat.db')
 
-async def rec(self, m):
+class Tmp():
+    pass
+
+#async def rec(self, m):
+def rec(self, m):
     prew = chatdb['prew']
     noch = chatdb['noun']
     beg  = chatdb['beg']
@@ -30,7 +36,8 @@ async def rec(self, m):
         noch.insert(dict(word=w))
     end.insert(dict(word=pre))
 
-async def getNoun(self, words, c):
+#async def getNoun(self, words, c):
+def getNoun(self, words, c):
         if c in cstate:
                 oldnoun = cstate[c]
         else:
@@ -54,7 +61,8 @@ async def getNoun(self, words, c):
         cstate[c] = noun
         return noun
 
-async def genOut(self, noun):
+#async def genOut(self, noun):
+def genOut(self, noun):
     prew = chatdb['prew']
     beg = [ i['word'] for i in chatdb['beg'].find() ]
     end = [ i['word'] for i in chatdb['end'].find() ]
@@ -77,32 +85,51 @@ async def genOut(self, noun):
     return out
 
 
-async def learn(self, c, n, m):
+#async def learn(self, c, n, m):
+def learn(self, c, n, m):
     '''
     :name: chat
     :hook: raw
     '''
-    if c in qtime and qtime[c] > time.time():
-        return
+    #if c in qtime and qtime[c] > time.time():
+    #    return
 
-    if m[:len(self.prefix)] == self.prefix:
-        return
+    #if m[:len(self.prefix)] == self.prefix:
+    #    return
 
     if m[:len(self.nickname)] == self.nickname:
         m = m[len(self.nickname):]
-        await go(self, c, n, m)
+        #await go(self, c, n, m)
+        go(self, c, n, m)
     else:
         if len(WSPLIT.split(m)) > 1:
-            if self.learntime + LEARNDELAY < time.time():
-                await rec(self, m)
-                self.learntime = time.time()
+            #if self.learntime + LEARNDELAY < time.time():
+                #await rec(self, m)
+            rec(self, m)
+            self.learntime = time.time()
 
-async def go(self, c, n, m):
-        await rec(self, m)
-        words = WSPLIT.split(m)
-        await self.message(c, ' '.join(await genOut(self, await getNoun(self, words, c))))
+#async def go(self, c, n, m):
+def go(self, c, n, m):
+    #    await rec(self, m)
+    #    words = WSPLIT.split(m)
+    #    await self.message(c, ' '.join(await genOut(self, await getNoun(self, words, c))))
+    pass
 
-async def init(self):
-    handlers.register(self, MODNAME, learn)
+#async def init(self):
+    #handlers.register(self, MODNAME, learn)
 
-    self.learntime = 0
+self = Tmp()
+self.learntime = 0
+self.nickname = 'tmp'
+
+with open('/home/kiedtl/doc/lotr-fixed.txt') as logf:
+    stuff = logf.read().split('\n')
+    ln = len(stuff)
+    chatdb.begin()
+    for i in range(0, ln):
+        if i % 64 == 0:
+            print(f'\rlearning... [{i}/{ln}]', end='')
+        learn(self, '', '', stuff[i])
+    print(f'\nwriting...', end='')
+    chatdb.commit()
+    print(f' done')

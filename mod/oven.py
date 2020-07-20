@@ -516,7 +516,7 @@ async def invsee(self, c, n, m):
     if len(it) < 1:
         await out.msg(self, modname, c, [msgs['INV_EMPTY']])
     else:
-        price = sum([baked_goods[i]
+        price = sum([_get_price(i)
             for i in it if i in baked_goods]) / 10
         output = _format_items(it) + \
             f', with a combined value of ${price:.2f}'

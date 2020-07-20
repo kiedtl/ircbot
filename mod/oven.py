@@ -1,3 +1,8 @@
+#
+# this module was originally written by xfnw.
+# (c) xfnw/lickthecheese <xfnw@tilde.team>
+#
+
 import time, dataset, out, random
 from common import nohighlight
 

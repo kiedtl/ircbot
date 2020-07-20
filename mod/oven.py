@@ -92,6 +92,22 @@ def _get_price(item):
     else:
         return DEFAULT_PRICE
 
+def _format_items(items):
+    '''
+    Take an array of items and format it.
+    '''
+    itemstats = {}
+    for i in items:
+        if not i in itemstats:
+            itemstats[i] = 0
+        itemstats[i] += 1
+
+    fmtd = []
+    for i in sorted(itemstats.items(),
+            key=lambda i: _get_price(i[0])):
+        fmtd.append(f'{i[0]} (×{i[1]})')
+
+    return ', '.join(fmtd)
 
 def _destroy_item(nick, item, count):
     """
@@ -385,8 +401,9 @@ async def recipe(self, c, n, m):
             ['something doesn\'t seem right...'])
         return
 
+    newitems_fmt = _format_items(newitems)
     await out.msg(self, modname, c,
-        [f'those items *might* give a {newitems}...'])
+        [f'those items *might* give a {newitems_fmt}...'])
 
 
 async def bake(self, c, n, m):
@@ -428,8 +445,9 @@ async def bake(self, c, n, m):
         await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
         return
 
+    newitems_fmt = _format_items(newitems)
     await out.msg(self, modname, c,
-        [msgs['BAKE_RESULT'].format(newitems)])
+        [msgs['BAKE_RESULT'].format(newitems_fmt)])
 
 async def bakeall(self, c, n, m):
     item = m.split()[0]
@@ -465,8 +483,9 @@ async def bakeall(self, c, n, m):
         await out.msg(self, modname, c, [msgs['BAKE_SMOKING']])
         return
 
+    newitems_fmt = _format_items(newitems)
     await out.msg(self, modname, c,
-        [msgs['BAKE_RESULT'].format(newitems)])
+        [msgs['BAKE_RESULT'].format(newitems_fmt)])
 
 async def eat(self, c, n, m):
     if len(m) < 1:
@@ -499,15 +518,8 @@ async def invsee(self, c, n, m):
     else:
         price = sum([baked_goods[i]
             for i in it if i in baked_goods]) / 10
-        itemstats = {}
-        for i in it:
-            if not i in itemstats:
-                itemstats[i] = 0
-            itemstats[i] += 1
-        output = 'you look in the oven and see: '
-        for i in sorted(itemstats.items(), key=lambda i: i[1], reverse=True):
-            output += f'{i[0]} (×{i[1]}), '
-        output += f'with a combined value of ${price:.2f}'
+        output = _format_items(it) + \
+            f', with a combined value of ${price:.2f}'
         await out.msg(self, modname, c, [output])
 
 

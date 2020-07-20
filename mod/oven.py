@@ -29,8 +29,7 @@ baked_goods = {
     nohighlight('login'):  50,
 
     'spam':           2,
-    'grass':          4,
-    'flour':          8,
+    'flour':          6,
     'pizza':         10,
     'pancake':       28,
     'water':         20,

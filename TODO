@@ -17,8 +17,8 @@ bot:
 
 documentation on the bot's internals.
 
-chat:
-	ignore stuff from bots
+ov:
+	print nicely
 
 
 CHANGES

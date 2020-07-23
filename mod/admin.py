@@ -15,6 +15,10 @@ async def dump(self, chan, source, msg):
     dump the contents of self to a file
     for debugging purposes.
     '''
+    if len(msg) < 1:
+        await out.msg(self, modname, chan, ['need filename'])
+        return
+
     with open(msg, 'w') as f:
         pprint.pprint(vars(self), stream=f)
         pprint.pprint('\n\n\n',   stream=f)

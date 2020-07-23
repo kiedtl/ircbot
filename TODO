@@ -17,9 +17,8 @@ bot:
 
 documentation on the bot's internals.
 
-ov:
-	print nicely
-
+configuration database.
+fix :who
 
 CHANGES
 -------

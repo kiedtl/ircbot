@@ -556,6 +556,7 @@ async def ov_handle(self, c, src, msg):
         await out.msg(self, modname, c,
             [f'you must be registered.'])
         return
+    src = self.users[src]['account']
 
     msg = msg.split()
     if len(msg) < 1:

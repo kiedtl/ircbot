@@ -13,7 +13,7 @@ import out
 
 async def cmd_with_args(self, chan, cmd, msg):
     # TODO: throttling, disable in certain channels
-    cmd = cmd + msg.split(' ')
+    cmd = cmd + [msg]
     res = common.run(cmd, msg)
     for line in res.split('\n'):
         await self.message(chan, line)

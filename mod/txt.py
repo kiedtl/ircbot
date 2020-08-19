@@ -13,14 +13,15 @@ import out
 
 async def cmd_with_args(self, chan, cmd, msg):
     # TODO: throttling, disable in certain channels
-    cmd = cmd + [msg]
+    cmd = cmd + msg.split(' ')
     res = common.run(cmd, msg)
     for line in res.split('\n'):
         await self.message(chan, line)
 
 async def qrenco(self, chan, src, msg):
-    await cmd_with_args(self, chan,
-        ['qrencode', '-o', '-', '-t', 'UTF8'], msg)
+    res = common.run(['qrencode', '-o', '-', '-t', 'UTF8', msg], '')
+    for line in res.split('\n'):
+        await self.message(chan, line)
 
 async def figlet(self, chan, src, msg):
     await cmd_with_args(self, chan, ['figlet'], msg)

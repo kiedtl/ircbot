@@ -17,7 +17,7 @@ bannedchans = ['#meta']
 # channels that are joined only when the
 # `:admin joins` command is issued
 prod_chans = ['#team', '#lickthecheese', '#chaos', '#unruly',
-    '#koth', '#ricing']
+    '#koth', '#ricing', '#lounge']
 
 # channels that are joined initially
 initial_chans = ['#bots', '#spacehare']

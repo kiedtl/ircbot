@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# (c) Kiëd Llaentenn <kiedtl@tilde.team>
+# See the COPYING file for copyright information.
+
+git ls-files | \
+    while read -r f; do
+        case "$f" in
+            *py)
+                python -m black "$f"
+            ;;
+        esac
+    done

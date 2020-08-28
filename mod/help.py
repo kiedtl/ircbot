@@ -6,24 +6,24 @@
 import handlers
 import out
 
-modname = 'help'
+modname = "help"
+
 
 async def show_help(self, ch, src, msg, args, opts):
-    '''
+    """
     :name: help
     :hook: cmd
     :help: list commands or show help on command
     :args: @command:str
     :aliases: h he
-    '''
+    """
 
     # list commands if no arguments
     if len(msg) < 1:
         cmdnames = []
 
-        commands = ', '.join(self.handle_cmd)
-        await out.msg(self, modname, ch,
-            [f'commands: {commands}'])
+        commands = ", ".join(self.handle_cmd)
+        await out.msg(self, modname, ch, [f"commands: {commands}"])
         return
 
     # list of aliases that might match command
@@ -39,11 +39,13 @@ async def show_help(self, ch, src, msg, args, opts):
         # TODO: fuzzy search aliases
         for cmd in sorted(self.handle_cmd.keys()):
             if cmd.startswith(msg):
-                await out.msg(self, modname, ch,
-                    [f'no help for \'{msg}\', did you mean \'{cmd}\'?'])
+                await out.msg(
+                    self, modname, ch, [f"no help for '{msg}', did you mean '{cmd}'?"]
+                )
                 return
 
-        await out.msg(self, modname, ch, [f'no help for \'{msg}\''])
+        await out.msg(self, modname, ch, [f"no help for '{msg}'"])
+
 
 async def init(self):
     handlers.register(self, modname, show_help)

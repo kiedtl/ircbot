@@ -5,29 +5,30 @@
 
 from datetime import datetime
 
+
 async def backlogger(self, chan, src, msg):
     if chan not in self.backlog:
         self.backlog[chan] = []
     if chan not in self.logfiles:
-        logpath = 'irc/{}.log'.format(chan)
-        print('[logger] opening logfile {}'.format(logpath))
-        self.logfiles[chan] = open(logpath, 'a')
+        logpath = "irc/{}.log".format(chan)
+        print("[logger] opening logfile {}".format(logpath))
+        self.logfiles[chan] = open(logpath, "a")
 
     # store in logfile
     now = datetime.now()
-    time = datetime.strftime(now, '%d%m%y%H%M')
-    self.logfiles[chan].write('{} {} {}\n'.format(time, src, msg))
+    time = datetime.strftime(now, "%d%m%y%H%M")
+    self.logfiles[chan].write("{} {} {}\n".format(time, src, msg))
     self.logfiles[chan].flush()
 
     # don't store in backlog if msg is a command
     if src == self.nickname:
         return
-    if msg[:len('|| ')] == '|| ':
+    if msg[: len("|| ")] == "|| ":
         # it's a :sed command alias
         return
-    if msg[:len(self.prefix)] == self.prefix:
-        cmd = msg[len(self.prefix):]
-        cmd = cmd.split(' ')[0]
+    if msg[: len(self.prefix)] == self.prefix:
+        cmd = msg[len(self.prefix) :]
+        cmd = cmd.split(" ")[0]
         if cmd in self.handle_cmd:
             return
 
@@ -37,7 +38,8 @@ async def backlogger(self, chan, src, msg):
     if len(self.backlog[chan]) > 1024:
         del self.backlog[chan][:-512]
 
+
 async def init(self):
     self.backlog = {}
     self.logfiles = {}
-    self.handle_raw['backlog'] = backlogger
+    self.handle_raw["backlog"] = backlogger

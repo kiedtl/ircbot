@@ -5,21 +5,23 @@
 
 import requests
 
-def shorten(url, nullptr = 'https://0x0.st/'):
-    params = { 'shorten': url }
-    res = requests.post(url = nullptr, data = params)
+
+def shorten(url, nullptr="https://0x0.st/"):
+    params = {"shorten": url}
+    res = requests.post(url=nullptr, data=params)
 
     if res.status_code != 200:
-        raise Exception(f'received {res.status_code}')
+        raise Exception(f"received {res.status_code}")
 
     url = res.text.rstrip()
     return url
 
+
 def unshorten(target):
-    res = requests.get(url = target, allow_redirects = False)
+    res = requests.get(url=target, allow_redirects=False)
 
     if res.status_code != 302:
-        raise Exception(f'received {res.status_code}')
+        raise Exception(f"received {res.status_code}")
 
-    url = res.headers['Location']
+    url = res.headers["Location"]
     return url

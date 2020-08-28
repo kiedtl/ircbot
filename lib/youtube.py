@@ -9,19 +9,22 @@ import isodate, urllib, fmt
 import googleapiclient.discovery
 import googleapiclient.errors
 
+
 class InvalidURLException(Exception):
     """
     Is there already an exception like this?
     Don't think so...
     """
+
     pass
+
 
 def authenticate(api_key):
     """
     Return an authenticated youtube instance.
     """
-    return googleapiclient.discovery.build('youtube', 'v3',
-        developerKey=api_key)
+    return googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
+
 
 def id_from_url(rawurl):
     """
@@ -38,56 +41,58 @@ def id_from_url(rawurl):
     elif url.path == "/playlist" and "list" in query:
         return query["list"][0]
     else:
-        raise InvalidURLException('bad url')
+        raise InvalidURLException("bad url")
+
 
 def video_info(youtube, v_id):
     """
     Get information for a video from it's id.
     """
     request = youtube.videos().list(
-        part='snippet,contentDetails,statistics',
-        id=v_id,
-        locale='en_US.UTF8'
+        part="snippet,contentDetails,statistics", id=v_id, locale="en_US.UTF8"
     )
 
-    video = (request.execute())['items'][0]
+    video = (request.execute())["items"][0]
 
-    title    = video['snippet']['title']
-    uploaded = video['snippet']['publishedAt'].split('T')[0]
-    views    = int(video['statistics']['viewCount'])
-    likes    = int(video['statistics']['likeCount'])
-    dislikes = int(video['statistics']['dislikeCount'])
-    channel  = video['snippet']['channelTitle']
-    duration = isodate.parse_duration(video['contentDetails']['duration'])
+    title = video["snippet"]["title"]
+    uploaded = video["snippet"]["publishedAt"].split("T")[0]
+    views = int(video["statistics"]["viewCount"])
+    likes = int(video["statistics"]["likeCount"])
+    dislikes = int(video["statistics"]["dislikeCount"])
+    channel = video["snippet"]["channelTitle"]
+    duration = isodate.parse_duration(video["contentDetails"]["duration"])
 
     return {
-        'title': title,
-        'uploaded_at': uploaded,
-        'views': views,
-        'likes': likes,
-        'dislikes': dislikes,
-        'channel': channel,
-        'duration': duration
+        "title": title,
+        "uploaded_at": uploaded,
+        "views": views,
+        "likes": likes,
+        "dislikes": dislikes,
+        "channel": channel,
+        "duration": duration,
     }
+
 
 def fmt_video_info(info):
     """
     Format video information.
     """
     dur = {}
-    dur['hours'], rem = divmod(info['duration'].seconds, 3600)
-    dur['minutes'], dur['seconds'] = divmod(rem, 60)
+    dur["hours"], rem = divmod(info["duration"].seconds, 3600)
+    dur["minutes"], dur["seconds"] = divmod(rem, 60)
 
     durfmt = f'{dur["seconds"]}s'
-    if dur['minutes'] > 0:
+    if dur["minutes"] > 0:
         durfmt = f'{dur["minutes"]}m ' + durfmt
-    if dur['hours'] > 0:
+    if dur["hours"] > 0:
         durfmt = f'{dur["hours"]}h ' + durfmt
 
-    title    = fmt.bold(info['title'])
+    title = fmt.bold(info["title"])
     dislikes = fmt.red(f'{info["dislikes"]:,}')
-    likes    = fmt.green(f'{info["likes"]:,}')
+    likes = fmt.green(f'{info["likes"]:,}')
 
-    return f'{title} ({durfmt}) uploaded by {info["channel"]}' + \
-        f' on {info["uploaded_at"]}, {info["views"]:,} views' + \
-        f' ({likes}↑↓{dislikes})'
+    return (
+        f'{title} ({durfmt}) uploaded by {info["channel"]}'
+        + f' on {info["uploaded_at"]}, {info["views"]:,} views'
+        + f" ({likes}↑↓{dislikes})"
+    )

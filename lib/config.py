@@ -1,4 +1,5 @@
 nickname = "sigsegv"
+username = "kiedtl_bots"
 realname = "a bot with some useful functions and tons of useless ones"
 server = "localhost"
 tls = False

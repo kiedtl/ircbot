@@ -7,6 +7,7 @@ import handlers
 import os
 import out
 import pydle
+import secrets
 import sys
 import time
 import traceback
@@ -151,7 +152,9 @@ class SIGSEGV(pydle.Client):
         print(f'{fmt}: [{mod}]: {txt}')
 
 if __name__ == '__main__':
-    client = SIGSEGV(config.nickname, realname=config.realname)
+    client = SIGSEGV(config.nickname, realname=config.realname,
+        sasl_username=config.username, sasl_password=secrets.sasl_password,
+        sasl_identity=config.username)
     client.prefix = config.prefix
     client.asleep = {}
     client.run(config.server, tls=config.tls, tls_verify=config.tls_verify)

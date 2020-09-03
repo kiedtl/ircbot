@@ -28,11 +28,11 @@ async def dump(self, chan, source, msg):
 
 
 async def quit(self, chan, source, msg):
-    await self.quit()
+    await self.quit(config.quitmsg)
 
 
 async def restart(self, chan, source, msg):
-    await self.quit()
+    await self.quit(config.quitmsg)
     os.system("systemctl --user restart bot")
 
 

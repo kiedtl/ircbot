@@ -42,3 +42,5 @@ prod_chans = [
 
 # channels that are joined initially
 initial_chans = ["#bots", "#spacehare", "#sigsegv"]
+
+quitmsg = "I'll be back"

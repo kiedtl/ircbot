@@ -1,5 +1,6 @@
 # REQUIRE file bin/sysinfo
 
+import config
 import common
 import out
 import random
@@ -18,10 +19,13 @@ async def ping(self, chan, src, msg):
 
 
 async def whoami(self, chan, src, msg):
-    await out.msg(self, "who", chan, [f"I'm {self.nickname}, kiedtl's bot."])
-    await out.msg(self, "who", chan, ["https://github.com/kiedtl/ircbot"])
-    await out.msg(self, "who", chan, ["raves and rants: kiedtl‍＠‍tilde.team"])
-    await out.msg(self, "who", chan, ["for usage info, try :help"])
+    owner = common.nohighlight(config.botmaster)
+    email = common.nohighlight(config.email[0]) + "‍＠‍" + config.email[1]
+    source = "".join([common.nohighlight(i) for i in config.upstream])
+    await out.msg(self, "who", chan, [f"I'm {self.nickname}, {owner}'s bot."])
+    await out.msg(self, "who", chan, [f"upstream: {source}"])
+    await out.msg(self, "who", chan, [f"reporting issues: {email}"])
+    await out.msg(self, "who", chan, [f"for usage info, try {config.prefix}help"])
 
 
 async def init(self):

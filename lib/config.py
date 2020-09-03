@@ -1,3 +1,7 @@
+botmaster = 'kiedtl'
+email = ['kiedtl', 'tilde.team']
+upstream = ['https://github.com/', 'kiedtl', '/ircbot']
+
 nickname = "sigsegv"
 username = "kiedtl_bots"
 realname = "a bot with some useful functions and tons of useless ones"

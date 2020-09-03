@@ -1,6 +1,6 @@
-botmaster = 'kiedtl'
-email = ['kiedtl', 'tilde.team']
-upstream = ['https://github.com/', 'kiedtl', '/ircbot']
+botmaster = "kiedtl"
+email = ["kiedtl", "tilde.team"]
+upstream = ["https://github.com/", "kiedtl", "/ircbot"]
 
 nickname = "sigsegv"
 username = "kiedtl_bots"

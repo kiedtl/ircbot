@@ -41,4 +41,4 @@ prod_chans = [
 ]
 
 # channels that are joined initially
-initial_chans = ["#bots", "#spacehare"]
+initial_chans = ["#bots", "#spacehare", "#sigsegv"]

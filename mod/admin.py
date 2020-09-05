@@ -37,8 +37,8 @@ async def restart(self, chan, source, msg):
     try:
         _restart.restart()
     except Exception as e:
-        self.log(modname, 'encountered fatal exception while restarting')
-        self.log(modname, f'{repr(e)}')
+        self.log(modname, "encountered fatal exception while restarting")
+        self.log(modname, f"{repr(e)}")
 
 
 async def reloadmods(self, chan, source, msg):

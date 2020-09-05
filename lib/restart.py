@@ -2,6 +2,7 @@ import os
 import psutil
 import sys
 
+
 def restart():
     """
     Restarts the current program, with file objects and descriptors

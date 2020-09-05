@@ -168,26 +168,27 @@ def _get_baking_results(items):
     for thing in items:
         for i in range(0, items[thing]):
             values.append(_get_price(thing))
-        total += 1
+            total += 1
 
     # oooo randomize what will pop out
     sum_value = sum(values)
     avg_value = sum_value / len(values)
     output_value = random.uniform(sum_value, sum_value + avg_value)
 
-    # choose the output
     max_price = max(baked_price.keys())
     min_price = min(baked_price.keys())
 
     newitems = []
 
+    # choose the output
+    # keep getting items until we've given enough
     remaining = output_value
     while remaining > min_price:
         while output_value not in list(baked_price.keys()):
             output_value = int(output_value - 1)
             if output_value < min_price:
                 while output_value not in list(baked_price.keys()):
-                    output_value = int(output_value - 1)
+                    output_value = int(output_value + 1)
                 break
             elif output_value > max_price:
                 while output_value not in list(baked_price.keys()):

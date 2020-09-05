@@ -7,6 +7,7 @@ import config
 import common, importlib, out, os, time
 import traceback
 import pprint
+import restart as _restart
 
 modname = "admin"
 
@@ -33,7 +34,11 @@ async def quit(self, chan, source, msg):
 
 async def restart(self, chan, source, msg):
     await self.quit(config.quitmsg)
-    os.system("systemctl --user restart bot")
+    try:
+        _restart.restart()
+    except Exception as e:
+        self.log(modname, 'encountered fatal exception while restarting')
+        self.log(modname, f'{repr(e)}')
 
 
 async def reloadmods(self, chan, source, msg):

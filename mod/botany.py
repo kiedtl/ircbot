@@ -10,7 +10,7 @@ import subprocess
 from subprocess import Popen, PIPE, STDOUT
 
 
-BOTANY_FILE = '/home/%s/.botany/%s_plant.dat'
+BOTANY_FILE = "/home/%s/.botany/%s_plant.dat"
 modname = "botany"
 
 
@@ -28,24 +28,21 @@ async def visit(self, ch, src, msg, args, opts):
         username = msg.split()[0]
 
     # check if username's botany plant exists
-    if username == os.getenv('USER'):
-        await out.msg(self, modname, ch,
-                ['I cannot visit myself.'])
+    if username == os.getenv("USER"):
+        await out.msg(self, modname, ch, ["I cannot visit myself."])
         return
     if not os.path.isfile(BOTANY_FILE % (username, username)):
-        await out.msg(self, modname, ch,
-                [f'I couldn\'t find {username}\'s plant...'])
+        await out.msg(self, modname, ch, [f"I couldn't find {username}'s plant..."])
         return
 
     # water the plant
     water_string = f"\n4\n{username}\n\nq\n"
-    proc = Popen('botany', stdin=PIPE)
+    proc = Popen("botany", stdin=PIPE)
     proc.communicate(water_string.encode("utf-8"))
     exit = proc.wait()
 
     nick_noping = common.nohighlight(username)
-    await out.msg(self, modname, ch,
-            [f'I watered {nick_noping}\'s plant! ({exit})'])
+    await out.msg(self, modname, ch, [f"I watered {nick_noping}'s plant! ({exit})"])
 
 
 async def init(self):

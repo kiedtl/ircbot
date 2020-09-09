@@ -23,17 +23,18 @@ async def load_mod(self, chan, src, msg, args, opts):
     :aliases: load
     """
     mod = msg.split()[0]
-    mods = [s for s in os.listdir('mod') if '.py' in s]
-    if not f'{mod}.py' in mods:
-        await out.msg(self, 'modules', chan, ['no such module'])
+    mods = [s for s in os.listdir("mod") if ".py" in s]
+    if not f"{mod}.py" in mods:
+        await out.msg(self, "modules", chan, ["no such module"])
         return
 
-    self.log('modules', f'loading {mod}')
-    m = __import__('mod.' + mod)
-    m = eval('m.' + mod)
+    self.log("modules", f"loading {mod}")
+    m = __import__("mod." + mod)
+    m = eval("m." + mod)
     await m.init(self)
     self.modules[mod] = m
-    await out.msg(self, 'modules', chan, ['loaded module'])
+    await out.msg(self, "modules", chan, ["loaded module"])
+
 
 async def unload_mod(self, chan, src, msg, args, opts):
     """
@@ -46,11 +47,11 @@ async def unload_mod(self, chan, src, msg, args, opts):
     """
     mod = msg.split()[0]
     if not mod in self.modules:
-        await out.msg(self, 'modules', chan, ['no such module'])
+        await out.msg(self, "modules", chan, ["no such module"])
         return
     else:
         del self.modules[mod]
-        await out.msg(self, 'modules', chan, ['unloaded module'])
+        await out.msg(self, "modules", chan, ["unloaded module"])
 
 
 async def ping(self, chan, src, msg):
@@ -79,5 +80,5 @@ async def init(self):
     self.help["ping"] = ["ping - check if I'm responding"]
     self.help["who"] = ["who - get information about my owner"]
 
-    handlers.register(self, 'modules', load_mod)
-    handlers.register(self, 'modules', unload_mod)
+    handlers.register(self, "modules", load_mod)
+    handlers.register(self, "modules", unload_mod)

@@ -130,12 +130,12 @@ async def shutup(self, c, n, m):
         except:
             duration = 5
     self.asleep[c] = time.time() + (duration * 60)
-    await out.msg(self, modname, chan, [f"disabled for {duration}m"])
+    await out.msg(self, modname, c, [f"disabled for {duration}m"])
 
 
 async def wake(self, c, n, m):
     self.asleep[c] = time.time()
-    await out.msg(self, modname, chan, ["I'm back!"])
+    await out.msg(self, modname, c, ["I'm back!"])
 
 
 commands = {

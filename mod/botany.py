@@ -39,7 +39,7 @@ async def visit(self, ch, src, msg, args, opts):
 
     # water the plant
     water_string = f"\n4\n{username}\n\nq\n"
-    proc = Popen('botany', stdin=PIPE, stderr=STDOUT, stdout=STDOUT)
+    proc = Popen('botany', stdin=PIPE)
     proc.communicate(water_string.encode("utf-8"))
     exit = proc.wait()
 

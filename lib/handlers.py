@@ -5,6 +5,7 @@
 # handlers.
 #
 
+import config
 import getopt
 from getopt import gnu_getopt
 import out
@@ -39,6 +40,52 @@ async def execute(self, func, chan, src, msg):
     if func not in self.fndata:
         await func(self, chan, src, msg)
         return
+
+    if "require_identified" in self.fndata[func]:
+        if self.users[src]["account"] == None:
+            await out.msg(
+                self,
+                self.fndata[func]["module"],
+                chan,
+                [f"you must be identified to use this command"],
+            )
+            return
+    if "require_admin" in self.fndata[func]:
+        if not self.is_admin(src):
+            await out.msg(
+                self, self.fndata[func]["module"], chan, [f"insufficient privileges"]
+            )
+            return
+    if "require_op" in self.fndata[func]:
+        # operator
+        if not src in self.channels[config.botchannel]["modes"]["o"]:
+            await out.msg(
+                self,
+                self.fndata[func]["module"],
+                chan,
+                [f"you must be an operator in {config.botchannel}"],
+            )
+            return
+    if "require_hop" in self.fndata[func]:
+        # half operator
+        if not src in self.channels[config.botchannel]["modes"]["h"]:
+            await out.msg(
+                self,
+                self.fndata[func]["module"],
+                chan,
+                [f"you must be a half-operator in {config.botchannel}"],
+            )
+            return
+    if "require_vop" in self.fndata[func]:
+        # voice
+        if not src in self.channels[config.botchannel]["modes"]["v"]:
+            await out.msg(
+                self,
+                self.fndata[func]["module"],
+                chan,
+                [f"you must have +v in {config.botchannel}"],
+            )
+            return
 
     shortopts = ""
 
@@ -114,7 +161,7 @@ def register(self, modname, func):
             continue
         elif line[0] == ":":
             key, _, value = line.partition(": ")
-            key = key.lstrip(":")
+            key = key.lstrip(":").rstrip(":")
             if key in data and type(data[key]) is list:
                 data[key].append(value)
             else:

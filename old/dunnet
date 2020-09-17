@@ -10,6 +10,13 @@ savefile="dat/$1"
 shift
 
 if [ -f "$savefile" ]; then
+    case "$@" in
+        *restore*|*save*)
+            echo "nah"
+            exit 1
+        ;;
+    esac
+
     _commands="restore $savefile\n$@\nsave $savefile"
 else
     _commands="$@\nsave $savefile"

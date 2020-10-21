@@ -44,7 +44,7 @@ async def cowthink(self, chan, src, msg):
 
 async def communist(self, chan, src, msg):
     txt = msg.upper()
-    await self.message(chan, f"\x038,5 ☭ {txt} ☭ \x0f")
+    await self.message(chan, f"\x038,5\x02 ☭ {txt} ☭ \x0f")
 
 
 async def rot13(self, chan, src, msg):

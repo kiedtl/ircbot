@@ -26,7 +26,7 @@ admins = [
     "calamitous",
 ]
 
-bannedchans = ["#meta"]
+bannedchans = ["#meta", "##jmw2020"]
 
 # channels that are joined only when the
 # `:admin joins` command is issued

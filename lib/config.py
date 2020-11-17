@@ -26,7 +26,7 @@ admins = [
     "calamitous",
 ]
 
-bannedchans = ["#meta", "##jmw2020"]
+bannedchans = ["#meta", "##jmw2020", "#communism"]
 
 # channels that are joined only when the
 # `:admin joins` command is issued
@@ -43,4 +43,4 @@ prod_chans = [
 # channels that are joined initially
 initial_chans = ["#bots", "#spacehare", "#sigsegv"]
 
-quitmsg = "I'll be back"
+quitmsg = "illegal instruction"

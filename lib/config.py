@@ -1,10 +1,12 @@
 botmaster = "kiedtl"
 email = ["kiedtl", "tilde.team"]
 upstream = ["https://github.com/", "kiedtl", "/ircbot"]
+description = "a multi-purpose bot"
+rollcall_fmt = "I'm {nickname}! | owner: {owner} | source: {source} | contact: {email} | usage: try {prefix}help"
 
 nickname = "sigsegv"
 username = "kiedtl_bots"
-realname = "a bot with some useful functions and tons of useless ones"
+realname = description
 server = "localhost"
 tls = False
 tls_verify = False
@@ -43,4 +45,4 @@ prod_chans = [
 # channels that are joined initially
 initial_chans = ["#bots", "#spacehare", "#sigsegv"]
 
-quitmsg = "illegal instruction"
+quitmsg = "kill -11 $pid"

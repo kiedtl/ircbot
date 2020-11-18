@@ -9,22 +9,29 @@ import out
 modname = "help"
 
 
+async def show_commands(self, ch, src, msg, args, opts):
+    """
+    :name: commands
+    :hook: cmd
+    :help: show commands for a module
+    :args: module:str
+    :aliases: cmds
+    """
+    cmdnames = []
+    cmds = [cmd for cmd, func in self.handle_cmd.items() if func in self.fndata and self.fndata[self.handle_cmd[cmd]]['module'] == msg]
+
+    commands = ", ".join(cmds)
+    await out.msg(self, modname, ch, [f"commands for {msg}: {commands}"])
+
+
 async def show_help(self, ch, src, msg, args, opts):
     """
     :name: help
     :hook: cmd
-    :help: list commands or show help on command
-    :args: @command:str
-    :aliases: h he
+    :help: show help for a command
+    :args: command:str
+    :aliases: he
     """
-
-    # list commands if no arguments
-    if len(msg) < 1:
-        cmdnames = []
-
-        commands = ", ".join(self.handle_cmd)
-        await out.msg(self, modname, ch, [f"commands: {commands}"])
-        return
 
     # list of aliases that might match command
     aliases = {k for k, v in self.aliases.items() if msg in v}
@@ -40,7 +47,7 @@ async def show_help(self, ch, src, msg, args, opts):
         for cmd in sorted(self.handle_cmd.keys()):
             if cmd.startswith(msg):
                 await out.msg(
-                    self, modname, ch, [f"no help for '{msg}', did you mean '{cmd}'?"]
+                    self, modname, ch, [f"no help for '{msg}'; did you mean '{cmd}'?"]
                 )
                 return
 
@@ -49,3 +56,4 @@ async def show_help(self, ch, src, msg, args, opts):
 
 async def init(self):
     handlers.register(self, modname, show_help)
+    handlers.register(self, modname, show_commands)

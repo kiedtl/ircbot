@@ -98,7 +98,8 @@ async def execute(self, func, chan, src, msg):
 
     if len(args) < len(non_optional):
         # all the required arguments aren't there!
-        await error(f"not enough arguments (need argument '{name}'). see '{config.prefix}help {self.fndata[func]['name']}'.")
+        missing = non_optional[len(args)]["name"]
+        await error(f"not enough arguments (need argument '{missing}'). see '{config.prefix}help {self.fndata[func]['name']}'.")
         return
 
     await func(self, chan, src, msg, args, dict(opts))

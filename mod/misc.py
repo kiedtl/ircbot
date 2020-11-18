@@ -1,4 +1,5 @@
-# REQUIRE file bin/sysinfo
+# TODO: move to help module, admin module
+# TODO: rename "meta" module
 
 import config
 import common
@@ -7,10 +8,18 @@ import out
 import os
 import random
 
+modname = "misc"
 
-async def list_mods(self, chan, src, msg):
+async def list_mods(self, chan, src, msg, args, opts):
+    """
+    :name: modules
+    :hook: cmd
+    :help: list loaded modules
+    :args:
+    :aliases:
+    """
     mods = ", ".join(sorted(list(self.modules.keys())))
-    await out.msg(self, "modules", chan, [f"loaded: {mods}"])
+    await out.msg(self, modname, chan, [f"loaded: {mods}"])
 
 
 async def load_mod(self, chan, src, msg, args, opts):
@@ -33,7 +42,7 @@ async def load_mod(self, chan, src, msg, args, opts):
     m = eval("m." + mod)
     await m.init(self)
     self.modules[mod] = m
-    await out.msg(self, "modules", chan, ["loaded module"])
+    await out.msg(self, modname, chan, ["loaded module"])
 
 
 async def unload_mod(self, chan, src, msg, args, opts):
@@ -47,43 +56,54 @@ async def unload_mod(self, chan, src, msg, args, opts):
     """
     mod = msg.split()[0]
     if not mod in self.modules:
-        await out.msg(self, "modules", chan, ["no such module"])
+        await out.msg(self, modname, chan, ["no such module"])
         return
     else:
         del self.modules[mod]
-        await out.msg(self, "modules", chan, ["unloaded module"])
+        await out.msg(self, modname, chan, ["unloaded module"])
 
 
-async def ping(self, chan, src, msg):
+async def ping(self, chan, src, msg, args, opts):
+    """
+    :name: ping
+    :hook: cmd
+    :help: see if I'm responding
+    :args:
+    :aliases:
+    """
     res = random.choice(
         ["you rang?", "yes?", "pong!", "what?", "hmmm?", "at your service!"]
     )
-    await out.msg(self, "ping", chan, [f"{src}: {res}"])
+    await out.msg(self, modname, chan, [f"{src}: {res}"])
 
 
-async def whoami(self, chan, src, msg):
-    response = ""
-
-    owner = common.nohighlight(config.botmaster)
-    response += f"I'm {self.nickname}! | owner: {owner} "
-
+async def whoami(self, chan, src, msg, args, opts):
+    """
+    :name: whoami
+    :hook: cmd
+    :help: list information about this bot
+    :args:
+    :aliases: who
+    """
+    source = ""
     if not config.upstream == None:
         source = "".join([common.nohighlight(i) for i in config.upstream])
-        response += f"| source: {source} "
 
+    owner = common.nohighlight(config.botmaster)
     email = common.nohighlight(config.email[0]) + "‍＠‍" + config.email[1]
-    response += f"| contact: {email} | usage: try {config.prefix}help"
-    await out.msg(self, "who", chan, [response])
+
+    response = config.rollcall_fmt.format(
+            nickname=self.nickname,
+            description=config.description,
+            prefix=config.prefix,
+            owner=owner, source=source, email=email
+    )
+    await out.msg(self, modname, chan, [response])
 
 
 async def init(self):
-    self.handle_cmd["modules"] = list_mods
-    self.handle_cmd["ping"] = ping
-    self.handle_cmd["who"] = whoami
-
-    self.help["modules"] = ["modules - list loaded modules"]
-    self.help["ping"] = ["ping - check if I'm responding"]
-    self.help["who"] = ["who - get information about my owner"]
-
-    handlers.register(self, "modules", load_mod)
-    handlers.register(self, "modules", unload_mod)
+    handlers.register(self, modname, list_mods)
+    handlers.register(self, modname, load_mod)
+    handlers.register(self, modname, unload_mod)
+    handlers.register(self, modname, whoami)
+    handlers.register(self, modname, ping)

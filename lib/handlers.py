@@ -37,54 +37,36 @@ async def execute(self, func, chan, src, msg):
     are in place, parse non-positional arguments,
     and run function.
     """
+
+    async def error(text):
+        await out.msg(self, self.fndata[func]["module"], chan, [text])
+
     if func not in self.fndata:
         await func(self, chan, src, msg)
         return
 
     if "require_identified" in self.fndata[func]:
         if self.users[src]["account"] == None:
-            await out.msg(
-                self,
-                self.fndata[func]["module"],
-                chan,
-                [f"you must be identified to use this command"],
-            )
+            await error("you must identify with NickServ to use this command.")
             return
     if "require_admin" in self.fndata[func]:
-        if not self.is_admin(src):
-            await out.msg(
-                self, self.fndata[func]["module"], chan, [f"insufficient privileges"]
-            )
+        if not await self.is_admin(src):
+            await error("permission denied (admin-only command).")
             return
     if "require_op" in self.fndata[func]:
         # operator
         if not src in self.channels[config.botchannel]["modes"]["o"]:
-            await out.msg(
-                self,
-                self.fndata[func]["module"],
-                chan,
-                [f"you must be an operator in {config.botchannel}"],
-            )
+            await error(f"you must be an operator in {config.botchannel}.")
             return
     if "require_hop" in self.fndata[func]:
         # half operator
         if not src in self.channels[config.botchannel]["modes"]["h"]:
-            await out.msg(
-                self,
-                self.fndata[func]["module"],
-                chan,
-                [f"you must be a half-operator in {config.botchannel}"],
-            )
+            await error(f"you must be an half-operator in {config.botchannel}.")
             return
     if "require_vop" in self.fndata[func]:
         # voice
         if not src in self.channels[config.botchannel]["modes"]["v"]:
-            await out.msg(
-                self,
-                self.fndata[func]["module"],
-                chan,
-                [f"you must have +v in {config.botchannel}"],
-            )
+            await error(f"you must have +v in {config.botchannel}.")
             return
 
     shortopts = ""
@@ -100,7 +82,7 @@ async def execute(self, func, chan, src, msg):
     try:
         opts, args = gnu_getopt(msg.split(), shortopts)
     except getopt.GetoptError as err:
-        await out.msg(self, self.fndata[func]["module"], chan, [f"{err}"])
+        await error(f"{err}")
         return
 
     # -------------------------------
@@ -116,10 +98,7 @@ async def execute(self, func, chan, src, msg):
 
     if len(args) < len(non_optional):
         # all the required arguments aren't there!
-        name = non_optional[len(args)]["name"]
-        await out.msg(
-            self, self.fndata[func]["module"], chan, [f"need argument {name}"]
-        )
+        await error(f"not enough arguments (need argument '{name}'). see '{config.prefix}help {self.fndata[func]['name']}'.")
         return
 
     await func(self, chan, src, msg, args, dict(opts))
@@ -127,9 +106,8 @@ async def execute(self, func, chan, src, msg):
 
 def register(self, modname, func):
     """
-    Parse a functions docstring and then
-    register it as a {cmd, raw, regex} handler.
-    Set helptext and aliases, too.
+    Parse a function's docstring and then register it
+    as a {cmd, raw, regex} handler. Set helptext and aliases, too.
     """
 
     # TODO: cleanup data parsing
@@ -151,6 +129,7 @@ def register(self, modname, func):
 
     doc = func.__doc__ or False
     if not doc:
+        self.log("handlers", f"Tried to register function in module {modname} that had no docstring.")
         return
 
     last_item = ""

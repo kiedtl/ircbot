@@ -3,6 +3,7 @@
 # (c) xfnw/lickthecheese <xfnw@tilde.team>
 #
 
+import config
 import handlers
 import out
 
@@ -29,9 +30,12 @@ async def show_help(self, ch, src, msg, args, opts):
     :name: help
     :hook: cmd
     :help: show help for a command
-    :args: command:str
+    :args: @command:str
     :aliases: he
     """
+    if len(msg) == 0:
+        await out.msg(self, modname, ch, [f"Use '{config.prefix}modules' to list modules, '{config.prefix}commands <module>' to list commands, and '{config.prefix}help <command>' to show help for a command."])
+        return
 
     # list of aliases that might match command
     aliases = {k for k, v in self.aliases.items() if msg in v}

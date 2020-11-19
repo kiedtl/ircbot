@@ -13,9 +13,10 @@ async def pescli(self, chan, src, msg, args, opts):
     :aliases: calc pesc
     """
     res = common.run(["/home/kiedtl/local/bin/pescli", "-q"], msg)
-    for line in res.split('\n'):
+    for line in res.split("\n"):
         await self.msg(modname, chan, [line])
         break
+
 
 async def init(self):
     handlers.register(self, modname, pescli)

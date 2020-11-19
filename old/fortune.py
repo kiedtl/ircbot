@@ -5,6 +5,7 @@ import handlers
 
 modname = "fortune"
 
+
 async def fortune(self, chan, src, msg, args, opts):
     """
     :name: fortune

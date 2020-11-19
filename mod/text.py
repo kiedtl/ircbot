@@ -16,6 +16,7 @@ import random
 
 modname = "text"
 
+
 def _irc_rainbow(text):
     buf = ""
     rainbow = [fmt.blue, fmt.cyan, fmt.yellow, fmt.red, fmt.magenta]
@@ -25,8 +26,10 @@ def _irc_rainbow(text):
         ctr += 0.5
     return buf
 
+
 def _irc_communist(text):
     return f"\x038,5\x02 ☭ {text.upper()} ☭ \x0f"
+
 
 async def _cmd_with_args(self, chan, cmd, msg):
     # TODO: throttling, disable in certain channels
@@ -45,8 +48,7 @@ async def qrenco(self, chan, src, msg, args, opts):
     :aliases: qr
     """
     # encode text in MicroQR, it's a bit less spammy
-    res = common.run(["qrencode", "-Mm2", "-v4",
-        "-o-", "-tUTF8", msg], "")
+    res = common.run(["qrencode", "-Mm2", "-v4", "-o-", "-tUTF8", msg], "")
     for line in res.split("\n"):
         await self.message(chan, line)
 
@@ -105,6 +107,7 @@ async def rainbow(self, chan, src, msg, args, opts):
     """
     await self.msg("rainbow", chan, [_irc_rainbow(msg)])
 
+
 async def communist(self, chan, src, msg, args, opts):
     """
     :name: communist
@@ -114,6 +117,7 @@ async def communist(self, chan, src, msg, args, opts):
     :aliases: com
     """
     await self.msg("", chan, [_irc_communist(msg)])
+
 
 async def rot13(self, chan, src, msg, args, opts):
     """

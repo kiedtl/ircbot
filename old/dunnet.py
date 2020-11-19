@@ -15,7 +15,7 @@ async def dunnet_run(self, chan, src, msg, args, opts):
     :require_identified:
     """
     res = common.run(["bin/dunnet", src, msg], "")
-    for line in res.split('\n'):
+    for line in res.split("\n"):
         await out.msg(self, modname, chan, [f"{line}"])
 
 

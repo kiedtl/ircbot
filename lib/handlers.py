@@ -98,7 +98,9 @@ async def execute(self, func, chan, src, msg):
     if len(args) < len(non_optional):
         # all the required arguments aren't there!
         missing = non_optional[len(args)]["name"]
-        await error(f"not enough arguments (need argument '{missing}'). see '{config.prefix}help {self.fndata[func]['name']}'.")
+        await error(
+            f"not enough arguments (need argument '{missing}'). see '{config.prefix}help {self.fndata[func]['name']}'."
+        )
         return
 
     await func(self, chan, src, msg, args, dict(opts))
@@ -129,7 +131,10 @@ def register(self, modname, func):
 
     doc = func.__doc__ or False
     if not doc:
-        self.log("handlers", f"Tried to register function in module {modname} that had no docstring.")
+        self.log(
+            "handlers",
+            f"Tried to register function in module {modname} that had no docstring.",
+        )
         return
 
     last_item = ""

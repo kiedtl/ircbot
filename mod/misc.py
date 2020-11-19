@@ -9,6 +9,7 @@ import random
 
 modname = "misc"
 
+
 async def list_mods(self, chan, src, msg, args, opts):
     """
     :name: modules
@@ -92,10 +93,12 @@ async def whoami(self, chan, src, msg, args, opts):
     email = common.nohighlight(config.email[0]) + "‍＠‍" + config.email[1]
 
     response = config.rollcall_fmt.format(
-            nickname=self.nickname,
-            description=config.description,
-            prefix=config.prefix,
-            owner=owner, source=source, email=email
+        nickname=self.nickname,
+        description=config.description,
+        prefix=config.prefix,
+        owner=owner,
+        source=source,
+        email=email,
     )
     await self.msg(modname, chan, [response])
 

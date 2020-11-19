@@ -12,6 +12,7 @@ import restart as _restart
 
 modname = "admin"
 
+
 async def _aexec(self, code):
     # Make an async function with the code and `exec` it
     exec(f"async def __ex(self): " + "".join(f"\n {l}" for l in code.split("\n")))
@@ -110,7 +111,9 @@ async def reloadmods(self, chan, source, msg, args, opts):
         self.help = oldhelp
         return
 
-    await self.msg( modname, chan,
+    await self.msg(
+        modname,
+        chan,
         [
             "{} modules reloaded in {}s".format(
                 len(self.modules), round(time.time() - before, 3)

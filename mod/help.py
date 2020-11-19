@@ -22,14 +22,20 @@ async def which_module(self, ch, src, msg, args, opts):
     if msg in self.handle_cmd:
         cmd = self.handle_cmd[msg]
         module = self.fndata[cmd]["module"]
-        await self.msg(modname, ch,
-            [f"'{msg}' is a command provided by the {module} module."])
+        await self.msg(
+            modname, ch, [f"'{msg}' is a command provided by the {module} module."]
+        )
     elif len(matching_aliases) > 0:
         alias_to = matching_aliases[0]
         cmd = self.handle_cmd[alias_to]
         module = self.fndata[cmd]["module"]
-        await self.msg(modname, ch,
-            [f"'{msg}' is an alias to '{alias_to}', a command provided by the {module} module."])
+        await self.msg(
+            modname,
+            ch,
+            [
+                f"'{msg}' is an alias to '{alias_to}', a command provided by the {module} module."
+            ],
+        )
     else:
         await self.msg(modname, ch, [f"no such command '{msg}'"])
         return
@@ -44,8 +50,11 @@ async def show_commands(self, ch, src, msg, args, opts):
     :aliases: cmds
     """
     cmdnames = []
-    cmds = [cmd for cmd, func in self.handle_cmd.items()
-        if func in self.fndata and self.fndata[self.handle_cmd[cmd]]['module'] == msg]
+    cmds = [
+        cmd
+        for cmd, func in self.handle_cmd.items()
+        if func in self.fndata and self.fndata[self.handle_cmd[cmd]]["module"] == msg
+    ]
 
     commands = ", ".join(cmds)
     await self.msg(modname, ch, [f"commands for {msg}: {commands}"])
@@ -60,7 +69,13 @@ async def show_help(self, ch, src, msg, args, opts):
     :aliases: he
     """
     if len(msg) == 0:
-        await self.msg(modname, ch, [f"Use '{config.prefix}modules' to list modules, '{config.prefix}commands <module>' to list commands, and '{config.prefix}help <command>' to show help for a command."])
+        await self.msg(
+            modname,
+            ch,
+            [
+                f"Use '{config.prefix}modules' to list modules, '{config.prefix}commands <module>' to list commands, and '{config.prefix}help <command>' to show help for a command."
+            ],
+        )
         return
 
     # list of aliases that might match command

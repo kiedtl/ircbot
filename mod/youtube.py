@@ -1,7 +1,7 @@
-# youtube garbage stuff -_-
+# youtube utility functions
 
 import youtube as YT
-import common, out, re, secrets
+import common, re, secrets
 
 modname = "youtube"
 is_yturl = re.compile(
@@ -24,29 +24,29 @@ async def handle_yt(self, chan, src, msg):
 
     info = YT.video_info(youtube, v_id)
     info_fmted = YT.fmt_video_info(info)
-    await out.msg(self, modname, chan, [info_fmted])
+    await self.msg(modname, chan, [info_fmted])
 
 
 async def yt_info(self, chan, src, msg):
     try:
         txt = common.get_backlog_msg(self, chan, msg)[1]
     except:
-        await out.msg(self, modname, chan, [self.err_backlog_too_short])
+        await self.msg(modname, chan, [self.err_backlog_too_short])
         return
 
     matches = is_yturl.findall(txt)
     if len(matches) < 1:
-        await out.msg(self, modname, chan, [f"no url in {txt}"])
+        await self.msg(modname, chan, [f"no url in {txt}"])
         return
     try:
         v_id = YT.id_from_url(matches[0])
     except:
-        await out.msg(self, modname, chan, [f"bad url"])
+        await self.msg(modname, chan, [f"bad url"])
         return
 
     info = YT.video_info(youtube, v_id)
     info_fmted = YT.fmt_video_info(info)
-    await out.msg(self, modname, chan, [info_fmted])
+    await self.msg(modname, chan, [info_fmted])
 
 
 async def init(self):

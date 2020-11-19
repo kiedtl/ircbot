@@ -13,7 +13,6 @@ import handlers
 import fmt
 import math
 import random
-import out
 
 modname = "text"
 
@@ -104,7 +103,7 @@ async def rainbow(self, chan, src, msg, args, opts):
     :args: text:str
     :aliases: lolcat
     """
-    await out.msg(self, "rainbow", chan, [_irc_rainbow(msg)])
+    await self.msg("rainbow", chan, [_irc_rainbow(msg)])
 
 async def communist(self, chan, src, msg, args, opts):
     """
@@ -114,7 +113,7 @@ async def communist(self, chan, src, msg, args, opts):
     :args: text:str
     :aliases: com
     """
-    await out.msg(self, "", chan, [_irc_communist(msg)])
+    await self.msg("", chan, [_irc_communist(msg)])
 
 async def rot13(self, chan, src, msg, args, opts):
     """
@@ -125,7 +124,7 @@ async def rot13(self, chan, src, msg, args, opts):
     :aliases:
     """
     res = caesar.rot(13)(msg)
-    await out.msg(self, "rot", chan, [f"{res}"])
+    await self.msg("rot", chan, [f"{res}"])
 
 
 async def rot_n(self, chan, src, msg, _args, opts):
@@ -141,11 +140,11 @@ async def rot_n(self, chan, src, msg, _args, opts):
     try:
         rotn = int(args[0])
     except:
-        await out.msg(self, "rot", chan, ["invalid rotation amount."])
+        await self.msg("rot", chan, ["invalid rotation amount."])
         return
 
     res = caesar.rot(rotn)(args[1])
-    await out.msg(self, "rot", chan, [f"{res}"])
+    await self.msg("rot", chan, [f"{res}"])
 
 
 async def init(self):

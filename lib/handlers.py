@@ -8,7 +8,6 @@
 import config
 import getopt
 from getopt import gnu_getopt
-import out
 
 # TODO: documentation on how this whole file,
 # works, so when I inevitably leave this project
@@ -39,7 +38,7 @@ async def execute(self, func, chan, src, msg):
     """
 
     async def error(text):
-        await out.msg(self, self.fndata[func]["module"], chan, [text])
+        await self.msg(self.fndata[func]["module"], chan, [text])
 
     if func not in self.fndata:
         await func(self, chan, src, msg)

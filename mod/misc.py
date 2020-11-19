@@ -4,7 +4,6 @@
 import config
 import common
 import handlers
-import out
 import os
 import random
 
@@ -19,7 +18,7 @@ async def list_mods(self, chan, src, msg, args, opts):
     :aliases:
     """
     mods = ", ".join(sorted(list(self.modules.keys())))
-    await out.msg(self, modname, chan, [f"loaded: {mods}"])
+    await self.msg(modname, chan, [f"loaded: {mods}"])
 
 
 async def load_mod(self, chan, src, msg, args, opts):
@@ -34,7 +33,7 @@ async def load_mod(self, chan, src, msg, args, opts):
     mod = msg.split()[0]
     mods = [s for s in os.listdir("mod") if ".py" in s]
     if not f"{mod}.py" in mods:
-        await out.msg(self, "modules", chan, ["no such module"])
+        await self.msg("modules", chan, ["no such module"])
         return
 
     self.log("modules", f"loading {mod}")
@@ -42,7 +41,7 @@ async def load_mod(self, chan, src, msg, args, opts):
     m = eval("m." + mod)
     await m.init(self)
     self.modules[mod] = m
-    await out.msg(self, modname, chan, ["loaded module"])
+    await self.msg(modname, chan, ["loaded module"])
 
 
 async def unload_mod(self, chan, src, msg, args, opts):
@@ -56,11 +55,11 @@ async def unload_mod(self, chan, src, msg, args, opts):
     """
     mod = msg.split()[0]
     if not mod in self.modules:
-        await out.msg(self, modname, chan, ["no such module"])
+        await self.msg(modname, chan, ["no such module"])
         return
     else:
         del self.modules[mod]
-        await out.msg(self, modname, chan, ["unloaded module"])
+        await self.msg(modname, chan, ["unloaded module"])
 
 
 async def ping(self, chan, src, msg, args, opts):
@@ -74,7 +73,7 @@ async def ping(self, chan, src, msg, args, opts):
     res = random.choice(
         ["you rang?", "yes?", "pong!", "what?", "hmmm?", "at your service!"]
     )
-    await out.msg(self, modname, chan, [f"{src}: {res}"])
+    await self.msg(modname, chan, [f"{src}: {res}"])
 
 
 async def whoami(self, chan, src, msg, args, opts):
@@ -98,7 +97,7 @@ async def whoami(self, chan, src, msg, args, opts):
             prefix=config.prefix,
             owner=owner, source=source, email=email
     )
-    await out.msg(self, modname, chan, [response])
+    await self.msg(modname, chan, [response])
 
 
 async def init(self):

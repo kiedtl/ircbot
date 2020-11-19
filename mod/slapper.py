@@ -4,7 +4,7 @@ import re
 
 
 async def handle_slap(self, chan, src, msg):
-    print(f"[misc] slapped by {src} in {chan}")
+    self.log(f"[misc] slapped by {src} in {chan}")
     if not src in self.slapped:
         self.slapped[src] = 0
     if not self.slapped[src] + 21600 < time.time():

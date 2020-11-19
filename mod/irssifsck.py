@@ -10,9 +10,9 @@ RESPONSE = [
     "stahp",
     "no u",
     "irssi--",
-    "use weechat",
     "you're clogging my logs",
     "you should try catgirl :^)",
+    "use weechat",
 ]
 PERCENTAGE = 100
 

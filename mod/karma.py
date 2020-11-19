@@ -1,5 +1,5 @@
 import common, dataset
-import out, random, re
+import random, re
 
 modname = "karma"
 is_karma = re.compile("(^[+-]{2}\(?[\S\W]+\)?$)|(^\(?[\S\W]+\)?[+-]{2}$)")
@@ -33,10 +33,10 @@ async def handle_karma(self, chan, src, msg):
 async def listkarma(self, chan, src, msg):
     entry = self.karmadb.find_one(name=msg)
     if entry == None or entry["amount"] == 0:
-        await out.msg(self, modname, chan, [f"{msg} has 0 karma..."])
+        await self.msg(modname, chan, [f"{msg} has 0 karma..."])
     else:
         num = entry["amount"]
-        await out.msg(self, modname, chan, [f"{msg} has {num} karma!"])
+        await self.msg(modname, chan, [f"{msg} has {num} karma!"])
 
 
 async def init(self):

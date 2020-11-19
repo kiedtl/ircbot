@@ -1,5 +1,4 @@
 import common
-import out
 import handlers
 
 modname = "pesc"
@@ -15,7 +14,7 @@ async def pescli(self, chan, src, msg, args, opts):
     """
     res = common.run(["/home/kiedtl/local/bin/pescli", "-q"], msg)
     for line in res.split('\n'):
-        await out.msg(self, modname, chan, [line])
+        await self.msg(modname, chan, [line])
         break
 
 async def init(self):

@@ -4,7 +4,7 @@
 #
 
 import config
-import common, importlib, out, os, time
+import common, importlib, os, time
 import traceback
 import handlers
 import pprint
@@ -33,7 +33,7 @@ async def dump(self, chan, source, msg, args, opts):
         pprint.pprint(vars(self), stream=f)
         pprint.pprint("\n\n\n", stream=f)
         pprint.pprint(dir(self), stream=f)
-    await out.msg(self, modname, chan, ["done"])
+    await self.msg(modname, chan, ["done"])
 
 
 async def quit(self, chan, source, msg, args, opts):
@@ -79,7 +79,7 @@ async def reloadmods(self, chan, source, msg, args, opts):
     :aliases: rl
     """
     before = time.time()
-    await out.msg(self, modname, chan, ["reloading modules..."])
+    await self.msg(modname, chan, ["reloading modules..."])
 
     fndata = self.fndata
     oldcmd = self.handle_cmd
@@ -101,7 +101,7 @@ async def reloadmods(self, chan, source, msg, args, opts):
             await self.modules[i].init(self)
     except Exception as e:
         traceback.print_tb(e.__traceback__)
-        await out.msg(self, modname, chan, [f"segmentation fault", repr(e)])
+        await self.msg(modname, chan, [f"segmentation fault", repr(e)])
         self.fndata = fndata
         self.handle_cmd = oldcmd
         self.handle_raw = oldraw
@@ -110,10 +110,7 @@ async def reloadmods(self, chan, source, msg, args, opts):
         self.help = oldhelp
         return
 
-    await out.msg(
-        self,
-        modname,
-        chan,
+    await self.msg( modname, chan,
         [
             "{} modules reloaded in {}s".format(
                 len(self.modules), round(time.time() - before, 3)
@@ -172,9 +169,9 @@ async def ev(self, chan, source, msg, args, opts):
     try:
         result = await _aexec(self, " ".join(msg))
     except Exception as e:
-        await out.msg(self, modname, chan, [f"segmentation fault: {repr(e)}"])
+        await self.msg(modname, chan, [f"segmentation fault: {repr(e)}"])
         return
-    await out.msg(self, modname, chan, [f"result: '{result}'"])
+    await self.msg(modname, chan, [f"result: '{result}'"])
 
 
 async def send(self, c, n, m, args, opts):
@@ -206,7 +203,7 @@ async def shutup(self, c, n, m, args, opts):
         except:
             pass
     self.asleep[c] = time.time() + (duration * 60)
-    await out.msg(self, modname, c, [f"disabled for {duration}m"])
+    await self.msg(modname, c, [f"disabled for {duration}m"])
 
 
 async def wake(self, c, n, m, args, opts):
@@ -219,7 +216,7 @@ async def wake(self, c, n, m, args, opts):
     :aliases:
     """
     self.asleep[c] = time.time()
-    await out.msg(self, modname, c, ["I'm back!"])
+    await self.msg(modname, c, ["I'm back!"])
 
 
 async def init(self):

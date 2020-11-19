@@ -3,7 +3,7 @@
 # REQUIRE lib bs4
 # REQUIRE lib urllib
 
-import common, re, urllib, nullptr, out
+import common, re, urllib, nullptr
 from bs4 import BeautifulSoup as BS
 
 modname = "url"
@@ -18,14 +18,14 @@ async def handle_url(self, chan, src, msg):
         data = BS(http)
     except:
         return
-    await out.msg(self, modname, chan, [data.title.string])
+    await self.msg(modname, chan, [data.title.string])
 
 
 async def title(self, chan, src, msg):
     try:
         txt = common.get_backlog_msg(self, chan, msg)[1]
     except:
-        await out.msg(self, modname, chan, [self.err_backlog_too_short])
+        await self.msg(modname, chan, [self.err_backlog_too_short])
         return
 
     if not txt.startswith("http"):
@@ -35,23 +35,23 @@ async def title(self, chan, src, msg):
         http = urllib.request.urlopen(txt)
         data = BS(http)
     except:
-        await out.msg(self, modname, chan, [f"bad url"])
+        await self.msg(modname, chan, [f"bad url"])
         return
-    await out.msg(self, modname, chan, [data.title.string])
+    await self.msg(modname, chan, [data.title.string])
 
 
 async def shorten(self, chan, msg, target="https://0x0.st/"):
     if len(msg) < 1:
-        await out.msg(self, modname, chan, [f"need url"])
+        await self.msg(modname, chan, [f"need url"])
         return
 
     try:
         res = nullptr.shorten(msg, nullptr=target)
     except:
-        await out.msg(self, modname, chan, [f"bad url"])
+        await self.msg(modname, chan, [f"bad url"])
         return
 
-    await out.msg(self, modname, chan, [f"{res}"])
+    await self.msg(modname, chan, [f"{res}"])
 
 
 async def shorten_0x0(self, chan, src, msg):
@@ -64,16 +64,16 @@ async def shorten_ttm(self, chan, src, msg):
 
 async def unshorten(self, chan, src, msg):
     if len(msg) < 1:
-        await out.msg(self, modname, chan, [f"need url"])
+        await self.msg(modname, chan, [f"need url"])
         return
 
     try:
         res = nullptr.unshorten(msg)
     except:
-        await out.msg(self, modname, chan, [f"bad url"])
+        await self.msg(modname, chan, [f"bad url"])
         return
 
-    await out.msg(self, modname, chan, [f"{res}"])
+    await self.msg(modname, chan, [f"{res}"])
 
 
 async def init(self):

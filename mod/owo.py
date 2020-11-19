@@ -4,7 +4,7 @@
 #
 
 import common
-import out, random
+import random
 
 modname = "owo"
 
@@ -14,9 +14,9 @@ async def owoify(self, c, n, m):
     try:
         ms = common.get_backlog_msg(self, c, m)
     except:
-        await out.msg(self, modname, c, [f"my backwog is two showt!"])
+        await self.msg(modname, c, [f"my backwog is two showt!"])
         return
-    await out.msg(self, modname, c, [await owotext(self, ms)])
+    await self.msg(modname, c, [await owotext(self, ms)])
 
 
 async def owotext(self, msg):

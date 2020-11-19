@@ -5,7 +5,6 @@
 
 import config
 import handlers
-import out
 
 modname = "help"
 
@@ -23,16 +22,16 @@ async def which_module(self, ch, src, msg, args, opts):
     if msg in self.handle_cmd:
         cmd = self.handle_cmd[msg]
         module = self.fndata[cmd]["module"]
-        await out.msg(self, modname, ch,
+        await self.msg(modname, ch,
             [f"'{msg}' is a command provided by the {module} module."])
     elif len(matching_aliases) > 0:
         alias_to = matching_aliases[0]
         cmd = self.handle_cmd[alias_to]
         module = self.fndata[cmd]["module"]
-        await out.msg(self, modname, ch,
+        await self.msg(modname, ch,
             [f"'{msg}' is an alias to '{alias_to}', a command provided by the {module} module."])
     else:
-        await out.msg(self, modname, ch, [f"no such command '{msg}'"])
+        await self.msg(modname, ch, [f"no such command '{msg}'"])
         return
 
 
@@ -49,7 +48,7 @@ async def show_commands(self, ch, src, msg, args, opts):
         if func in self.fndata and self.fndata[self.handle_cmd[cmd]]['module'] == msg]
 
     commands = ", ".join(cmds)
-    await out.msg(self, modname, ch, [f"commands for {msg}: {commands}"])
+    await self.msg(modname, ch, [f"commands for {msg}: {commands}"])
 
 
 async def show_help(self, ch, src, msg, args, opts):
@@ -61,28 +60,28 @@ async def show_help(self, ch, src, msg, args, opts):
     :aliases: he
     """
     if len(msg) == 0:
-        await out.msg(self, modname, ch, [f"Use '{config.prefix}modules' to list modules, '{config.prefix}commands <module>' to list commands, and '{config.prefix}help <command>' to show help for a command."])
+        await self.msg(modname, ch, [f"Use '{config.prefix}modules' to list modules, '{config.prefix}commands <module>' to list commands, and '{config.prefix}help <command>' to show help for a command."])
         return
 
     # list of aliases that might match command
     aliases = {k for k, v in self.aliases.items() if msg in v}
 
     if msg in self.help:
-        await out.msg(self, modname, ch, self.help[msg])
+        await self.msg(modname, ch, self.help[msg])
     elif len(aliases) > 0:
         a = list(aliases)[0]
-        await out.msg(self, modname, ch, self.help[a])
+        await self.msg(modname, ch, self.help[a])
     else:
         # fuzzy search when all else fails
         # TODO: fuzzy search aliases
         for cmd in sorted(self.handle_cmd.keys()):
             if cmd.startswith(msg):
-                await out.msg(
-                    self, modname, ch, [f"no help for '{msg}'; did you mean '{cmd}'?"]
+                await self.msg(
+                    modname, ch, [f"no help for '{msg}'; did you mean '{cmd}'?"]
                 )
                 return
 
-        await out.msg(self, modname, ch, [f"no help for '{msg}'"])
+        await self.msg(modname, ch, [f"no help for '{msg}'"])
 
 
 async def init(self):

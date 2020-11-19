@@ -1,5 +1,4 @@
 import handlers
-import out
 
 modname = "more"
 
@@ -13,7 +12,7 @@ async def more(self, ch, src, msg, args, opts):
     :aliases: m
     """
 
-    await out.more(self, ch)
+    await self.more(ch)
 
 
 async def init(self):

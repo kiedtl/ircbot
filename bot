@@ -2,10 +2,10 @@
 
 import asyncio
 import config
+import common
 import datetime
 import handlers
 import os
-import out
 import pydle
 import secrets
 import sys
@@ -13,6 +13,11 @@ import time
 import traceback
 
 from misc import whoami
+
+# cache output, module name on a per-channel basis
+# this is for self.msg and self.more
+output_buf = {}
+last_modname = {}
 
 class SIGSEGV(pydle.Client):
     async def on_connect(self):
@@ -126,9 +131,50 @@ class SIGSEGV(pydle.Client):
                         module = self.fndata[func]['module']
                     else:
                         module = 'oops'
-                    await out.msg(self, module, chan,
+                    await self.msg(module, chan,
                         ['segmentation fault', repr(e)])
                     return
+
+    async def on_private_message(self, chan, source, msg):
+        await super().on_private_message(chan, source, msg)
+        await self.on_channel_message(source, source, msg)
+
+    async def on_user_mode_change(self, modes):
+        await super().on_user_mode_change(modes)
+        self.log('irc', 'mode changed: {}'.format(modes))
+
+    # ---- utility functions ----
+
+    async def msg(self, mod, chan, msg):
+        # TODO: throttling
+        # (if the messages are too big)
+        if chan in output_buf:
+            del output_buf[chan]
+        output_buf[chan] = msg[:]  # copy list
+        last_modname[chan] = mod
+
+        fmt = "{}"
+        if len(last_modname[chan]) > 1:
+            fmt = common.modname(last_modname[chan]) + " " + fmt
+        if len(output_buf[chan]) > 1:
+            fmt = fmt + " (more)"
+
+        await self.message(chan, fmt.format(output_buf[chan].pop(0)))
+
+    async def more(self, chan):
+        if len(output_buf[chan]) == 0:
+            await self.message(
+                chan, "{} no more text to show".format(common.modname("more"))
+            )
+            return
+
+        fmt = "{}"
+        if len(last_modname[chan]) > 1:
+            fmt = common.modname(last_modname[chan]) + " " + fmt
+        if len(output_buf[chan]) > 1:
+            fmt = fmt + " (more)"
+
+        await self.message(chan, fmt.format(output_buf[chan].pop(0)))
 
     async def is_admin(self, nickname):
         info = await self.whois(nickname)
@@ -138,13 +184,6 @@ class SIGSEGV(pydle.Client):
 
         return info['account'] in config.admins
 
-    async def on_private_message(self, chan, source, msg):
-        await super().on_private_message(chan, source, msg)
-        await self.on_channel_message(source, source, msg)
-
-    async def on_user_mode_change(self, modes):
-        await super().on_user_mode_change(modes)
-        self.log('irc', 'mode changed: {}'.format(modes))
 
     def log(self, mod, txt):
         now = datetime.datetime.now()

@@ -8,7 +8,6 @@ import handlers
 import json
 import math
 import os
-import out
 import re
 import time
 
@@ -54,7 +53,7 @@ async def botany(self, ch, src, msg, args, opts):
         info = _plant_info(username)
         visitors = _plant_visitors(username)
     except FileNotFoundError:
-        await out.msg(self, modname, ch, [f"I couldn't find {user_noping}'s plant :/"])
+        await self.msg(modname, ch, [f"I couldn't find {user_noping}'s plant :/"])
         return
 
     description = info['description']
@@ -101,9 +100,9 @@ async def botany(self, ch, src, msg, args, opts):
         is_dead = True
 
     if is_dead:
-        await out.msg(self, modname, ch, [f"{user_noping}'s {description} is dead!"])
+        await self.msg(modname, ch, [f"{user_noping}'s {description} is dead!"])
     else:
-        await out.msg(self, modname, ch, [f"{user_noping}'s {description} was last watered {str_last_watered} ago{watered_by_str}. It has {score:,} points, is {str_age} old, and is on generation {generation}."])
+        await self.msg(modname, ch, [f"{user_noping}'s {description} was last watered {str_last_watered} ago{watered_by_str}. It has {score:,} points, is {str_age} old, and is on generation {generation}."])
 
 async def visit(self, ch, src, msg, args, opts):
     """
@@ -129,7 +128,7 @@ async def visit(self, ch, src, msg, args, opts):
         info = _plant_info(username)
         visitors = _plant_visitors(username)
     except FileNotFoundError:
-        await out.msg(self, modname, ch, [f"I couldn't find {user_noping}'s plant :/"])
+        await self.msg(modname, ch, [f"I couldn't find {user_noping}'s plant :/"])
         return
 
     is_dead = info['is_dead']

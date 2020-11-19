@@ -45,4 +45,4 @@ prod_chans = [
 # channels that are joined initially
 initial_chans = ["#bots", "#spacehare", "#sigsegv"]
 
-quitmsg = "kill -11 $pid"
+quitmsg = "kill -11 $$"

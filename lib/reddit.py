@@ -49,7 +49,7 @@ def fmt_post_info(post):
     rd_id = post["id"]
     rd_url = fmt.underline(f"https://redd.it/{rd_id}")
 
-    main = f"{title} ({karma}) by {author} on {subreddit} uploaded on {date}"
+    main = f"{title} ({karma}) by {author} on {subreddit} posted on {date}"
 
     if post["full_link"] == post["url"]:
         return main + f" ({rd_url})"

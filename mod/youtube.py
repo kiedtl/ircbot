@@ -64,5 +64,5 @@ async def yt_info(self, chan, src, msg):
 
 async def init(self):
     # disabled, now that tildebot is a thing
-    #handlers.register(self, modname, handle_yt)
+    # handlers.register(self, modname, handle_yt)
     handlers.register(self, modname, yt_info)

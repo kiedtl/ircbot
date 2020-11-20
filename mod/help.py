@@ -20,6 +20,7 @@ async def show_modules(self, chan, src, msg):
     mods = ", ".join(sorted(list(self.modules.keys())))
     await self.msg(modname, chan, [f"loaded: {mods}"])
 
+
 async def which_module(self, ch, src, msg):
     """
     :name: which

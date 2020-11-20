@@ -55,6 +55,6 @@ async def owotext(self, msg):
 
 
 async def init(self):
-    #self.handle_cmd["owo"] = owoify
-    #self.help["owo"] = ["owo [num] - owoify the text", "owo owo uwu"]
+    # self.handle_cmd["owo"] = owoify
+    # self.help["owo"] = ["owo [num] - owoify the text", "owo owo uwu"]
     manager.register(self, owoify)

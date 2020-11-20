@@ -20,13 +20,14 @@ SLAP_CMD = re.compile(r"^;slap (?P<user>[a-zA-Z0-9]+)$")
 # 6 hour period, we lose points instead of getting them
 slapped = {}
 
+
 async def handle_slap(self, chan, src, msg):
     """
     :name: filterslap
     :hook: raw
     """
     matches = SLAP_CMD.match(msg)
-    if not matches or not matches.groupdict()['user'] == self.nickname:
+    if not matches or not matches.groupdict()["user"] == self.nickname:
         # the message was not a slap message, or we were
         # not being slapped
         return

@@ -9,10 +9,13 @@ from functools import partial
 from dataclasses import field
 from typing import List
 
+
 def _enum(**items):
-    return type('Enum', (), items)
+    return type("Enum", (), items)
+
 
 ArgType = _enum(INT=0, STR=1, LIST=2)
+
 
 @dataclasses.dataclass
 class FunctionArg:
@@ -21,10 +24,12 @@ class FunctionArg:
     argtype: ArgType
     optional: bool
 
-HookType = _enum(COMMAND='cmd', RAW='raw', PATTERN='reg')
+
+HookType = _enum(COMMAND="cmd", RAW="raw", PATTERN="reg")
 AccessType = _enum(ANY=0, ADMIN=1, CHAN_OP=2, CHAN_HOP=3, CHAN_VOP=4)
 
 FNINFO_ATTR = "fninfo"
+
 
 @dataclasses.dataclass
 class FunctionInfo:
@@ -60,17 +65,20 @@ def hook(module, name, hook=HookType.COMMAND, pattern=None):
 
         setattr(func, FNINFO_ATTR, fninfo)
         return func
+
     return decorator
 
 
 def argument(name, desc="", argtype=ArgType.STR, optional=False):
     def decorator(func):
-        arg = FunctionArg(name=name, description=desc,
-                argtype=argtype, optional=optional)
+        arg = FunctionArg(
+            name=name, description=desc, argtype=argtype, optional=optional
+        )
         fninfo = _fn_get_info(func)
         fninfo.args.append(arg)
         setattr(func, FNINFO_ATTR, fninfo)
         return func
+
     return decorator
 
 
@@ -80,6 +88,7 @@ def access(access):
         fninfo.access = access
         setattr(func, FNINFO_ATTR, fninfo)
         return func
+
     return decorator
 
 
@@ -89,6 +98,7 @@ def alias(alias):
         fninfo.aliases.append(alias)
         setattr(func, FNINFO_ATTR, fninfo)
         return func
+
     return decorator
 
 
@@ -99,6 +109,7 @@ def helptext(helptexts):
             fninfo.helptext.append(helptext)
         setattr(func, FNINFO_ATTR, fninfo)
         return func
+
     return decorator
 
 
@@ -122,9 +133,9 @@ def register(self, func):
 
         for arg in fninfo.args:
             if arg.optional:
-                help_string += f'[{arg.name}] '
+                help_string += f"[{arg.name}] "
             else:
-                help_string += f'>{arg.name}> '
+                help_string += f">{arg.name}> "
 
         help_string += "── " + fninfo.helptext[0]
 

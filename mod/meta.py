@@ -16,6 +16,7 @@ from manager import *
 modname = "meta"
 BOTLIST = r"^(!rollcall|!botlist)"
 
+
 @manager.hook(modname, "rollcall", hook=HookType.PATTERN, pattern=BOTLIST)
 async def rollcall(self, chan, src, msg):
     await whoami(self, chan, src, msg, None, None)
@@ -24,9 +25,7 @@ async def rollcall(self, chan, src, msg):
 @manager.hook(modname, "ping")
 @manager.helptext(["see if I'm responding"])
 async def ping(self, chan, src, msg):
-    res = random.choice(
-        ["you rang?", "yes?", "pong!", "what?", "hmmm?"]
-    )
+    res = random.choice(["you rang?", "yes?", "pong!", "what?", "hmmm?"])
     await self.msg(modname, chan, [f"{src}: {res}"])
 
 

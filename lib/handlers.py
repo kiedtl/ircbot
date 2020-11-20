@@ -6,10 +6,11 @@
 #
 
 import config
+import re
 import getopt
 from getopt import gnu_getopt
 
-# TODO: documentation on how this whole file,
+# TODO: documentation on how this whole file
 # works, so when I inevitably leave this project
 # to rot for a month I won't come back completely
 # confused.
@@ -54,18 +55,18 @@ async def execute(self, func, chan, src, msg):
             return
     if "require_op" in self.fndata[func]:
         # operator
-        if not src in self.channels[config.botchannel]["modes"]["o"]:
-            await error(f"you must be an operator in {config.botchannel}.")
+        if not src in self.channels[chan]["modes"]["o"]:
+            await error(f"you must be an operator in this channel.")
             return
     if "require_hop" in self.fndata[func]:
         # half operator
-        if not src in self.channels[config.botchannel]["modes"]["h"]:
-            await error(f"you must be an half-operator in {config.botchannel}.")
+        if not src in self.channels[chan]["modes"]["h"]:
+            await error(f"you must be an half-operator in this channel.")
             return
     if "require_vop" in self.fndata[func]:
         # voice
-        if not src in self.channels[config.botchannel]["modes"]["v"]:
-            await error(f"you must have +v in {config.botchannel}.")
+        if not src in self.channels[chan]["modes"]["v"]:
+            await error(f"you must have +v in this channel.")
             return
 
     shortopts = ""

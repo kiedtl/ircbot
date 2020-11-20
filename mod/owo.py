@@ -5,11 +5,16 @@
 
 import common
 import random
+import manager
+from manager import *
 
 modname = "owo"
 
 
-async def owoify(self, c, n, m):
+@manager.hook(modname, "owo")
+@manager.argument("num", argtype=ArgType.INT, optional=True)
+@manager.helptext(["owoify the text", "owo owo uwu"])
+async def owoify(self, c, n, m, _a, _o):
     ms = ""
     try:
         ms = common.get_backlog_msg(self, c, m)
@@ -50,5 +55,6 @@ async def owotext(self, msg):
 
 
 async def init(self):
-    self.handle_cmd["owo"] = owoify
-    self.help["owo"] = ["owo [num] - owoify the text", "owo owo uwu"]
+    #self.handle_cmd["owo"] = owoify
+    #self.help["owo"] = ["owo [num] - owoify the text", "owo owo uwu"]
+    manager.register(self, owoify)

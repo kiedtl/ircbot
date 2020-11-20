@@ -2,6 +2,7 @@
 
 import youtube as YT
 import common, re, secrets
+import handlers
 
 modname = "youtube"
 is_yturl = re.compile(
@@ -11,6 +12,11 @@ youtube = YT.authenticate(secrets.yt_key)
 
 
 async def handle_yt(self, chan, src, msg):
+    """
+    :name: handle_yt
+    :hook: reg
+    :hook_regex: (?:.*)?(https?\://(?:www\.|m\.)?(?:youtu.be/|youtube.com/)(?:[^ ]+)?)
+    """
     """
     Detect a YT url in chat.
     """
@@ -28,6 +34,13 @@ async def handle_yt(self, chan, src, msg):
 
 
 async def yt_info(self, chan, src, msg):
+    """
+    :name: youtube
+    :hook: cmd
+    :help: show info for a youtube url [num] messages back
+    :args: @num:int
+    :aliases: yt
+    """
     try:
         txt = common.get_backlog_msg(self, chan, msg)[1]
     except:
@@ -51,11 +64,5 @@ async def yt_info(self, chan, src, msg):
 
 async def init(self):
     # disabled, now that tildebot is a thing
-    # self.handle_reg['youtube'] = (is_yturl, handle_yt)
-    self.handle_cmd["youtube"] = yt_info
-
-    self.aliases["youtube"] = ["yt"]
-
-    self.help["youtube"] = [
-        "yt [num] - show info for a youtube url [num] messages back"
-    ]
+    #handlers.register(self, modname, handle_yt)
+    handlers.register(self, modname, yt_info)

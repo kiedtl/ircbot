@@ -86,7 +86,7 @@ def access(access):
 def alias(alias):
     def decorator(func):
         fninfo = _fn_get_info(func)
-        fninfo.alias.append(alias)
+        fninfo.aliases.append(alias)
         setattr(func, FNINFO_ATTR, fninfo)
         return func
     return decorator

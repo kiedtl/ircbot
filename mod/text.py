@@ -39,7 +39,7 @@ async def _cmd_with_args(self, chan, cmd, msg):
         await self.message(chan, line)
 
 
-async def qrenco(self, chan, src, msg, args, opts):
+async def qrenco(self, chan, src, msg):
     """
     :name: qrenco
     :hook: cmd
@@ -53,7 +53,7 @@ async def qrenco(self, chan, src, msg, args, opts):
         await self.message(chan, line)
 
 
-async def figlet(self, chan, src, msg, args, opts):
+async def figlet(self, chan, src, msg):
     """
     :name: figlet
     :hook: cmd
@@ -64,7 +64,7 @@ async def figlet(self, chan, src, msg, args, opts):
     await _cmd_with_args(self, chan, ["figlet"], msg)
 
 
-async def toilet(self, chan, src, msg, args, opts):
+async def toilet(self, chan, src, msg):
     """
     :name: toilet
     :hook: cmd
@@ -75,7 +75,7 @@ async def toilet(self, chan, src, msg, args, opts):
     await _cmd_with_args(self, chan, ["toilet", "--irc"], msg)
 
 
-async def cowsay(self, chan, src, msg, args, opts):
+async def cowsay(self, chan, src, msg):
     """
     :name: cowsay
     :hook: cmd
@@ -86,7 +86,7 @@ async def cowsay(self, chan, src, msg, args, opts):
     await _cmd_with_args(self, chan, ["cowsay"], msg)
 
 
-async def cowthink(self, chan, src, msg, args, opts):
+async def cowthink(self, chan, src, msg):
     """
     :name: cowthink
     :hook: cmd
@@ -97,7 +97,7 @@ async def cowthink(self, chan, src, msg, args, opts):
     await _cmd_with_args(self, chan, ["cowthink"], msg)
 
 
-async def rainbow(self, chan, src, msg, args, opts):
+async def rainbow(self, chan, src, msg):
     """
     :name: rainbow
     :hook: cmd
@@ -108,7 +108,7 @@ async def rainbow(self, chan, src, msg, args, opts):
     await self.msg("rainbow", chan, [_irc_rainbow(msg)])
 
 
-async def communist(self, chan, src, msg, args, opts):
+async def communist(self, chan, src, msg):
     """
     :name: communist
     :hook: cmd
@@ -119,7 +119,7 @@ async def communist(self, chan, src, msg, args, opts):
     await self.msg("", chan, [_irc_communist(msg)])
 
 
-async def rot13(self, chan, src, msg, args, opts):
+async def rot13(self, chan, src, msg):
     """
     :name: rot13
     :hook: cmd
@@ -131,7 +131,7 @@ async def rot13(self, chan, src, msg, args, opts):
     await self.msg("rot", chan, [f"{res}"])
 
 
-async def rot_n(self, chan, src, msg, _args, opts):
+async def rot_n(self, chan, src, msg):
     """
     :name: rot
     :hook: cmd

@@ -21,7 +21,7 @@ async def _aexec(self, code):
     return await locals()["__ex"](self)
 
 
-async def dump(self, chan, source, msg, args, opts):
+async def dump(self, chan, source, msg):
     """
     :name: coredump
     :hook: cmd
@@ -37,7 +37,7 @@ async def dump(self, chan, source, msg, args, opts):
     await self.msg(modname, chan, ["done"])
 
 
-async def quit(self, chan, source, msg, args, opts):
+async def quit(self, chan, source, msg):
     """
     :name: quit
     :hook: cmd
@@ -52,7 +52,7 @@ async def quit(self, chan, source, msg, args, opts):
     await self.quit(quitmsg)
 
 
-async def restart(self, chan, source, msg, args, opts):
+async def restart(self, chan, source, msg):
     """
     :name: restart
     :hook: cmd
@@ -70,7 +70,7 @@ async def restart(self, chan, source, msg, args, opts):
         exit(1)
 
 
-async def load_mod(self, chan, src, msg, args, opts):
+async def load_mod(self, chan, src, msg):
     """
     :name: loadmodule
     :hook: cmd
@@ -93,7 +93,7 @@ async def load_mod(self, chan, src, msg, args, opts):
     await self.msg(modname, chan, ["loaded module"])
 
 
-async def unload_mod(self, chan, src, msg, args, opts):
+async def unload_mod(self, chan, src, msg):
     """
     :name: unloadmodule
     :hook: cmd
@@ -111,7 +111,7 @@ async def unload_mod(self, chan, src, msg, args, opts):
         await self.msg(modname, chan, ["unloaded module"])
 
 
-async def reloadmods(self, chan, source, msg, args, opts):
+async def reloadmods(self, chan, source, msg):
     """
     :name: reload
     :hook: cmd
@@ -163,7 +163,7 @@ async def reloadmods(self, chan, source, msg, args, opts):
     )
 
 
-async def part(self, chan, source, msg, args, opts):
+async def part(self, chan, source, msg):
     """
     :name: part
     :hook: cmd
@@ -175,7 +175,7 @@ async def part(self, chan, source, msg, args, opts):
     await self.part(msg)
 
 
-async def join(self, chan, source, msg, args, opts):
+async def join(self, chan, source, msg):
     """
     :name: join
     :hook: cmd
@@ -187,7 +187,7 @@ async def join(self, chan, source, msg, args, opts):
     await self.join(msg)
 
 
-async def joinall(self, chan, source, msg, args, opts):
+async def joinall(self, chan, source, msg):
     """
     :name: joinall
     :hook: cmd
@@ -200,7 +200,7 @@ async def joinall(self, chan, source, msg, args, opts):
         await self.join(i)
 
 
-async def ev(self, chan, source, msg, args, opts):
+async def ev(self, chan, source, msg):
     """
     :name: eval
     :hook: cmd
@@ -218,7 +218,7 @@ async def ev(self, chan, source, msg, args, opts):
     await self.msg(modname, chan, [f"result: '{result}'"])
 
 
-async def send(self, c, n, m, args, opts):
+async def send(self, c, n, m):
     """
     :name: send
     :hook: cmd
@@ -231,7 +231,7 @@ async def send(self, c, n, m, args, opts):
     await self.message(msg.pop(0), " ".join(msg))
 
 
-async def shutup(self, c, n, m, args, opts):
+async def shutup(self, c, n, m):
     """
     :name: sleep
     :hook: cmd
@@ -250,7 +250,7 @@ async def shutup(self, c, n, m, args, opts):
     await self.msg(modname, c, [f"disabled for {duration}m"])
 
 
-async def wake(self, c, n, m, args, opts):
+async def wake(self, c, n, m):
     """
     :name: wake
     :hook: cmd

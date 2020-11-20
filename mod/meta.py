@@ -14,7 +14,7 @@ import random
 from manager import *
 
 modname = "meta"
-ROLLCALL = r"^(!rollcall|!botlist)"
+BOTLIST = r"^(!rollcall|!botlist)"
 
 @manager.hook(modname, "rollcall", hook=HookType.PATTERN, pattern=BOTLIST)
 async def rollcall(self, chan, src, msg):
@@ -23,7 +23,7 @@ async def rollcall(self, chan, src, msg):
 
 @manager.hook(modname, "ping")
 @manager.helptext(["see if I'm responding"])
-async def ping(self, chan, src, msg, args, opts):
+async def ping(self, chan, src, msg):
     res = random.choice(
         ["you rang?", "yes?", "pong!", "what?", "hmmm?"]
     )
@@ -33,7 +33,7 @@ async def ping(self, chan, src, msg, args, opts):
 @manager.hook(modname, "whoami")
 @manager.helptext(["list information about this bot"])
 @manager.alias("who")
-async def whoami(self, chan, src, msg, args, opts):
+async def whoami(self, chan, src, msg):
     source = ""
     if not config.upstream == None:
         source = "".join([common.nohighlight(i) for i in config.upstream])

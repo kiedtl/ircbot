@@ -7,8 +7,6 @@
 
 import config
 import re
-import getopt
-from getopt import gnu_getopt
 
 # TODO: documentation on how this whole file
 # works, so when I inevitably leave this project
@@ -33,9 +31,8 @@ from getopt import gnu_getopt
 
 async def execute(self, func, chan, src, msg):
     """
-    Ensure that all the necessary arguments
-    are in place, parse non-positional arguments,
-    and run function.
+    Ensure that all the necessary arguments are in place,
+    and run the function.
     """
 
     async def error(text):
@@ -69,32 +66,8 @@ async def execute(self, func, chan, src, msg):
             await error(f"you must have +v in this channel.")
             return
 
-    shortopts = ""
-
-    # create list of short opts
-    for arg in self.fndata[func]["args"]:
-        if "option" in arg:
-            shortopts += arg["option"]
-            shortopts += ":"
-        elif "flag" in arg:
-            shortopts += arg["flag"]
-
-    try:
-        opts, args = gnu_getopt(msg.split(), shortopts)
-    except getopt.GetoptError as err:
-        await error(f"{err}")
-        return
-
-    # -------------------------------
-    #     ***MESSY MESSY MESSY***
-    # -------------------------------
-
     # ensure all non-optional arguments are in place
-    non_optional = [
-        a
-        for a in self.fndata[func]["args"]
-        if not a["optional"] and "option" not in a and "flag" not in a
-    ]
+    non_optional = [a for a in self.fndata[func]["args"] if not a["optional"]]
 
     if len(args) < len(non_optional):
         # all the required arguments aren't there!
@@ -104,7 +77,7 @@ async def execute(self, func, chan, src, msg):
         )
         return
 
-    await func(self, chan, src, msg, args, dict(opts))
+    await func(self, chan, src, msg)
 
 
 def register(self, modname, func):
@@ -174,19 +147,6 @@ def register(self, modname, func):
         else:
             arg["optional"] = False
 
-        # is it a flag?
-        # flags follow this syntax when defined
-        # in a function docstring:
-        #   [&/*]<shortopt_char>:<opt_name>:<type>
-        # if the prefix is '&', it takes an argument,
-        # if the prefix is '*', if doesn't take args.
-        if raw_arg[0] == "&":
-            arg["option"] = raw_arg[1]
-            raw_arg = raw_arg[3:]
-        elif raw_arg[0] == "*":
-            arg["flag"] = raw_arg[1]
-            raw_arg = raw_arg[3:]
-
         name, _, _type = raw_arg.partition(":")
         arg["name"] = name
         arg["type"] = _type
@@ -209,10 +169,6 @@ def register(self, modname, func):
         for arg in data["args"]:
             if arg["optional"]:
                 help_string += f'[{arg["name"]}] '
-            elif "flag" in arg:
-                help_string += f'[-{arg["flag"]} ({arg["name"]})] '
-            elif "option" in arg:
-                help_string += f'[-{arg["option"]} {arg["name"]}] '
             else:
                 help_string += f'<{arg["name"]}> '
         help_string += "- " + data["help"][0]

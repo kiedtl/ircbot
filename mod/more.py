@@ -3,7 +3,7 @@ import handlers
 modname = "more"
 
 
-async def more(self, ch, src, msg, args, opts):
+async def more(self, ch, src, msg, args):
     """
     :name: more
     :hook: cmd

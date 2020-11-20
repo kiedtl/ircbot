@@ -39,7 +39,7 @@ def _plant_info(username):
         return json.load(finfo)
 
 
-async def botany(self, ch, src, msg, args, opts):
+async def botany(self, ch, src, msg):
     """
     :name: botany
     :hook: cmd
@@ -116,7 +116,7 @@ async def botany(self, ch, src, msg, args, opts):
         )
 
 
-async def visit(self, ch, src, msg, args, opts):
+async def visit(self, ch, src, msg):
     """
     :name: visit
     :hook: cmd

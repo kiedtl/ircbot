@@ -15,23 +15,24 @@ EXTRACTID = re.compile(
 # TODO: search only in subreddit
 
 
-async def submissions_search(self, chan, src, msg, args, opts):
+async def submissions_search(self, chan, src, msg):
     """
     :name: redditsearch
     :hook: cmd
     :help: search for posts on reddit.
-    :args: &s:subreddit:str keywords:list
+    :args: subreddit:str keywords:list
     :aliases: rds
     """
     await self.msg(modname, chan, ["searching..."])
 
-    if "s" in opts:
-        sub = opts["s"]
-        if sub.startswith("r/"):
-            sub = sub[2:]
-        posts = reddit.search_by_keywords(msg, subreddit=sub)
-    else:
-        posts = reddit.search_by_keywords(msg)
+    args = msg.split(" ", 1)
+    keywords = msg[1:]
+    sub = msg[0]
+
+    if sub.startswith("r/"):
+        sub = sub[2:]
+
+    posts = reddit.search_by_keywords(keywords, subreddit=sub)
 
     if len(posts) == 0:
         await self.msg(modname, chan, ["no results found"])
@@ -49,12 +50,12 @@ async def submissions_search(self, chan, src, msg, args, opts):
     await self.msg(modname, chan, results)
 
 
-async def submissions_for_url(self, chan, src, msg, args, opts):
+async def submissions_for_url(self, chan, src, msg):
     """
     :name: redditurl
     :hook: cmd
     :help: search for posts for url on reddit.
-    :args: &s:subreddit:str @url:str
+    :args: subreddit:str @url:str
     :aliases: rdu
     """
     # TODO: check backlog too
@@ -65,13 +66,14 @@ async def submissions_for_url(self, chan, src, msg, args, opts):
 
     await self.msg(modname, chan, ["searching..."])
 
-    if "s" in opts:
-        sub = opts["s"]
-        if sub.startswith("r/"):
-            sub = sub[2:]
-        posts = reddit.search_by_url(msg, subreddit=sub)
-    else:
-        posts = reddit.search_by_url(msg)
+    args = msg.split(" ", 1)
+    keywords = msg[1:]
+    sub = msg[0]
+
+    if sub.startswith("r/"):
+        sub = sub[2:]
+
+    posts = reddit.search_by_url(msg, subreddit=sub)
 
     if len(posts) == 0:
         await self.msg(modname, chan, ["no results found"])
@@ -89,7 +91,7 @@ async def submissions_for_url(self, chan, src, msg, args, opts):
     await self.msg(modname, chan, results)
 
 
-async def submission_info(self, chan, src, msg, args, opts):
+async def submission_info(self, chan, src, msg):
     """
     :name: redditinfo
     :hook: cmd

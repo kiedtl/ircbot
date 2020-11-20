@@ -4,7 +4,7 @@ import handlers
 modname = "status"
 
 
-async def status(self, chan, src, msg, args, opts):
+async def status(self, chan, src, msg):
     """
     :name: sysinfo
     :hook: cmd

@@ -4,7 +4,7 @@ import handlers
 modname = "pesc"
 
 # NOTE: this is *very* WIP
-async def pescli(self, chan, src, msg, args, opts):
+async def pescli(self, chan, src, msg):
     """
     :name: pescli
     :hook: cmd

@@ -9,7 +9,7 @@ import handlers
 modname = "help"
 
 
-async def show_modules(self, chan, src, msg, args, opts):
+async def show_modules(self, chan, src, msg):
     """
     :name: modules
     :hook: cmd
@@ -20,7 +20,7 @@ async def show_modules(self, chan, src, msg, args, opts):
     mods = ", ".join(sorted(list(self.modules.keys())))
     await self.msg(modname, chan, [f"loaded: {mods}"])
 
-async def which_module(self, ch, src, msg, args, opts):
+async def which_module(self, ch, src, msg):
     """
     :name: which
     :hook: cmd
@@ -52,7 +52,7 @@ async def which_module(self, ch, src, msg, args, opts):
         return
 
 
-async def show_commands(self, ch, src, msg, args, opts):
+async def show_commands(self, ch, src, msg):
     """
     :name: commands
     :hook: cmd
@@ -71,7 +71,7 @@ async def show_commands(self, ch, src, msg, args, opts):
     await self.msg(modname, ch, [f"commands for {msg}: {commands}"])
 
 
-async def show_help(self, ch, src, msg, args, opts):
+async def show_help(self, ch, src, msg):
     """
     :name: help
     :hook: cmd

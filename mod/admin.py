@@ -70,6 +70,47 @@ async def restart(self, chan, source, msg, args, opts):
         exit(1)
 
 
+async def load_mod(self, chan, src, msg, args, opts):
+    """
+    :name: loadmodule
+    :hook: cmd
+    :help: load an unloaded module from $ROOT/mod/
+    :args: module:str
+    :require_admin:
+    :aliases: load
+    """
+    mod = msg.split()[0]
+    mods = [s for s in os.listdir("mod") if ".py" in s]
+    if not f"{mod}.py" in mods:
+        await self.msg("modules", chan, ["no such module"])
+        return
+
+    self.log("modules", f"loading {mod}")
+    m = __import__("mod." + mod)
+    m = eval("m." + mod)
+    await m.init(self)
+    self.modules[mod] = m
+    await self.msg(modname, chan, ["loaded module"])
+
+
+async def unload_mod(self, chan, src, msg, args, opts):
+    """
+    :name: unloadmodule
+    :hook: cmd
+    :help: unload an loaded module
+    :args: module:str
+    :require_admin:
+    :aliases: unload
+    """
+    mod = msg.split()[0]
+    if not mod in self.modules:
+        await self.msg(modname, chan, ["no such module"])
+        return
+    else:
+        del self.modules[mod]
+        await self.msg(modname, chan, ["unloaded module"])
+
+
 async def reloadmods(self, chan, source, msg, args, opts):
     """
     :name: reload
@@ -226,6 +267,8 @@ async def init(self):
     handlers.register(self, modname, dump)
     handlers.register(self, modname, quit)
     handlers.register(self, modname, restart)
+    handlers.register(self, modname, load_mod)
+    handlers.register(self, modname, unload_mod)
     handlers.register(self, modname, reloadmods)
     handlers.register(self, modname, part)
     handlers.register(self, modname, join)

@@ -9,6 +9,17 @@ import handlers
 modname = "help"
 
 
+async def show_modules(self, chan, src, msg, args, opts):
+    """
+    :name: modules
+    :hook: cmd
+    :help: list loaded modules
+    :args:
+    :aliases:
+    """
+    mods = ", ".join(sorted(list(self.modules.keys())))
+    await self.msg(modname, chan, [f"loaded: {mods}"])
+
 async def which_module(self, ch, src, msg, args, opts):
     """
     :name: which
@@ -102,4 +113,5 @@ async def show_help(self, ch, src, msg, args, opts):
 async def init(self):
     handlers.register(self, modname, show_help)
     handlers.register(self, modname, show_commands)
+    handlers.register(self, modname, show_modules)
     handlers.register(self, modname, which_module)

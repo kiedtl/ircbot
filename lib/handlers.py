@@ -69,9 +69,9 @@ async def execute(self, func, chan, src, msg):
     # ensure all non-optional arguments are in place
     non_optional = [a for a in self.fndata[func]["args"] if not a["optional"]]
 
-    if len(args) < len(non_optional):
+    if len(msg.split()) < len(non_optional):
         # all the required arguments aren't there!
-        missing = non_optional[len(args)]["name"]
+        missing = non_optional[len(msg.split())]["name"]
         await error(
             f"not enough arguments (need argument '{missing}'). see '{config.prefix}help {self.fndata[func]['name']}'."
         )

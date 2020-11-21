@@ -1,10 +1,34 @@
-# configuration for the bot.
+# key-value storage system for the bot.
 #
 # tables:
-#   defaults   ( key: string, value: string, type )
-#   #<channel> ( key: string, value: string, type )
-#   nickname   ( key: string, value: string, type )
+#   #<chan>@<network>  ( key: string, value: string )
+#    <user>@<network>  ( key: string, value: string )
 #
-# if the #<channel>'s value for a particular key is
-# not set, it defaults to the value provided in the
-# defaults table.
+# configuration values that are "exported" by modules
+# can be configured on IRC by identified users and opers
+
+import dataset
+
+CONFIG_DB = dataset.connect("sqlite:///dat/config.db")
+
+def get(network, ctx, key, default=None):
+    ch_table = CONFIG_DB[f"{ctx}@{network}"]
+    row = ch_table.find_one(key=key)
+
+    if not row:
+        if default:
+            ch_table.insert(dict(key=key, value=default))
+        return default
+    else:
+        return row["value"]
+
+
+def set(network, ctx, key, value):
+    ch_table = CONFIG_DB[f"{ctx}@{network}"]
+    row = ch_table.find_one(key=key)
+
+    if not row:
+        ch_table.insert(dict(key=key, value=value))
+    else:
+        updated = dict(key=key, value=value)
+        ch_table.update(updated, ['key'])

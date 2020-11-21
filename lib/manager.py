@@ -1,32 +1,26 @@
-# NOTE: command-line-style flags are not supported, as I feel I made
-# a mistake when I added them earlier. IRC bots are not command-line
-# programs and should not act like they are.
-
 import dataclasses
 import re
+import utils
 
 from functools import partial
 from dataclasses import field
-from typing import List
+from typing import List, Tuple
 
 
-def _enum(**items):
-    return type("Enum", (), items)
-
-
-ArgType = _enum(INT=0, STR=1, LIST=2)
+ArgType = utils.enum(INT=0, STR=1, LIST=2)
 
 
 @dataclasses.dataclass
-class FunctionArg:
+class Arg:
     name: str
-    description: str
-    argtype: ArgType
-    optional: bool
+    desc: str = ""
+    argtype: ArgType = ArgType.STR
+    optional: bool = False
 
 
-HookType = _enum(COMMAND="cmd", RAW="raw", PATTERN="reg")
-AccessType = _enum(ANY=0, ADMIN=1, CHAN_OP=2, CHAN_HOP=3, CHAN_VOP=4)
+ConfigScope = utils.enum(USER=0, CHAN=1)
+HookType = utils.enum(COMMAND="cmd", RAW="raw", PATTERN="reg")
+AccessType = utils.enum(ANY=0, IDENTIFIED=1, ADMIN=2, CHAN_OP=3, CHAN_HOP=4, CHAN_VOP=5)
 
 FNINFO_ATTR = "fninfo"
 
@@ -35,7 +29,7 @@ FNINFO_ATTR = "fninfo"
 class FunctionInfo:
     name: str = ""
     hook_type: HookType = HookType.COMMAND
-    args: List[FunctionArg] = field(default_factory=lambda: [])
+    args: List[Arg] = field(default_factory=lambda: [])
     module: str = ""
 
     # only used when hook_type == HookType.PATTERN
@@ -43,8 +37,14 @@ class FunctionInfo:
 
     # only used when hook_type == HookType.COMMAND
     helptext: List[str] = field(default_factory=lambda: [])
-    access: AccessType = AccessType.ADMIN
+    access: AccessType = AccessType.ANY
     aliases: List[str] = field(default_factory=lambda: [])
+
+    # "exported" configuration values.
+    # tuple structure: <name>, <scope>, <pattern>, <desc>
+    # <pattern> is the valid format in regex form, <desc> is the same as <pattern>
+    # but in human-readable format.
+    configs: List[Tuple[str, ConfigScope, str, str]] = field(default_factory=lambda: [])
 
 
 def _fn_get_info(fn):
@@ -53,12 +53,15 @@ def _fn_get_info(fn):
     return getattr(fn, FNINFO_ATTR)
 
 
-def hook(module, name, hook=HookType.COMMAND, pattern=None):
+def hook(module, name, aliases=[], access=AccessType.ANY,
+        hook=HookType.COMMAND, pattern=None):
     def decorator(func):
         fninfo = _fn_get_info(func)
         fninfo.module = module
         fninfo.name = name
+        fninfo.access = access
         fninfo.hook_type = hook
+        fninfo.aliases = aliases
 
         if hook == HookType.PATTERN:
             fninfo.pattern = re.compile(pattern)
@@ -69,10 +72,11 @@ def hook(module, name, hook=HookType.COMMAND, pattern=None):
     return decorator
 
 
-def argument(name, desc="", argtype=ArgType.STR, optional=False):
+# deprecated.
+def argument(name, desc=None, argtype=ArgType.STR, optional=False):
     def decorator(func):
-        arg = FunctionArg(
-            name=name, description=desc, argtype=argtype, optional=optional
+        arg = Arg(
+            name=name, desc=desc, argtype=argtype, optional=optional
         )
         fninfo = _fn_get_info(func)
         fninfo.args.append(arg)
@@ -82,20 +86,21 @@ def argument(name, desc="", argtype=ArgType.STR, optional=False):
     return decorator
 
 
-def access(access):
+def arguments(args):
     def decorator(func):
         fninfo = _fn_get_info(func)
-        fninfo.access = access
+        fninfo.args = args
         setattr(func, FNINFO_ATTR, fninfo)
         return func
 
     return decorator
 
 
-def alias(alias):
+# deprecated.
+def aliases(aliases):
     def decorator(func):
         fninfo = _fn_get_info(func)
-        fninfo.aliases.append(alias)
+        fninfo.aliases = aliases
         setattr(func, FNINFO_ATTR, fninfo)
         return func
 
@@ -107,6 +112,20 @@ def helptext(helptexts):
         fninfo = _fn_get_info(func)
         for helptext in helptexts:
             fninfo.helptext.append(helptext)
+        setattr(func, FNINFO_ATTR, fninfo)
+        return func
+
+    return decorator
+
+
+def config(conf, ctx, pattern=None, desc=None):
+    """
+    'Export' a configuration value, making
+    it possible for users/opers to edit them.
+    """
+    def decorator(func):
+        fninfo = _fn_get_info(func)
+        fninfo.configs.append((conf, ctx, pattern, desc))
         setattr(func, FNINFO_ATTR, fninfo)
         return func
 
@@ -132,10 +151,13 @@ def register(self, func):
             help_string = fninfo.name + " "
 
         for arg in fninfo.args:
-            if arg.optional:
-                help_string += f"[{arg.name}] "
+            if arg.desc:
+                help_string += arg.desc + " "
             else:
-                help_string += f">{arg.name}> "
+                if arg.optional:
+                    help_string += f"[{arg.name}] "
+                else:
+                    help_string += f"<{arg.name}> "
 
         help_string += "── " + fninfo.helptext[0]
 
@@ -154,8 +176,9 @@ def register(self, func):
     data = {
         "name": fninfo.name,
         "help": fninfo.helptext,
-        "func": func,
+        "configs": fninfo.configs,
         "module": fninfo.module,
+        "func": func,
     }
 
     if fninfo.access == AccessType.ADMIN:
@@ -166,11 +189,14 @@ def register(self, func):
         data["require_hop"] = True
     elif fninfo.access == AccessType.CHAN_VOP:
         data["require_vop"] = True
+    elif fninfo.access == AccessType.IDENTIFIED:
+        data["require_identified"] = True
 
     data["args"] = []
     for arg in fninfo.args:
         data_arg = {}
         data_arg["name"] = arg.name
+        data_arg["desc"] = arg.desc
 
         if arg.optional:
             data_arg["optional"] = True

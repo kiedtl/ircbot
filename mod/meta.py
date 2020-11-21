@@ -29,9 +29,8 @@ async def ping(self, chan, src, msg):
     await self.msg(modname, chan, [f"{src}: {res}"])
 
 
-@manager.hook(modname, "whoami")
+@manager.hook(modname, "whoami", aliases=["who"])
 @manager.helptext(["list information about this bot"])
-@manager.alias("who")
 async def whoami(self, chan, src, msg):
     source = ""
     if not config.upstream == None:

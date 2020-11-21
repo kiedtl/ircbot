@@ -14,7 +14,7 @@ modname = "owo"
 @manager.hook(modname, "owo")
 @manager.argument("num", argtype=ArgType.INT, optional=True)
 @manager.helptext(["owoify the text", "owo owo uwu"])
-async def owoify(self, c, n, m, _a, _o):
+async def owoify(self, c, n, m):
     ms = ""
     try:
         ms = common.get_backlog_msg(self, c, m)

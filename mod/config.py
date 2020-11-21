@@ -77,10 +77,10 @@ async def bot_config_set(self, chan, nick, msg):
         return
 
     # ensure the value given is valid.
-    pattern = re.compile(setting[2])
+    pattern = setting[2]
     description = setting[3]
 
-    if not pattern.match(value):
+    if pattern and not re.match(pattern, value):
         if description:
             await self.msg(modname, chan, [f"invalid value format. format: {description}"])
         else:

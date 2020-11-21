@@ -115,17 +115,20 @@ class SIGSEGV(pydle.Client):
                 .format(cmd, msg, source, chan))
             func = self.handle_cmd[cmd]
 
-            if self.asleep[chan] < time.time() or cmd == 'admin':
+            is_admin = await self.is_admin(source)
+            if self.asleep[chan] < time.time() or is_admin:
                 try:
                     await handlers.execute(self, func, chan, source, msg)
                 except Exception as e:
-                    traceback.print_tb(e.__traceback__)
                     if func in self.fndata:
                         module = self.fndata[func]['module']
                     else:
                         module = 'oops'
                     await self.msg(module, chan,
                         ['segmentation fault', repr(e)])
+
+                    self.log(module, f"EXCEPTION: {repr(e)}")
+                    traceback.print_tb(e.__traceback__)
                     return
 
     async def on_private_message(self, chan, source, msg):

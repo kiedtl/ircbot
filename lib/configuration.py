@@ -11,6 +11,7 @@ import dataset
 
 CONFIG_DB = dataset.connect("sqlite:///dat/config.db")
 
+
 def get(network, ctx, key, default=None):
     ch_table = CONFIG_DB[f"{ctx}@{network}"]
     row = ch_table.find_one(key=key)
@@ -31,4 +32,4 @@ def set(network, ctx, key, value):
         ch_table.insert(dict(key=key, value=value))
     else:
         updated = dict(key=key, value=value)
-        ch_table.update(updated, ['key'])
+        ch_table.update(updated, ["key"])

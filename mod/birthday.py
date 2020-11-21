@@ -5,19 +5,22 @@ import manager
 from manager import *
 
 modname = "birthday"
-VALID_DATE = r"(\d{4}-\d{2}-\d{2}|\d{2}-(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))"
+VALID_DATE = (
+    r"(\d{4}-\d{2}-\d{2}|\d{2}-(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))"
+)
+
 
 @manager.hook(modname, "birthday", access=AccessType.IDENTIFIED)
 @manager.argument("user", optional=True)
 @manager.helptext(["see your (or someone else's) birthday"])
 @manager.config("birthday", ConfigScope.USER, VALID_DATE, "YYYY-MM-DD or DD-MMM")
 async def birthday(self, chan, nick, msg):
-    user = self.users[nick]['account']
+    user = self.users[nick]["account"]
 
     args = msg.split()
     if len(args) > 0:
         if args[0] in self.users:
-            user = self.users[args[0]]['account']
+            user = self.users[args[0]]["account"]
         else:
             await self.msg(modname, chan, [f"I don't know who {args[0]} is."])
             return

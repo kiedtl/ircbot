@@ -53,8 +53,9 @@ def _fn_get_info(fn):
     return getattr(fn, FNINFO_ATTR)
 
 
-def hook(module, name, aliases=[], access=AccessType.ANY,
-        hook=HookType.COMMAND, pattern=None):
+def hook(
+    module, name, aliases=[], access=AccessType.ANY, hook=HookType.COMMAND, pattern=None
+):
     def decorator(func):
         fninfo = _fn_get_info(func)
         fninfo.module = module
@@ -75,9 +76,7 @@ def hook(module, name, aliases=[], access=AccessType.ANY,
 # deprecated.
 def argument(name, desc=None, argtype=ArgType.STR, optional=False):
     def decorator(func):
-        arg = Arg(
-            name=name, desc=desc, argtype=argtype, optional=optional
-        )
+        arg = Arg(name=name, desc=desc, argtype=argtype, optional=optional)
         fninfo = _fn_get_info(func)
         fninfo.args.append(arg)
         setattr(func, FNINFO_ATTR, fninfo)
@@ -123,6 +122,7 @@ def config(conf, ctx, pattern=None, desc=None):
     'Export' a configuration value, making
     it possible for users/opers to edit them.
     """
+
     def decorator(func):
         fninfo = _fn_get_info(func)
         fninfo.configs.append((conf, ctx, pattern, desc))

@@ -17,15 +17,11 @@ set_botmode = True
 prefix = ":"
 admins = ["kiedtl", "spacehare"]
 
-bannedchans = ["#meta", "##jmw2020", "#communism", '#chaos']
+bannedchans = ["#meta", "##jmw2020", "#communism", "#chaos"]
 
 # channels that are joined only when the
 # `:admin joins` command is issued
-prod_chans = [
-    "#team",
-    "#lounge",
-    "#xfnw",
-]
+prod_chans = ["#team", "#lounge", "#xfnw"]
 
 # channels that are joined initially
 initial_chans = ["#bots", "#spacehare", "#sigsegv"]

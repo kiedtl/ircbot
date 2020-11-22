@@ -3,7 +3,7 @@
 An IRC bot that lives mainly on the `#bots`, `#team` and `#chaos`
 channels of the `irc.tilde.chat` IRC network.
 
-## faq
+## FAQ
 - **Q**: why does this implement features already present in other bots?
 	- **A**: so that I can use this on servers/channels without
 	those bots.

@@ -20,7 +20,7 @@ def _is_oper(self, chan, nick):
     return is_oper
 
 
-@manager.hook(modname, "cfg", access=AccessType.IDENTIFIED, aliases=["set"])
+@manager.hook(modname, "cfg", access=AccessType.IDENTIFIED, aliases=["set", "c"])
 @manager.arguments(
     [
         Arg("context", desc="<user/chan>"),
@@ -78,18 +78,23 @@ async def bot_config_set(self, chan, nick, msg):
         await self.msg(modname, chan, [f"no such setting '{setting_str}'."])
         return
 
+    setting = [s for s in exported if s[0] == setting_str][0]
+    pattern = setting[2]
+    description = setting[3]
+    cast = setting[4]
+
     # if no value is given, print out the current value for the setting.
     if not value:
-        cur_value = configuration.get(self.network, ctxname, setting_str, default="")
+        cur_value = configuration.get(self.network, ctxname, setting_str, default="", cast=cast)
         await self.msg(
             modname, chan, [f"current value for '{setting_str}': '{cur_value}'"]
         )
         return
 
-    setting = [s for s in exported if s[0] == setting_str][0]
-
     # don't let users change settings for channels they don't have +o in.
-    if ctxtype == ConfigScope.CHAN and not _is_oper(self, ctxname, nick):
+    is_admin = await self.is_admin(nick)
+    is_oper  = _is_oper(self, ctxname, nick)
+    if ctxtype == ConfigScope.CHAN and not is_oper and not is_admin:
         await self.msg(
             modname,
             chan,
@@ -98,16 +103,24 @@ async def bot_config_set(self, chan, nick, msg):
         return
 
     # ensure the value given is valid.
-    pattern = setting[2]
-    description = setting[3]
-
     if pattern and not re.match(pattern, value):
         if description:
             await self.msg(
-                modname, chan, [f"invalid value format. format: {description}"]
+                    modname, chan, [f"invalid format (need: {description})"]
             )
         else:
-            await self.msg(modname, chan, [f"invalid value format."])
+            await self.msg(modname, chan, [f"invalid format."])
+        return
+
+    try:
+        configuration.try_cast(cast, value)
+    except:
+        if description:
+            await self.msg(
+                    modname, chan, [f"invalid format (need: {description})"]
+            )
+        else:
+            await self.msg(modname, chan, [f"invalid format."])
         return
 
     # now we can set the value

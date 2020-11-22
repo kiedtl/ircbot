@@ -12,16 +12,16 @@ import dataset
 CONFIG_DB = dataset.connect("sqlite:///dat/config.db")
 
 
-def get(network, ctx, key, default=None):
+def get(network, ctx, key, default=None, cast=None):
     ch_table = CONFIG_DB[f"{ctx}@{network}"]
     row = ch_table.find_one(key=key)
 
     if not row:
         if default:
             ch_table.insert(dict(key=key, value=default))
-        return default
+        return try_cast(cast, default)
     else:
-        return row["value"]
+        return try_cast(cast, row["value"])
 
 
 def set(network, ctx, key, value):
@@ -33,3 +33,12 @@ def set(network, ctx, key, value):
     else:
         updated = dict(key=key, value=value)
         ch_table.update(updated, ["key"])
+
+
+def try_cast(cast, value):
+    if cast:
+        if cast == bool and type(value) == str:
+            value = value.lower() == "true"
+        else:
+            value = cast(value)
+    return value

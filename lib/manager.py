@@ -41,10 +41,10 @@ class FunctionInfo:
     aliases: List[str] = field(default_factory=lambda: [])
 
     # "exported" configuration values.
-    # tuple structure: <name>, <scope>, <pattern>, <desc>
+    # tuple structure: <name>, <scope>, <pattern>, <desc>, <cast>
     # <pattern> is the valid format in regex form, <desc> is the same as <pattern>
     # but in human-readable format.
-    configs: List[Tuple[str, ConfigScope, str, str]] = field(default_factory=lambda: [])
+    configs: List[Tuple[str, ConfigScope, str, str, type]] = field(default_factory=lambda: [])
 
 
 def _fn_get_info(fn):
@@ -117,7 +117,7 @@ def helptext(helptexts):
     return decorator
 
 
-def config(conf, ctx, pattern=None, desc=None):
+def config(conf, ctx, pattern=None, desc=None, cast=None):
     """
     'Export' a configuration value, making
     it possible for users/opers to edit them.
@@ -125,7 +125,7 @@ def config(conf, ctx, pattern=None, desc=None):
 
     def decorator(func):
         fninfo = _fn_get_info(func)
-        fninfo.configs.append((conf, ctx, pattern, desc))
+        fninfo.configs.append((conf, ctx, pattern, desc, cast))
         setattr(func, FNINFO_ATTR, fninfo)
         return func
 

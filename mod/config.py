@@ -59,6 +59,13 @@ async def bot_config_set(self, chan, nick, msg):
         )
         return
 
+    # allow for viewing/setting configs for other users/chans
+    ctxargs = context_str.split(":")
+    if len(ctxargs) > 1:
+        ctxname = ctxargs[1]
+        if ctxtype == ConfigScope.USER and ctxname in self.users and self.users[ctxname]["identified"]:
+            ctxname = self.users[ctxname]['account']
+
     # build a list of all exported values.
     exported = [
         data["configs"] for fn, data in self.fndata.items() if "configs" in data
@@ -87,19 +94,19 @@ async def bot_config_set(self, chan, nick, msg):
     if not value:
         cur_value = configuration.get(self.network, ctxname, setting_str, default="", cast=cast)
         await self.msg(
-            modname, chan, [f"current value for '{setting_str}': '{cur_value}'"]
+            modname, chan, [f"value of '{setting_str}' for {ctxname}: '{cur_value}'"]
         )
         return
 
     # don't let users change settings for channels they don't have +o in.
+    # don't let users change settings for other users (unles they're bot admins)
     is_admin = await self.is_admin(nick)
     is_oper  = _is_oper(self, ctxname, nick)
     if ctxtype == ConfigScope.CHAN and not is_oper and not is_admin:
-        await self.msg(
-            modname,
-            chan,
-            [f"you may not change settings for channels that you do not have +o in."],
-        )
+        await self.msg(modname, chan, [f"you must have +o in {ctxname}"])
+        return
+    if ctxtype == ConfigScope.USER and not ctxname == nick and not ctxname == user and not is_admin:
+        await self.msg(modname, chan, [f"permission denied"])
         return
 
     # ensure the value given is valid.

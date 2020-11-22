@@ -8,7 +8,7 @@ modname = "pronouns"
 @manager.hook(modname, "pronouns", access=AccessType.IDENTIFIED)
 @manager.argument("user", optional=True)
 @manager.helptext(["see your (or someone else's) preferred pronouns"])
-@manager.config("pronouns", ConfigScope.USER, None, None)
+@manager.config("pronouns", ConfigScope.USER)
 async def pronouns(self, chan, nick, msg):
     user = self.users[nick]["account"]
 

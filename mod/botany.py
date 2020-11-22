@@ -122,6 +122,7 @@ async def visit(self, ch, src, msg):
     :hook: cmd
     :help: water your (or someone else's) botany plant
     :args: @username:str
+    :aliases: water
     """
 
     username = src
@@ -153,9 +154,14 @@ async def visit(self, ch, src, msg):
         )
         return
 
+    visitor = self.nickname
+    if username != src:
+        if os.path.exists(f"/home/{src}/.botany/"):
+            visitor = src
+
     # just add ourselves to the visitors list. botany will take care of the
     # rest the next time that user opens it.
-    visitors.append({"timestamp": int(time.time()), "user": self.nickname})
+    visitors.append({"timestamp": int(time.time()), "user": visitor})
 
     # json.load complains if the file object is write-able
     try:

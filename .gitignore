@@ -8,7 +8,4 @@ tmp/
 bak/
 
 **/*secrets*
-mod/khuxfsck.py
-mod/no_u.py
-
 *.db-journal

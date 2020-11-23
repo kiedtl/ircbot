@@ -19,7 +19,7 @@ BOTLIST = r"^(!rollcall|!botlist)"
 
 @manager.hook(modname, "rollcall", hook=HookType.PATTERN, pattern=BOTLIST)
 async def rollcall(self, chan, src, msg):
-    await whoami(self, chan, src, msg, None, None)
+    await whoami(self, chan, src, msg)
 
 
 @manager.hook(modname, "ping")

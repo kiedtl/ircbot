@@ -4,7 +4,7 @@
 # module does that, as well as providing the 'ping' and 'whoami'
 # commands.
 
-import config
+import config as bot_conf
 import common
 import handlers
 import manager
@@ -33,16 +33,16 @@ async def ping(self, chan, src, msg):
 @manager.helptext(["list information about this bot"])
 async def whoami(self, chan, src, msg):
     source = ""
-    if not config.upstream == None:
-        source = "".join([common.nohighlight(i) for i in config.upstream])
+    if not bot_conf.upstream == None:
+        source = "".join([common.nohighlight(i) for i in bot_conf.upstream])
 
-    owner = common.nohighlight(config.botmaster)
-    email = common.nohighlight(config.email[0]) + "‍＠‍" + config.email[1]
+    owner = common.nohighlight(bot_conf.botmaster)
+    email = common.nohighlight(bot_conf.email[0]) + "‍＠‍" + bot_conf.email[1]
 
-    response = config.rollcall_fmt.format(
+    response = bot_conf.rollcall_fmt.format(
         nickname=self.nickname,
-        description=config.description,
-        prefix=config.prefix,
+        description=bot_conf.description,
+        prefix=bot_conf.prefix,
         owner=owner,
         source=source,
         email=email,

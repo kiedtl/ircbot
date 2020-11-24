@@ -141,7 +141,7 @@ class SIGSEGV(pydle.Client):
 
     # ---- utility functions ----
 
-    async def msg(self, mod, chan, msg):
+    async def msg(self, mod, chan, msg: list):
         # TODO: throttling
         # (if the messages are too big)
         if chan in output_buf:

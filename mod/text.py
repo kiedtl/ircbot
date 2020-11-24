@@ -11,11 +11,48 @@ import config
 import common
 import handlers
 import fmt
+import manager
 import math
+import pig
 import random
+import re
 import utils
 
+from manager import *
+
 modname = "text"
+
+def _owo_text(text):
+    #
+    # this module was originally written by xfnw.
+    # (c) xfnw/lickthecheese <xfnw@tilde.team>
+    #
+
+    text = (
+        text
+        .replace("r", "w")
+        .replace("l", "w")
+        .replace("uck", "uwk")
+        .replace("too", "two")
+        .replace("ou", "ow")
+    )
+
+    owo = random.choice(
+        [
+            "owo",
+            "uwu",
+            "^w^",
+            "OwO",
+            "Owo",
+            "owO",
+            "Owo?",
+            "owO?",
+            "UwU",
+            "0w0",
+        ]
+    )
+
+    return f"{text} {owo}"
 
 
 def _irc_rainbow(text):
@@ -54,6 +91,47 @@ async def _cmd_with_args(self, chan, cmd, msg):
     res = common.run(cmd, msg)
     for line in res.split("\n"):
         await self.message(chan, line)
+
+
+@manager.hook(modname, "pig")
+@manager.arguments([Arg("text", optional=True)])
+@manager.helptext(["convert text to pig latin"])
+async def pigify(self, c, n, m):
+    # pig-latin module (·(oo)·) (･ั(00)･ั)
+    #
+    # this command is pretty useless, but as it was the first module
+    # to be added to this bot, I'm leaving it here for, uh, historical
+    # reasons.
+
+    ms = []
+    if len(m) > 0:
+        ms = [n, m]
+    else:
+        try:
+            ms = common.get_backlog_msg(self, c, m)
+        except:
+            await self.msg(modname, c, [f"ymay acklogbay isway ootay ortshay!"])
+            return
+
+    pigtext = pig.pigify(ms[1])
+    pigface = pig.pig_ascii()
+
+    await self.msg("", c, [f"<{ms[0]}> {pigtext} {pigface}"])
+
+
+@manager.hook(modname, "owo")
+@manager.arguments([Arg("num", argtype=ArgType.INT, optional=True)])
+@manager.helptext(["owoify the text", "owo owo uwu"])
+async def owoify(self, chan, src, msg):
+    ms = ""
+    try:
+        ms = common.get_backlog_msg(self, chan, msg)
+    except:
+        await self.msg(modname, chan, [f"my backwog is two showt!"])
+        return
+    usr = common.nohighlight(ms[0])
+    res = _owo_text(ms[1])
+    await self.message(chan, f"<{usr}> {res}")
 
 
 async def mock(self, chan, src, msg):
@@ -187,6 +265,12 @@ async def rot_n(self, chan, src, msg):
 
 
 async def init(self):
+    # self.handle_cmd["owo"] = owoify
+    # self.help["owo"] = ["owo [num] - owoify the text", "owo owo uwu"]
+
+    manager.register(self, owoify)
+    manager.register(self, pigify)
+
     handlers.register(self, modname, mock)
     handlers.register(self, modname, qrenco)
     handlers.register(self, modname, figlet)

@@ -290,7 +290,7 @@ async def friends(self, chan, src, msg):
     chan_duccs = ducc_db.find(channel=channel, was_killed=False)
     owners = [ducc["owner"] for ducc in chan_duccs]
     formatted = _format_items(owners)
-    await self.msg(modname, chan, [f"Ducc friends in {chan}: {formatted}"])
+    await self.msg(modname, chan, [f"ducc friends in {chan}: {formatted}"])
 
 
 @manager.hook(modname, "enemies", aliases=["fiends"])
@@ -304,7 +304,7 @@ async def fiends(self, chan, src, msg):
     chan_duccs = ducc_db.find(channel=channel, was_killed=True)
     owners = [ducc["owner"] for ducc in chan_duccs]
     formatted = _format_items(owners)
-    await self.msg(modname, chan, [f"Ducc enemies in {chan}: {formatted}"])
+    await self.msg(modname, chan, [f"ducc enemies in {chan}: {formatted}"])
 
 
 async def _user_duckstats(self, chan, user):

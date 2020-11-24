@@ -335,7 +335,9 @@ async def _user_duckstats(self, chan, user):
     else:
         first_message = f"{user_noping} has captured {total} duccs, befriending {befriended_str} and murdering {murdered_str}. Their fastest capture was {fastest:,.2f} seconds, and their slowest capture was {slowest:,.2f} seconds; on average, they capture duccs in about {average:,.2f} seconds."
 
-    await self.msg(modname, chan, [first_message, f"{user_noping} has duccs in: {channels}"])
+    await self.msg(
+        modname, chan, [first_message, f"{user_noping} has duccs in: {channels}"]
+    )
 
 
 async def _chan_duckstats(self, chan, context):

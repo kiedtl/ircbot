@@ -13,6 +13,7 @@ import handlers
 import fmt
 import math
 import random
+import utils
 
 modname = "text"
 
@@ -31,12 +32,51 @@ def _irc_communist(text):
     return f"\x038,5\x02 ☭ {text.upper()} ☭ \x0f"
 
 
+def _mock_text(text):
+    cases = utils.enum(UPPER=0, LOWER=1)
+    dest = ""
+    case = cases.LOWER
+    for char in text:
+        if char.isalpha():
+            if case == cases.LOWER:
+                char = char.lower()
+                case = cases.UPPER
+            elif case == cases.UPPER:
+                char = char.upper()
+                case = cases.LOWER
+        dest += char
+    return dest
+
+
 async def _cmd_with_args(self, chan, cmd, msg):
     # TODO: throttling, disable in certain channels
     cmd = cmd + msg.split(" ")
     res = common.run(cmd, msg)
     for line in res.split("\n"):
         await self.message(chan, line)
+
+
+async def mock(self, chan, src, msg):
+    """
+    :name: mock
+    :hook: cmd
+    :help: mock user by displaying their message in aLtErNaTiNg CaPs
+    :args: user:str
+    """
+    ms = None
+    if chan in self.backlog:
+        backlog = list(reversed(self.backlog[chan]))
+        for back_msg in backlog:
+            if back_msg[0] == msg:
+                ms = back_msg
+                break
+
+    if not ms:
+        await self.msg(modname, chan, [f"couldn't find anything to mock"])
+        return
+
+    mocked = _mock_text(ms[1])
+    await self.message(chan, f"<{ms[0]}> {mocked}")
 
 
 async def qrenco(self, chan, src, msg):
@@ -59,7 +99,6 @@ async def figlet(self, chan, src, msg):
     :hook: cmd
     :help: make some nice ASCII art with figlet
     :args: text:str
-    :aliases:
     """
     await _cmd_with_args(self, chan, ["figlet"], msg)
 
@@ -81,7 +120,6 @@ async def cowsay(self, chan, src, msg):
     :hook: cmd
     :help: use cow{say, think}(1) to generate ASCII art
     :args: text:str
-    :aliases:
     """
     await _cmd_with_args(self, chan, ["cowsay"], msg)
 
@@ -92,7 +130,6 @@ async def cowthink(self, chan, src, msg):
     :hook: cmd
     :help: use cow{say, think}(1) to generate ASCII art
     :args: text:str
-    :aliases:
     """
     await _cmd_with_args(self, chan, ["cowthink"], msg)
 
@@ -125,7 +162,6 @@ async def rot13(self, chan, src, msg):
     :hook: cmd
     :help: rot13 text
     :args: text:str
-    :aliases:
     """
     res = caesar.rot(13)(msg)
     await self.msg("rot", chan, [f"{res}"])
@@ -137,7 +173,6 @@ async def rot_n(self, chan, src, msg):
     :hook: cmd
     :help: like the rot13 command, but rotate message by an arbitrary amount
     :args: rotation:int text:str
-    :aliases:
     """
     args = msg.split(" ", 1)
 
@@ -152,6 +187,7 @@ async def rot_n(self, chan, src, msg):
 
 
 async def init(self):
+    handlers.register(self, modname, mock)
     handlers.register(self, modname, qrenco)
     handlers.register(self, modname, figlet)
     handlers.register(self, modname, toilet)

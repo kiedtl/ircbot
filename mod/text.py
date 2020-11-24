@@ -134,13 +134,10 @@ async def owoify(self, chan, src, msg):
     await self.message(chan, f"<{usr}> {res}")
 
 
+@manager.hook(modname, "mock")
+@manager.arguments([Arg("user")])
+@manager.helptext("mock user's last message by printing it in aLtErNaTiNg cApS")
 async def mock(self, chan, src, msg):
-    """
-    :name: mock
-    :hook: cmd
-    :help: mock user by displaying their message in aLtErNaTiNg CaPs
-    :args: user:str
-    """
     ms = None
     if chan in self.backlog:
         backlog = list(reversed(self.backlog[chan]))
@@ -265,13 +262,10 @@ async def rot_n(self, chan, src, msg):
 
 
 async def init(self):
-    # self.handle_cmd["owo"] = owoify
-    # self.help["owo"] = ["owo [num] - owoify the text", "owo owo uwu"]
-
     manager.register(self, owoify)
     manager.register(self, pigify)
+    manager.register(self, mock)
 
-    handlers.register(self, modname, mock)
     handlers.register(self, modname, qrenco)
     handlers.register(self, modname, figlet)
     handlers.register(self, modname, toilet)

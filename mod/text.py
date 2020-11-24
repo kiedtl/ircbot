@@ -19,6 +19,7 @@ import re
 import utils
 
 from manager import *
+from handlers import *
 
 modname = "text"
 
@@ -114,8 +115,9 @@ async def pigify(self, c, n, m):
 
     pigtext = pig.pigify(ms[1])
     pigface = pig.pig_ascii()
+    usr = common.nohighlight(ms[0])
 
-    await self.msg("", c, [f"<{ms[0]}> {pigtext} {pigface}"])
+    return (Msg.RAW, f"<{usr}> {pigtext} {pigface}")
 
 
 @manager.hook(modname, "owo", desc="owoify the text")
@@ -129,12 +131,12 @@ async def owoify(self, chan, src, msg):
         return
     usr = common.nohighlight(ms[0])
     res = _owo_text(ms[1])
-    await self.message(chan, f"<{usr}> {res}")
+    return (Msg.RAW, f"<{usr}> {res}")
 
 
 @manager.hook(modname, "mock")
 @manager.arguments([Arg("user")])
-@manager.helptext("mock user's last message by printing it in aLtErNaTiNg cApS")
+@manager.helptext(["mock user's last message by printing it in aLtErNaTiNg cApS"])
 async def mock(self, chan, src, msg):
     ms = None
     if chan in self.backlog:
@@ -149,7 +151,8 @@ async def mock(self, chan, src, msg):
         return
 
     mocked = _mock_text(ms[1])
-    await self.message(chan, f"<{ms[0]}> {mocked}")
+    usr = common.nohighlight(ms[0])
+    return (Msg.RAW, f"<{usr}> {mocked}")
 
 
 async def qrenco(self, chan, src, msg):
@@ -215,7 +218,7 @@ async def rainbow(self, chan, src, msg):
     :args: text:str
     :aliases: lolcat
     """
-    await self.msg("rainbow", chan, [_irc_rainbow(msg)])
+    return (Msg.RAW, _irc_rainbow(msg))
 
 
 async def communist(self, chan, src, msg):
@@ -226,7 +229,7 @@ async def communist(self, chan, src, msg):
     :args: text:str
     :aliases: com
     """
-    await self.msg("", chan, [_irc_communist(msg)])
+    return (Msg.RAW, _irc_communist(msg))
 
 
 async def rot13(self, chan, src, msg):
@@ -236,8 +239,7 @@ async def rot13(self, chan, src, msg):
     :help: rot13 text
     :args: text:str
     """
-    res = caesar.rot(13)(msg)
-    await self.msg("rot", chan, [f"{res}"])
+    return (Msg.OK, caesar.rot(13)(msg))
 
 
 async def rot_n(self, chan, src, msg):
@@ -252,11 +254,10 @@ async def rot_n(self, chan, src, msg):
     try:
         rotn = int(args[0])
     except:
-        await self.msg("rot", chan, ["invalid rotation amount."])
-        return
+        return (Msg.ERR, "invalid rotation amount.")
 
     res = caesar.rot(rotn)(args[1])
-    await self.msg("rot", chan, [f"{res}"])
+    return (Msg.OK, caesar.rot(rotn)(args[1]))
 
 
 async def init(self):

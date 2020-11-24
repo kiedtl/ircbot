@@ -7,6 +7,9 @@
 
 import config
 import re
+import utils
+
+Msg = utils.enum(RAW=0, OK=1, ERR=2)
 
 # TODO: documentation on how this whole file
 # works, so when I inevitably leave this project
@@ -77,7 +80,21 @@ async def execute(self, func, chan, src, msg):
         )
         return
 
-    await func(self, chan, src, msg)
+    ret = await func(self, chan, src, msg)
+
+    # if the handler returns anything, print it to IRC.
+    # the returned data should be a Tuple[Msg, List[str]]
+    if ret and type(ret) == tuple:
+        msgtype = ret[0]
+        msgstr = ret[1]
+
+        if type(msgstr) == str:
+            msgstr = [msgstr]
+
+        if msgtype == Msg.RAW:
+            await self.message(chan, msgstr[0])
+        elif msgtype == Msg.OK or msgtype == Msg.ERR:
+            await self.msg(self.fndata[func]["module"], chan, msgstr)
 
 
 def register(self, modname, func):

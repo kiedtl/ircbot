@@ -121,7 +121,6 @@ async def reloadmods(self, chan, source, msg):
     :aliases: rl
     """
     before = time.time()
-    await self.msg(modname, chan, ["reloading modules..."])
 
     fndata = self.fndata
     oldcmd = self.handle_cmd

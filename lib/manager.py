@@ -44,7 +44,9 @@ class FunctionInfo:
     # tuple structure: <name>, <scope>, <pattern>, <desc>, <cast>
     # <pattern> is the valid format in regex form, <desc> is the same as <pattern>
     # but in human-readable format.
-    configs: List[Tuple[str, ConfigScope, str, str, type]] = field(default_factory=lambda: [])
+    configs: List[Tuple[str, ConfigScope, str, str, type]] = field(
+        default_factory=lambda: []
+    )
 
 
 def _fn_get_info(fn):

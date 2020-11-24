@@ -8,7 +8,9 @@ import re
 from manager import *
 
 RESPONSE = [
-    "fuck", "stahp", "no u",
+    "fuck",
+    "stahp",
+    "no u",
     "you're clogging my logs",
     "opers: halp",
     "stop spamming",
@@ -17,6 +19,7 @@ PERCENTAGE = 30
 
 modname = "bufcmdfsck"
 IS_BUFCMD = r"^(\/([0-9])+)+$"
+
 
 @manager.hook(modname, "bufcmdfilter", hook=HookType.PATTERN, pattern=IS_BUFCMD)
 @manager.config("respond-to-bufcmd", ConfigScope.CHAN, desc="True or False", cast=bool)

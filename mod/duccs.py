@@ -23,8 +23,15 @@ modname = "duccs"
 MSGS_UNTIL_DUCC = 110
 FLIGHTS_UNTIL_DELETION = 10
 CHANCE_OF_DUCC = 25
-SLOGANS = ["QUACK!", "QUACK QUACK!", "QUACK! QUACK!",
-        "FLAP!", "FLAP FLAP!", "*quack*", "*flap*"]
+SLOGANS = [
+    "QUACK!",
+    "QUACK QUACK!",
+    "QUACK! QUACK!",
+    "FLAP!",
+    "FLAP FLAP!",
+    "*quack*",
+    "*flap*",
+]
 SINGLE_WAVE_LEN = 8
 WAVES = "・゜゜・。。・゜゜・。。・゜゜・。。・゜゜"
 REQUIRE_MAGIC_FOR = 60
@@ -85,7 +92,17 @@ class Ducc:
 
 
 def _ducc_persist(network, chan, src, was_killed, ducc: Ducc):
-    ducc_db.insert(dict(network=network, channel=chan, appeared=ducc.appeared, captured=ducc.captive_since, flew_through=ducc.flew_through, was_killed=was_killed, owner=src))
+    ducc_db.insert(
+        dict(
+            network=network,
+            channel=chan,
+            appeared=ducc.appeared,
+            captured=ducc.captive_since,
+            flew_through=ducc.flew_through,
+            was_killed=was_killed,
+            owner=src,
+        )
+    )
 
 
 def _ducc_fmt(ducc: Ducc):
@@ -107,17 +124,16 @@ def _ducc_ascii():
     l_tail = random.choice(["//", "/"])
     head = random.choice([h for h in "oðõôòóö"])
 
-    return random.choice([f"{r_tail}_{head}{r_beak}",
-        f"{l_beak}{head}_{l_tail}"])
+    return random.choice([f"{r_tail}_{head}{r_beak}", f"{l_beak}{head}_{l_tail}"])
 
 
 def _ducc_waves():
     index = round(random.uniform(0, (len(WAVES) - SINGLE_WAVE_LEN) - 1))
-    return WAVES[index:(index + SINGLE_WAVE_LEN)]
+    return WAVES[index : (index + SINGLE_WAVE_LEN)]
 
 
 def _ducc_math_magic():
-    num2 = round(random.uniform(1,  5))
+    num2 = round(random.uniform(1, 5))
     num1 = round(random.uniform(5, 10))
     operator = random.choice(["+", "-", "/", "*"])
 
@@ -168,7 +184,9 @@ async def _summon_ducc(self, chan):
     waves = _ducc_waves()
     magic = random.choice([_ducc_math_magic, _ducc_random_magic, _ducc_none_magic])()
 
-    ducc = Ducc(appeared=time.time(), magic=magic, waves=waves, art=_scii, slogan=slogan)
+    ducc = Ducc(
+        appeared=time.time(), magic=magic, waves=waves, art=_scii, slogan=slogan
+    )
     duccs[chan].append(ducc)
     await self.message(chan, _ducc_fmt(ducc))
 
@@ -212,7 +230,9 @@ async def _catches_ducc(self, chan, src, msg):
 
     if not duccs[chan][-1].free:
         missed = time.time() - duccs[chan][-1].captive_since
-        await self.msg(modname, chan, [f"{src} missed the duck by {missed:,.2f} seconds!"])
+        await self.msg(
+            modname, chan, [f"{src} missed the duck by {missed:,.2f} seconds!"]
+        )
         return False
 
     if msg != duccs[chan][-1].magic[0]:
@@ -236,7 +256,11 @@ async def befriend(self, chan, src, msg):
     if await _catches_ducc(self, chan, src, msg):
         befd_in = time.time() - duccs[chan][-1].appeared
         await _catch_ducc(self, chan, src, False)
-        await self.msg(modname, chan, [f"QUACK! {src} befriended the ducc in {befd_in:,.2f} seconds!"])
+        await self.msg(
+            modname,
+            chan,
+            [f"QUACK! {src} befriended the ducc in {befd_in:,.2f} seconds!"],
+        )
 
 
 @manager.hook(modname, "bang", aliases=["bash", "trap"])
@@ -244,12 +268,18 @@ async def befriend(self, chan, src, msg):
 @manager.helptext(["shoot a ducc"])
 async def bang(self, chan, src, msg):
     if await _catches_ducc(self, chan, src, msg):
-        death_cry_aas = 'A' * round(random.uniform(1, 3))
+        death_cry_aas = "A" * round(random.uniform(1, 3))
         death_cry = f"QU{death_cry_aas}CK!"
 
         murdered_in = time.time() - duccs[chan][-1].appeared
         await _catch_ducc(self, chan, src, True)
-        await self.msg(modname, chan, [f"{death_cry} {src} brutally murders the ducc in {murdered_in:,.2f} seconds!"])
+        await self.msg(
+            modname,
+            chan,
+            [
+                f"{death_cry} {src} brutally murders the ducc in {murdered_in:,.2f} seconds!"
+            ],
+        )
 
 
 @manager.hook(modname, "friends", aliases=["frens"])
@@ -299,7 +329,14 @@ async def _user_duckstats(self, chan, user):
     befriended_str = fmt.bold(fmt.green(str(befriended)))
     murdered_str = fmt.bold(fmt.red(str(murdered)))
 
-    await self.msg(modname, chan, [f"{user} has captured {total} duccs, befriending {befriended_str} and murdering {murdered_str}. Their fastest capture was {fastest:,.2f} seconds, and their slowest capture was {slowest:,.2f} seconds; on average, they capture duccs in about {average:,.2f} seconds.", f"{user} has duccs in: {channels}"])
+    await self.msg(
+        modname,
+        chan,
+        [
+            f"{user} has captured {total} duccs, befriending {befriended_str} and murdering {murdered_str}. Their fastest capture was {fastest:,.2f} seconds, and their slowest capture was {slowest:,.2f} seconds; on average, they capture duccs in about {average:,.2f} seconds.",
+            f"{user} has duccs in: {channels}",
+        ],
+    )
 
 
 async def _chan_duckstats(self, chan, context):
@@ -312,7 +349,10 @@ async def _chan_duckstats(self, chan, context):
 
     befriended = len([ducc for ducc in ducc_record if ducc["was_killed"] == False])
     murdered = len([ducc for ducc in ducc_record if ducc["was_killed"] == True])
-    times = sorted([(ducc["captured"] - ducc["appeared"], ducc["owner"]) for ducc in ducc_record], key=lambda i: i[0])
+    times = sorted(
+        [(ducc["captured"] - ducc["appeared"], ducc["owner"]) for ducc in ducc_record],
+        key=lambda i: i[0],
+    )
     fastest = times[0]
     slowest = times[-1]
     average = sum([t[0] for t in times]) / len(times)
@@ -320,7 +360,13 @@ async def _chan_duckstats(self, chan, context):
     befriended_str = fmt.bold(fmt.green(str(befriended)))
     murdered_str = fmt.bold(fmt.red(str(murdered)))
 
-    await self.msg(modname, chan, [f"duck stats for {context}: {befriended_str} befriended, {murdered_str} murdered. The fastest capture was by {fastest[1]} in {fastest[0]:,.2f}; the slowest capture was by {slowest[1]} in {slowest[0]:,.2f}. The average speed of a ducc capture is {average:,.2f} seconds."])
+    await self.msg(
+        modname,
+        chan,
+        [
+            f"duck stats for {context}: {befriended_str} befriended, {murdered_str} murdered. The fastest capture was by {fastest[1]} in {fastest[0]:,.2f}; the slowest capture was by {slowest[1]} in {slowest[0]:,.2f}. The average speed of a ducc capture is {average:,.2f} seconds."
+        ],
+    )
 
 
 async def _all_duckstats(self, chan):
@@ -330,13 +376,23 @@ async def _all_duckstats(self, chan):
     channels = [ducc["channel"] for ducc in ducc_record]
     channels_total = len(utils.dedup(channels))
 
-    channel_frens = [ducc["channel"] for ducc in ducc_record if ducc["was_killed"] == False]
-    channel_foes  = [ducc["channel"] for ducc in ducc_record if ducc["was_killed"] == True]
+    channel_frens = [
+        ducc["channel"] for ducc in ducc_record if ducc["was_killed"] == False
+    ]
+    channel_foes = [
+        ducc["channel"] for ducc in ducc_record if ducc["was_killed"] == True
+    ]
 
     befriended = len([ducc for ducc in ducc_record if ducc["was_killed"] == False])
     murdered = len([ducc for ducc in ducc_record if ducc["was_killed"] == True])
 
-    times = sorted([(ducc["captured"] - ducc["appeared"], ducc["owner"], ducc["channel"]) for ducc in ducc_record], key=lambda i: i[0])
+    times = sorted(
+        [
+            (ducc["captured"] - ducc["appeared"], ducc["owner"], ducc["channel"])
+            for ducc in ducc_record
+        ],
+        key=lambda i: i[0],
+    )
     fastest = times[0]
     slowest = times[-1]
     average = sum([t[0] for t in times]) / len(times)
@@ -347,7 +403,14 @@ async def _all_duckstats(self, chan):
     channels_total_str = fmt.bold(fmt.yellow(str(channels_total)))
     channels_str = _format_items(channels)
 
-    await self.msg(modname, chan, [f"duck stats for {channels_total_str} channels: {befriended_str} befriended, {murdered_str} murdered, {total_str} total. Fastest capture was {fastest[0]:,.2f} by {fastest[1]} in {fastest[2]}; slowest was {slowest[0]:,.2f} by {slowest[1]} in {slowest[2]}.", f"top channels: {channels_str}"])
+    await self.msg(
+        modname,
+        chan,
+        [
+            f"duck stats for {channels_total_str} channels: {befriended_str} befriended, {murdered_str} murdered, {total_str} total. Fastest capture was {fastest[0]:,.2f} by {fastest[1]} in {fastest[2]}; slowest was {slowest[0]:,.2f} by {slowest[1]} in {slowest[2]}.",
+            f"top channels: {channels_str}",
+        ],
+    )
 
 
 @manager.hook(modname, "duckstats")
@@ -359,9 +422,9 @@ async def duckstats(self, chan, src, msg):
     if len(msg) > 0:
         context = msg
 
-    if context[0] == '#':
+    if context[0] == "#":
         await _chan_duckstats(self, chan, context)
-    elif context == '*':
+    elif context == "*":
         await _all_duckstats(self, chan)
     else:
         await _user_duckstats(self, chan, context)

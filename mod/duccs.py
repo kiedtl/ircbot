@@ -2,7 +2,7 @@
 # [DONE] :duccs/:friends/:enemies/:duccstats command that allows users to see
 #        their duccs
 # [DONE] make duck statistics persist in a database
-# [TODO] set ducc owners to user's account name, not nickname
+# [DONE] set ducc owners to user's account name, not nickname
 # [DONE] do not ping nicknames/users
 
 import common
@@ -243,9 +243,13 @@ async def _catches_ducc(self, chan, src, msg):
 
 
 async def _catch_ducc(self, chan, src, was_killed: bool):
+    user = src
+    if user in self.users and self.users[user]["identified"]:
+        user = self.users[user]["account"]
+
     duccs[chan][-1].free = False
     duccs[chan][-1].captive_since = time.time()
-    _ducc_persist(self.network, chan, src, was_killed, duccs[chan][-1])
+    _ducc_persist(self.network, chan, user, was_killed, duccs[chan][-1])
 
 
 @manager.hook(modname, "befr", aliases=["bef"])

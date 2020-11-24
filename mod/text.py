@@ -93,9 +93,8 @@ async def _cmd_with_args(self, chan, cmd, msg):
         await self.message(chan, line)
 
 
-@manager.hook(modname, "pig")
+@manager.hook(modname, "pig", desc="convert text to pig latin")
 @manager.arguments([Arg("text", optional=True)])
-@manager.helptext(["convert text to pig latin"])
 async def pigify(self, c, n, m):
     # pig-latin module (·(oo)·) (･ั(00)･ั)
     #
@@ -119,9 +118,8 @@ async def pigify(self, c, n, m):
     await self.msg("", c, [f"<{ms[0]}> {pigtext} {pigface}"])
 
 
-@manager.hook(modname, "owo")
+@manager.hook(modname, "owo", desc="owoify the text")
 @manager.arguments([Arg("num", argtype=ArgType.INT, optional=True)])
-@manager.helptext(["owoify the text", "owo owo uwu"])
 async def owoify(self, chan, src, msg):
     ms = ""
     try:

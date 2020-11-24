@@ -56,7 +56,7 @@ def _fn_get_info(fn):
 
 
 def hook(
-    module, name, aliases=[], access=AccessType.ANY, hook=HookType.COMMAND, pattern=None
+        module, name, aliases=[], access=AccessType.ANY, hook=HookType.COMMAND, pattern=None, desc=""
 ):
     def decorator(func):
         fninfo = _fn_get_info(func)
@@ -65,6 +65,7 @@ def hook(
         fninfo.access = access
         fninfo.hook_type = hook
         fninfo.aliases = aliases
+        fninfo.helptext.append(desc)
 
         if hook == HookType.PATTERN:
             fninfo.pattern = re.compile(pattern)
@@ -108,6 +109,8 @@ def aliases(aliases):
     return decorator
 
 
+# not deprecated, but best to use hook(desc=helptext) for
+# shorter helptexts
 def helptext(helptexts):
     def decorator(func):
         fninfo = _fn_get_info(func)

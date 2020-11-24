@@ -274,7 +274,7 @@ async def bang(self, chan, src, msg):
             modname,
             chan,
             [
-                f"{death_cry} {src} brutally murders the ducc in {murdered_in:,.2f} seconds!"
+                f"{death_cry} {src} brutally murdered the ducc in {murdered_in:,.2f} seconds!"
             ],
         )
 

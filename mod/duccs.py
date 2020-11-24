@@ -135,7 +135,7 @@ def _ducc_waves():
 def _ducc_math_magic():
     num2 = round(random.uniform(1, 5))
     num1 = round(random.uniform(5, 10))
-    operator = random.choice(["+", "-", "/", "*"])
+    operator = random.choice(["+", "-", "*"])
 
     num1_str = inflect_ngn.number_to_words(num1)
     num2_str = inflect_ngn.number_to_words(num2)
@@ -151,9 +151,6 @@ def _ducc_math_magic():
     elif operator == "*":
         operator_str = random.choice(["*", "times", "multiplied by", "×"])
         magic = num1 * num2
-    elif operator == "/":
-        operator_str = random.choice(["/", "divided by", "÷"])
-        magic = num1 / num2
 
     magic_str = f"{num1_str} {operator_str} {num2_str}"
     return (str(magic), magic_str)

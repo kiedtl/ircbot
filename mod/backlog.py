@@ -1,31 +1,30 @@
 # backlogger
-# stores messages for modules such
-# as :pig and :owo and logs them
-# for irc statistics
+# temporarily stores messages for other modules to access (such as
+# :pig, :owo, and :mock) and logs them
 
 from datetime import datetime
 
+modname = 'backlog'
+MAX_BACKLOG_SIZE=512
 
 async def backlogger(self, chan, src, msg):
     if chan not in self.backlog:
         self.backlog[chan] = []
+
     if chan not in self.logfiles:
-        logpath = "irc/{}.log".format(chan)
-        print("[logger] opening logfile {}".format(logpath))
+        logpath = f"irc/{chan}.log"
+        self.log(modname, f'opening logfile {logpath}')
         self.logfiles[chan] = open(logpath, "a")
 
     # store in logfile
-    now = datetime.now()
-    time = datetime.strftime(now, "%d%m%y%H%M")
-    self.logfiles[chan].write("{} {} {}\n".format(time, src, msg))
+    time = datetime.strftime(datetime.now(), "%d%m%y%H%M")
+    self.logfiles[chan].write(f"{time} {src} {msg}\n")
     self.logfiles[chan].flush()
 
-    # don't store in backlog if msg is a command
     if src == self.nickname:
         return
-    if msg[: len("|| ")] == "|| ":
-        # it's a :sed command alias
-        return
+
+    # don't store in backlog if msg is a command
     if msg[: len(self.prefix)] == self.prefix:
         cmd = msg[len(self.prefix) :]
         cmd = cmd.split(" ")[0]
@@ -34,9 +33,9 @@ async def backlogger(self, chan, src, msg):
 
     self.backlog[chan].append([src, msg])
 
-    # flush backlog if its size exceeds 1024
-    if len(self.backlog[chan]) > 1024:
-        del self.backlog[chan][:-512]
+    # flush backlog if its size exceeds MAX_BACKLOG_SIZE
+    if len(self.backlog[chan]) > MAX_BACKLOG_SIZE:
+        del self.backlog[chan][:-(MAX_BACKLOG_SIZE / 2)]
 
 
 async def init(self):

@@ -3,7 +3,7 @@
 #        their duccs
 # [DONE] make duck statistics persist in a database
 # [TODO] set ducc owners to user's account name, not nickname
-# [TODO] do not ping nicknames/users
+# [DONE] do not ping nicknames/users
 
 import common
 import configuration

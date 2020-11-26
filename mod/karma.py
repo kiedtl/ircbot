@@ -1,4 +1,4 @@
-import common, dataset
+import dataset
 import random, re
 
 modname = "karma"

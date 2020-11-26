@@ -44,7 +44,7 @@ async def yt_info(self, chan, src, msg):
     try:
         txt = common.get_backlog_msg(self, chan, msg)[1]
     except:
-        await self.msg(modname, chan, [self.err_backlog_too_short])
+        await self.msg(modname, chan, ["no youtube url found"])
         return
 
     matches = is_yturl.findall(txt)

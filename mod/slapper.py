@@ -6,7 +6,6 @@
 #
 # this module reacts everytime someone slaps the bot by slapping back.
 
-import common
 import handlers
 import time
 import re

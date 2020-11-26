@@ -1,5 +1,5 @@
-import common
 import handlers
+import utils
 
 modname = "status"
 
@@ -12,7 +12,7 @@ async def status(self, chan, src, msg):
     :args:
     :aliases:
     """
-    res = common.run(["bin/sysinfo"], "")
+    res = utils.command(["bin/sysinfo"], "")
     await self.msg(modname, chan, [f"~team status: {res}"])
 
 

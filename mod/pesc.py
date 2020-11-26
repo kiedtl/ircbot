@@ -1,5 +1,5 @@
-import common
 import handlers
+import utils
 
 modname = "pesc"
 
@@ -12,7 +12,7 @@ async def pescli(self, chan, src, msg):
     :args: @command:str
     :aliases: calc pesc
     """
-    res = common.run(["/home/kiedtl/local/bin/pescli", "-q"], msg)
+    res = utils.command(["/home/kiedtl/local/bin/pescli", "-q"], msg)
     for line in res.split("\n"):
         await self.msg(modname, chan, [line])
         break

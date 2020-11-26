@@ -78,7 +78,7 @@ def _mock_text(text):
 async def _cmd_with_args(self, chan, cmd, msg):
     # TODO: throttling, disable in certain channels
     cmd = cmd + msg.split(" ")
-    res = common.run(cmd, msg)
+    res = utils.command(cmd, msg)
     for line in res.split("\n"):
         await self.message(chan, line)
 
@@ -153,7 +153,7 @@ async def qrenco(self, chan, src, msg):
     :aliases: qr
     """
     # encode text in MicroQR, it's a bit less spammy
-    res = common.run(["qrencode", "-Mm2", "-v4", "-o-", "-tUTF8", msg], "")
+    res = utils.command(["qrencode", "-Mm2", "-v4", "-o-", "-tUTF8", msg], "")
     for line in res.split("\n"):
         await self.message(chan, line)
 

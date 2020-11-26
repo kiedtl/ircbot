@@ -26,3 +26,4 @@ def get_backlog_msg(self, chan, msg):
 
 
 async def init(self):
+    pass

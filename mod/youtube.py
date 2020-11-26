@@ -1,14 +1,14 @@
 # youtube utility functions
 
 import youtube as YT
-import common, re, secrets
+import common, re, botsecrets
 import handlers
 
 modname = "youtube"
 is_yturl = re.compile(
     "(?:.*)?(https?\://(?:www\.|m\.)?(?:youtu.be/|youtube.com/)(?:[^ ]+)?)"
 )
-youtube = YT.authenticate(secrets.yt_key)
+youtube = YT.authenticate(botsecrets.yt_key)
 
 
 async def handle_yt(self, chan, src, msg):

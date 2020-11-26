@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 
-import asyncio
-import config
 import datetime
-import fmt
-import handlers
 import os
-import pydle
-import secrets
-import sys
 import time
 import traceback
+
+import pydle
+
+import botsecrets
+import config
+import fmt
+import handlers
 
 # cache output, module name on a per-channel basis
 # this is for self.msg and self.more
@@ -18,11 +18,7 @@ output_buf = {}
 last_modname = {}
 
 class SIGSEGV(pydle.Client):
-    async def on_connect(self):
-        await super().on_connect()
-
-        self.log('irc', 'connected!')
-
+    def __init__(self, *args, **kwargs):
         self.fndata = {}
         self.modules = {}
         self.help = {}
@@ -40,6 +36,17 @@ class SIGSEGV(pydle.Client):
         # channel history playback
         self.ignore_cmd = 0
 
+        self.prefix = config.prefix
+        self.asleep = {}
+
+        super().__init__(*args, **kwargs)
+
+
+    async def on_connect(self):
+        await super().on_connect()
+
+        self.log('irc', 'connected!')
+
         self.log('modules', 'loading modules...')
         await self.load_mods()
         self.log('irc', 'joining channels')
@@ -55,10 +62,10 @@ class SIGSEGV(pydle.Client):
         for i in [s for s in os.listdir('mod') if '.py' in s]:
             i = i[:-3]
             self.log('modules', f'loading {i}')
-            m = __import__('mod.' + i)
-            m = eval('m.' + i)
-            await m.init(self)
-            self.modules[i] = m
+            module = __import__('mod.' + i)
+            module = eval('module.' + i)
+            await module.init(self)
+            self.modules[i] = module
 
     async def on_join(self, chan, by):
         await super().on_join(chan, by)
@@ -76,7 +83,7 @@ class SIGSEGV(pydle.Client):
                 await self.join(chan)
 
     async def on_channel_message(self, chan, source, msg):
-        await super().on_message(chan, source, msg)
+        await super().on_channel_message(chan, source, msg)
 
         # ignore channel playback on channels that have
         # mode +H (only on ircv3 servers)
@@ -119,16 +126,16 @@ class SIGSEGV(pydle.Client):
             if self.asleep[chan] < time.time() or is_admin:
                 try:
                     await handlers.execute(self, func, chan, source, msg)
-                except Exception as e:
+                except Exception as err:
                     if func in self.fndata:
                         module = self.fndata[func]['module']
                     else:
                         module = 'oops'
                     await self.msg(module, chan,
-                        ['segmentation fault', repr(e)])
+                        ['segmentation fault', repr(err)])
 
-                    self.log(module, f"EXCEPTION: {repr(e)}")
-                    traceback.print_tb(e.__traceback__)
+                    self.log(module, f"EXCEPTION: {repr(err)}")
+                    traceback.print_tb(err.__traceback__)
                     return
 
     async def on_private_message(self, chan, source, msg):
@@ -142,8 +149,7 @@ class SIGSEGV(pydle.Client):
     # ---- utility functions ----
 
     async def msg(self, mod, chan, msg: list):
-        # TODO: throttling
-        # (if the messages are too big)
+        # TODO: throttling (if the messages are too big)
         if chan in output_buf:
             del output_buf[chan]
         output_buf[chan] = msg[:]  # copy list
@@ -165,13 +171,13 @@ class SIGSEGV(pydle.Client):
             )
             return
 
-        fmt = "{}"
+        msg_fmted = "{}"
         if len(last_modname[chan]) > 1:
-            fmt = fmt.modname(last_modname[chan]) + " " + fmt
+            msg_fmted = fmt.modname(last_modname[chan]) + " " + msg_fmted
         if len(output_buf[chan]) > 1:
-            fmt = fmt + " (more)"
+            msg_fmted = msg_fmted + " (more)"
 
-        await self.message(chan, fmt.format(output_buf[chan].pop(0)))
+        await self.message(chan, msg_fmted.format(output_buf[chan].pop(0)))
 
     async def is_admin(self, nickname):
         info = await self.whois(nickname)
@@ -182,15 +188,14 @@ class SIGSEGV(pydle.Client):
         return info['account'] in config.admins
 
 
-    def log(self, mod, txt):
+    @staticmethod
+    def log(mod, txt):
         now = datetime.datetime.now()
-        fmt = datetime.datetime.strftime(now, '%Y-%M-%dT%H:%m:%SZ')
-        print(f'{fmt}: [{mod}]: {txt}')
+        timestamp = datetime.datetime.strftime(now, '%Y-%M-%dT%H:%m:%SZ')
+        print(f'{timestamp}: [{mod}]: {txt}')
 
 if __name__ == '__main__':
     client = SIGSEGV(config.nickname, realname=config.realname,
-        sasl_username=config.username, sasl_password=secrets.sasl_password,
+        sasl_username=config.username, sasl_password=botsecrets.sasl_password,
         sasl_identity=config.username)
-    client.prefix = config.prefix
-    client.asleep = {}
     client.run(config.server, tls=config.tls, tls_verify=config.tls_verify)

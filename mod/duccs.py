@@ -17,6 +17,7 @@ import time
 import utils
 
 from manager import *
+from handlers import *
 from typing import Tuple
 
 modname = "duccs"
@@ -220,6 +221,21 @@ async def summon(self, chan, src, msg):
     if ducc_countdown[chan] <= 0:
         ducc_countdown[chan] = MSGS_UNTIL_DUCC
     await _summon_ducc(self, chan)
+
+
+@manager.hook(modname, "lsducc", access=AccessType.ADMIN)
+@manager.arguments([Arg("channel", optional=True)])
+@manager.helptext(["see how many messages are left until a ducc will appear"])
+async def ls(self, chan, src, msg):
+    channel = chan
+    if len(msg) > 0:
+        channel = msg
+
+    until = "unknown"
+    if channel in ducc_countdown:
+        until = ducc_countdown[channel]
+
+    return (Msg.OK, f"{until}")
 
 
 async def _catches_ducc(self, chan, src, msg):
@@ -442,6 +458,7 @@ async def duckstats(self, chan, src, msg):
 async def init(self):
     manager.register(self, filterducc)
     manager.register(self, summon)
+    manager.register(self, ls)
     manager.register(self, befriend)
     manager.register(self, bang)
     manager.register(self, friends)

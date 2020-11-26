@@ -1,44 +1,39 @@
 TODO: rsync backups
 
-FIXES
+CHANGES
 -----
 
 throttling for karma
 
 bot:
 	common: move out of modules, split up
-	get_backlog: throw non-generic exception if backlog too short
 	use requests, not urllib
 	filter out messages tagged with @batch
 	add a better way to restart/reload/stop bot remotely (UNIX sockets?)
 		update systemd unit and add to repo.
 	do not crash if exception was thrown in a handle_raw
-	log via self.log(), not print()
 
 documentation on the bot's internals.
-
-configuration database.
-fix :who
-
-CHANGES
--------
-
-store irc logs in a sql database
-	fix chanstats/usrstats
-index irc logs
-
-multiple prefixes
+add config option controlling whether to display module name in bot messages
 
 
 NEW FUNCTIONALITY
 -----------------
 
-commands:
-	wikipedia command
-	get lobsters/hn dicussions
-	youtube search
-	distrowatch lookup
-	oxford dictionary
+calendar
+sedbot functionality
+koran lookup
+distrowatch lookup
+HN/lobsters lookup
+oxford dictionary lookup
+wikipedia lookup
+GUS searching
+Google searching
+DDG searching
+Gemini/Gopher support for urls
+tell <user> command
+lastseen command
+talklike command
 
 evaluation:
 	python evaluation

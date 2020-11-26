@@ -1,6 +1,23 @@
-# IRC formatting :D
+# mIRC color codes formatting -- bold, italics, etc
 
 RESET = "\x0f"
+
+# --- misc ---
+def zwnj(x):
+    """
+    Add a zero-width non-joiner character between the first and
+    second character of a string. This prevents nicknames from
+    being treated as a "mention" aka ping in IRC clients.
+
+    Unfortunately, there are some stupid terminals that display
+    the ZWNJ character as a space, instead of not displaying it
+    at all, as it should, viz. Windows Terminal, conhost.exe
+
+    TODO: find a character that most terminals display properly.
+    """
+    x = str(x)
+    return x[0] + "\u200c" + nick[1:]
+
 
 # --- attributes ---
 def bold(x):

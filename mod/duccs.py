@@ -5,7 +5,6 @@
 # [DONE] set ducc owners to user's account name, not nickname
 # [DONE] do not ping nicknames/users
 
-import common
 import configuration
 import dataclasses
 import dataset
@@ -311,7 +310,7 @@ async def friends(self, chan, src, msg):
 
     chan_duccs = ducc_db.find(channel=channel, was_killed=False)
     owners = [ducc["owner"] for ducc in chan_duccs]
-    formatted = _format_items(owners, itemmap=lambda i: common.nohighlight(i))
+    formatted = _format_items(owners, itemmap=lambda i: fmt.zwnj(i))
     await self.msg(modname, chan, [f"ducc friends in {chan}: {formatted}"])
 
 
@@ -325,12 +324,12 @@ async def fiends(self, chan, src, msg):
 
     chan_duccs = ducc_db.find(channel=channel, was_killed=True)
     owners = [ducc["owner"] for ducc in chan_duccs]
-    formatted = _format_items(owners, itemmap=lambda i: common.nohighlight(i))
+    formatted = _format_items(owners, itemmap=lambda i: fmt.zwnj(i))
     await self.msg(modname, chan, [f"ducc enemies in {chan}: {formatted}"])
 
 
 async def _user_duckstats(self, chan, user):
-    user_noping = common.nohighlight(user)
+    user_noping = fmt.zwnj(user)
     ducc_record = list(ducc_db.find(owner=user))
     total = len(ducc_record)
     channels = _format_items([ducc["channel"] for ducc in ducc_record])
@@ -346,8 +345,8 @@ async def _user_duckstats(self, chan, user):
     slowest = times[-1]
     average = sum(times) / len(times)
 
-    befriended_str = fmt.bold(fmt.green(str(befriended)))
-    murdered_str = fmt.bold(fmt.red(str(murdered)))
+    befriended_str = fmt.bold(fmt.green(befriended))
+    murdered_str = fmt.bold(fmt.red(murdered))
 
     first_message = ""
     if total == 1:
@@ -378,10 +377,10 @@ async def _chan_duckstats(self, chan, context):
     slowest = times[-1]
     average = sum([t[0] for t in times]) / len(times)
 
-    befriended_str = fmt.bold(fmt.green(str(befriended)))
-    murdered_str = fmt.bold(fmt.red(str(murdered)))
-    fastest_user_str = fmt.blue(common.nohighlight(fastest[1]))
-    slowest_user_str = fmt.blue(common.nohighlight(slowest[1]))
+    befriended_str = fmt.bold(fmt.green(befriended))
+    murdered_str = fmt.bold(fmt.red(murdered))
+    fastest_user_str = fmt.blue(fmt.zwnj(fastest[1]))
+    slowest_user_str = fmt.blue(fmt.zwnj(slowest[1]))
 
     await self.msg(
         modname,
@@ -420,13 +419,13 @@ async def _all_duckstats(self, chan):
     slowest = times[-1]
     average = sum([t[0] for t in times]) / len(times)
 
-    befriended_str = fmt.bold(fmt.green(str(befriended)))
-    murdered_str = fmt.bold(fmt.red(str(murdered)))
-    total_str = fmt.bold(fmt.cyan(str(total)))
-    channels_total_str = fmt.yellow(str(channels_total))
+    befriended_str = fmt.bold(fmt.green(befriended))
+    murdered_str = fmt.bold(fmt.red(murdered))
+    total_str = fmt.bold(fmt.cyan(total))
+    channels_total_str = fmt.yellow(channels_total)
     channels_str = _format_items(channels)
-    fastest_user_str = fmt.blue(common.nohighlight(fastest[1]))
-    slowest_user_str = fmt.blue(common.nohighlight(slowest[1]))
+    fastest_user_str = fmt.blue(fmt.zwnj(fastest[1]))
+    slowest_user_str = fmt.blue(fmt.zwnj(slowest[1]))
 
     await self.msg(
         modname,

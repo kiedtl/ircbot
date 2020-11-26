@@ -2,8 +2,8 @@
 # inspired by pinhook on ~town
 #
 
-import common
 import dataset
+import fmt
 import handlers
 import json
 import math
@@ -49,7 +49,7 @@ async def botany(self, ch, src, msg):
     username = src
     if len(msg) > 1:
         username = msg.split()[0]
-    user_noping = common.nohighlight(username)
+    user_noping = fmt.zwnj(username)
 
     info = {}
     visitors = []
@@ -93,7 +93,7 @@ async def botany(self, ch, src, msg):
 
     watered_by_str = ""
     if not last_visitor == None:
-        last_visitor_noping = common.nohighlight(last_visitor)
+        last_visitor_noping = fmt.zwnj(last_visitor)
         watered_by_str = f" by {last_visitor_noping}"
 
     last_watered = datetime.now() - watered_on
@@ -128,7 +128,7 @@ async def visit(self, ch, src, msg):
     username = src
     if len(msg) > 1:
         username = msg.split()[0]
-    user_noping = common.nohighlight(username)
+    user_noping = fmt.zwnj(username)
 
     visits_file = VISITORS_FILE.format(username)
     info = {}

@@ -5,9 +5,9 @@
 # commands.
 
 import config as bot_conf
-import common
 import handlers
 import manager
+import fmt
 import os
 import random
 
@@ -34,10 +34,10 @@ async def ping(self, chan, src, msg):
 async def whoami(self, chan, src, msg):
     source = ""
     if not bot_conf.upstream == None:
-        source = "".join([common.nohighlight(i) for i in bot_conf.upstream])
+        source = "".join([fmt.zwnj(i) for i in bot_conf.upstream])
 
-    owner = common.nohighlight(bot_conf.botmaster)
-    email = common.nohighlight(bot_conf.email[0]) + "‍＠‍" + bot_conf.email[1]
+    owner = fmt.zwnj(bot_conf.botmaster)
+    email = fmt.zwnj(bot_conf.email[0]) + "‍＠‍" + bot_conf.email[1]
 
     response = bot_conf.rollcall_fmt.format(
         nickname=self.nickname,

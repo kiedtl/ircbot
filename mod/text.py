@@ -115,7 +115,7 @@ async def pigify(self, c, n, m):
 
     pigtext = pig.pigify(ms[1])
     pigface = pig.pig_ascii()
-    usr = common.nohighlight(ms[0])
+    usr = fmt.zwnj(ms[0])
 
     return (Msg.RAW, f"<{usr}> {pigtext} {pigface}")
 
@@ -129,7 +129,7 @@ async def owoify(self, chan, src, msg):
     except:
         await self.msg(modname, chan, [f"my backwog is two showt!"])
         return
-    usr = common.nohighlight(ms[0])
+    usr = fmt.zwnj(ms[0])
     res = _owo_text(ms[1])
     return (Msg.RAW, f"<{usr}> {res}")
 
@@ -151,7 +151,7 @@ async def mock(self, chan, src, msg):
         return
 
     mocked = _mock_text(ms[1])
-    usr = common.nohighlight(ms[0])
+    usr = fmt.zwnj(ms[0])
     return (Msg.RAW, f"<{usr}> {mocked}")
 
 

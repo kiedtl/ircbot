@@ -16,11 +16,6 @@ def loadlogs(chan):
     return res
 
 
-def nohighlight(nick):
-    """add a ZWNJ to nick to prevent highlight"""
-    return nick[0] + "\u200c" + nick[1:]
-
-
 def modname(name):
     """Get a stylized version of module name"""
     return "[\x032{}\x0f]".format(name)

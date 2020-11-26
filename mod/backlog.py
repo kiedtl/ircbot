@@ -4,8 +4,9 @@
 
 from datetime import datetime
 
-modname = 'backlog'
-MAX_BACKLOG_SIZE=512
+modname = "backlog"
+MAX_BACKLOG_SIZE = 512
+
 
 async def backlogger(self, chan, src, msg):
     if chan not in self.backlog:
@@ -13,7 +14,7 @@ async def backlogger(self, chan, src, msg):
 
     if chan not in self.logfiles:
         logpath = f"irc/{chan}.log"
-        self.log(modname, f'opening logfile {logpath}')
+        self.log(modname, f"opening logfile {logpath}")
         self.logfiles[chan] = open(logpath, "a")
 
     # store in logfile
@@ -35,7 +36,7 @@ async def backlogger(self, chan, src, msg):
 
     # flush backlog if its size exceeds MAX_BACKLOG_SIZE
     if len(self.backlog[chan]) > MAX_BACKLOG_SIZE:
-        del self.backlog[chan][:-(MAX_BACKLOG_SIZE / 2)]
+        del self.backlog[chan][: -(MAX_BACKLOG_SIZE / 2)]
 
 
 async def init(self):

@@ -23,6 +23,7 @@ from handlers import *
 
 modname = "text"
 
+
 def _owo_text(text):
     #
     # this module was originally written by xfnw.
@@ -30,8 +31,7 @@ def _owo_text(text):
     #
 
     text = (
-        text
-        .replace("r", "w")
+        text.replace("r", "w")
         .replace("l", "w")
         .replace("uck", "uwk")
         .replace("too", "two")
@@ -39,18 +39,7 @@ def _owo_text(text):
     )
 
     owo = random.choice(
-        [
-            "owo",
-            "uwu",
-            "^w^",
-            "OwO",
-            "Owo",
-            "owO",
-            "Owo?",
-            "owO?",
-            "UwU",
-            "0w0",
-        ]
+        ["owo", "uwu", "^w^", "OwO", "Owo", "owO", "Owo?", "owO?", "UwU", "0w0"]
     )
 
     return f"{text} {owo}"

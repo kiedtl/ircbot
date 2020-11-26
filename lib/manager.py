@@ -56,7 +56,13 @@ def _fn_get_info(fn):
 
 
 def hook(
-        module, name, aliases=[], access=AccessType.ANY, hook=HookType.COMMAND, pattern=None, desc=""
+    module,
+    name,
+    aliases=[],
+    access=AccessType.ANY,
+    hook=HookType.COMMAND,
+    pattern=None,
+    desc="",
 ):
     def decorator(func):
         fninfo = _fn_get_info(func)

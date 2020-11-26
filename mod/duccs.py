@@ -92,6 +92,8 @@ class Ducc:
     free: bool = True
     captive_since: int = 0
 
+    is_phantom: bool = False
+
 
 def _ducc_persist(network, chan, src, was_killed, ducc: Ducc):
     ducc_db.insert(
@@ -167,7 +169,7 @@ def _ducc_none_magic():
     return ("", "")
 
 
-async def _summon_ducc(self, chan):
+async def _summon_ducc(self, chan, phantom):
     if not chan in duccs:
         duccs[chan] = []
 
@@ -184,7 +186,8 @@ async def _summon_ducc(self, chan):
     magic = random.choice([_ducc_math_magic, _ducc_random_magic, _ducc_none_magic])()
 
     ducc = Ducc(
-        appeared=time.time(), magic=magic, waves=waves, art=_scii, slogan=slogan
+        appeared=time.time(), magic=magic, waves=waves, art=_scii, slogan=slogan,
+        is_phantom = phantom
     )
     duccs[chan].append(ducc)
     await self.message(chan, _ducc_fmt(ducc))
@@ -206,7 +209,7 @@ async def filterducc(self, chan, src, msg):
     ducc_countdown[chan] -= 1
     if ducc_countdown[chan] <= 0:
         if random.uniform(1, 100) < CHANCE_OF_DUCC:
-            await _summon_ducc(self, chan)
+            await _summon_ducc(self, chan, False)
             ducc_countdown[chan] = MSGS_UNTIL_DUCC
 
 
@@ -219,7 +222,7 @@ async def summon(self, chan, src, msg):
     ducc_countdown[chan] -= 1
     if ducc_countdown[chan] <= 0:
         ducc_countdown[chan] = MSGS_UNTIL_DUCC
-    await _summon_ducc(self, chan)
+    await _summon_ducc(self, chan, True)
 
 
 @manager.hook(modname, "lsducc", access=AccessType.ADMIN)
@@ -247,6 +250,10 @@ async def _catches_ducc(self, chan, src, msg):
         await self.msg(
             modname, chan, [f"{src} missed the duck by {missed:,.2f} seconds!"]
         )
+        return False
+
+    if duccs[chan][-1].is_phantom:
+        await self.msg(modname, chan, [f"WHOOSH! the ducc vanishes into thin air!"])
         return False
 
     if msg != duccs[chan][-1].magic[0]:

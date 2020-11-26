@@ -24,7 +24,7 @@ def zwnj(x):
     TODO: find a character that most terminals display properly.
     """
     x = str(x)
-    return x[0] + "\u200c" + nick[1:]
+    return x[0] + "\u200c" + x[1:]
 
 
 # --- attributes ---

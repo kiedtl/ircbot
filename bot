@@ -2,8 +2,8 @@
 
 import asyncio
 import config
-import common
 import datetime
+import fmt
 import handlers
 import os
 import pydle
@@ -149,24 +149,25 @@ class SIGSEGV(pydle.Client):
         output_buf[chan] = msg[:]  # copy list
         last_modname[chan] = mod
 
-        fmt = "{}"
+        msg_fmted = "{}"
         if len(last_modname[chan]) > 1:
-            fmt = common.modname(last_modname[chan]) + " " + fmt
-        if len(output_buf[chan]) > 1:
-            fmt = fmt + " (more)"
+            msg_fmted = fmt.modname(last_modname[chan]) + " " + msg_fmted
 
-        await self.message(chan, fmt.format(output_buf[chan].pop(0)))
+        if len(output_buf[chan]) > 1:
+            msg_fmted = msg_fmted + " (more)"
+
+        await self.message(chan, msg_fmted.format(output_buf[chan].pop(0)))
 
     async def more(self, chan):
         if len(output_buf[chan]) == 0:
             await self.message(
-                chan, "{} no more text to show".format(common.modname("more"))
+                chan, "{} no more text to show".format(fmt.modname("more"))
             )
             return
 
         fmt = "{}"
         if len(last_modname[chan]) > 1:
-            fmt = common.modname(last_modname[chan]) + " " + fmt
+            fmt = fmt.modname(last_modname[chan]) + " " + fmt
         if len(output_buf[chan]) > 1:
             fmt = fmt + " (more)"
 

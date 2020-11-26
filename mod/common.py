@@ -16,11 +16,6 @@ def loadlogs(chan):
     return res
 
 
-def modname(name):
-    """Get a stylized version of module name"""
-    return "[\x032{}\x0f]".format(name)
-
-
 def get_backlog_or_msg(self, chan, msg):
     if msg == "":
         return msg

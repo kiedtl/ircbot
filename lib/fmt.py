@@ -3,6 +3,14 @@
 RESET = "\x0f"
 
 # --- misc ---
+def modname(x):
+    """
+    Style a module name.
+    """
+    coloured = blue(x)
+    return f"[{coloured}]"
+
+
 def zwnj(x):
     """
     Add a zero-width non-joiner character between the first and

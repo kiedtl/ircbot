@@ -5,8 +5,6 @@
 from datetime import datetime
 
 modname = "backlog"
-MAX_BACKLOG_SIZE = 512
-
 
 async def backlogger(self, chan, src, msg):
     if chan not in self.backlog:
@@ -34,9 +32,9 @@ async def backlogger(self, chan, src, msg):
 
     self.backlog[chan].append([src, msg])
 
-    # flush backlog if its size exceeds MAX_BACKLOG_SIZE
-    if len(self.backlog[chan]) > MAX_BACKLOG_SIZE:
-        del self.backlog[chan][: -(MAX_BACKLOG_SIZE / 2)]
+    # flush backlog if its size exceeds 128
+    if len(self.backlog[chan]) > 128:
+        del self.backlog[chan][:-64]
 
 
 async def init(self):

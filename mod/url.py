@@ -1,46 +1,82 @@
 # url-based functions
 
-# REQUIRE lib bs4
-# REQUIRE lib urllib
+import re
+import urllib
 
-import common, re, urllib, nullptr
+import configuration
+import manager
+import nullptr
+import gemini
+import common
+
+from manager import *
 from bs4 import BeautifulSoup as BS
 
+IS_URL = r"(https?|gemini)://\S+"
 modname = "url"
 
+class UnknownSchemeException(Exception):
+    pass
 
-async def handle_url(self, chan, src, msg):
-    """
-    Detect a url in chat.
-    """
+def _url_scheme(url):
+    return urllib.parse.urlparse(url).scheme
+
+def _url_title(url, scheme):
+    # TODO: gopher, finger
+    if scheme.startswith("http"):
+        http = urllib.request.urlopen(url)
+        return BS(http).title.string
+    elif scheme == "gemini":
+        data = gemini.query(url)
+        gemi = gemini.parse(data)
+        return gemini.title(gemi)
+    else:
+        raise UnknownSchemeException()
+
+
+@manager.hook(modname, "filterurl", hook=HookType.PATTERN, pattern=IS_URL)
+@manager.config("http-titles",   ConfigScope.CHAN, desc="True or False", cast=bool)
+@manager.config("gemini-titles", ConfigScope.CHAN, desc="True or False", cast=bool)
+async def url_filter(self, chan, src, msg):
     try:
-        http = urllib.request.urlopen(msg)
-        data = BS(http)
+        scheme = _url_scheme(msg)
+        if scheme.startswith("http"):
+            if not configuration.get(self.network, chan, "http-titles", cast=bool):
+                return
+        elif scheme == "gemini":
+            if not configuration.get(self.network, chan, "gemini-titles", cast=bool):
+                return
+
+        title = _url_title(msg, scheme)
+        await self.msg(modname, chan, [title])
     except:
         return
-    await self.msg(modname, chan, [data.title.string])
 
 
 async def title(self, chan, src, msg):
-    try:
-        txt = common.get_backlog_msg(self, chan, msg)[1]
-    except:
-        await self.msg(modname, chan, ["no url found"])
-        return
+    if len(msg.strip()) > 0:
+        txt = msg
+    else:
+        try:
+            txt = common.get_backlog_msg(self, chan, msg)[1]
+        except:
+            await self.msg(modname, chan, ["no url found"])
+            return
 
-    if not txt.startswith("http"):
+    # assume urls are HTTP if no scheme
+    if not "://" in txt:
         txt = "http://" + txt
 
     try:
-        http = urllib.request.urlopen(txt)
-        data = BS(http)
+        title = _url_title(txt, _url_scheme(txt))
+        await self.msg(modname, chan, [title])
+    except UnknownSchemeException:
+        await self.msg(modname, chan, [f"Invalid URL scheme."])
     except:
-        await self.msg(modname, chan, [f"bad url"])
-        return
-    await self.msg(modname, chan, [data.title.string])
+        await self.msg(modname, chan, [f"Invalid URL."])
 
 
-async def shorten(self, chan, msg, target="https://0x0.st/"):
+async def _shorten(self, chan, msg, target="https://0x0.st/"):
     if len(msg) < 1:
         await self.msg(modname, chan, [f"need url"])
         return
@@ -55,11 +91,11 @@ async def shorten(self, chan, msg, target="https://0x0.st/"):
 
 
 async def shorten_0x0(self, chan, src, msg):
-    await shorten(self, chan, msg)
+    await _shorten(self, chan, msg)
 
 
 async def shorten_ttm(self, chan, src, msg):
-    await shorten(self, chan, msg, target="https://ttm.sh")
+    await _shorten(self, chan, msg, target="https://ttm.sh")
 
 
 async def unshorten(self, chan, src, msg):
@@ -77,10 +113,7 @@ async def unshorten(self, chan, src, msg):
 
 
 async def init(self):
-    url_re = re.compile(r"https?://\S+", re.I)
-
-    # disabled, now that tildebot is a thing
-    # self.handle_reg['url'] = (url_re, handle_url)
+    manager.register(self, url_filter)
 
     self.handle_cmd["0x0"] = shorten_0x0
     self.handle_cmd["ttm"] = shorten_ttm

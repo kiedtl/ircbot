@@ -21,9 +21,9 @@ bannedchans = ["#meta", "##jmw2020", "#communism", "#chaos"]
 
 # channels that are joined only when the
 # `:admin joins` command is issued
-prod_chans = ["#team", "#lounge", "#xfnw"]
+prod_chans = ["#team", "#lounge", "#xfnw", "#nsfw"]
 
 # channels that are joined initially
-initial_chans = ["#bots", "#spacehare", "#sigsegv"]
+initial_chans = ["#bots", "#kiedtl", "#sigsegv"]
 
 quitmsg = "kill -11 $$"

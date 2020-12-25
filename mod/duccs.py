@@ -122,7 +122,7 @@ def _ducc_fmt(ducc: Ducc):
 
 
 def _ducc_ascii():
-    r_beak = random.choice(["<", "-"])
+    r_beak = random.choice(["<", "⁖", "-"])
     l_beak = random.choice([">", "-"])
     r_tail = random.choice(["\\\\", "\\"])
     l_tail = random.choice(["//", "/"])

@@ -153,7 +153,7 @@ async def qrenco(self, chan, src, msg):
     :aliases: qr
     """
     # encode text in MicroQR, it's a bit less spammy
-    res = utils.command(["qrencode", "-Mm2", "-v4", "-o-", "-tUTF8", msg], "")
+    res = utils.command(["qrencode", "-m2", "-v4", "-o-", "-tUTF8", msg], "")
     for line in res.split("\n"):
         await self.message(chan, line)
 
@@ -216,7 +216,7 @@ async def communist(self, chan, src, msg):
     :hook: cmd
     :help: seize the means of chaos production, comrade
     :args: text:str
-    :aliases: com
+    :aliases: com comm
     """
     return (Msg.RAW, _irc_communist(msg))
 

@@ -105,10 +105,13 @@ class SIGSEGV(pydle.Client):
                 continue
             await self.handle_reg[i][1](self, chan, source, msg)
 
-        if not msg[:len(self.prefix)] == self.prefix:
+        if msg[:len(self.prefix)] == self.prefix:
+            msg = msg[len(self.prefix):]
+        elif msg[:len(f"{self.nickname}: ")] == f"{self.nickname}: ":
+            msg = msg[len(f"{self.nickname}: "):]
+        else:
             return
 
-        msg = msg[len(self.prefix):]
         cmd = msg.split(' ')[0]
         msg = msg[len(cmd) + 1:]
 

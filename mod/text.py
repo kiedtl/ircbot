@@ -1,11 +1,5 @@
 # simple text manipulation stuff
 
-# REQUIRE exe qrencode
-# REQUIRE exe figlet
-# REQUIRE exe toilet
-# REQUIRE exe cowsay
-# REQUIRE exe cowthink
-
 import caesar
 import config
 import common
@@ -75,14 +69,6 @@ def _mock_text(text):
     return dest
 
 
-async def _cmd_with_args(self, chan, cmd, msg):
-    # TODO: throttling, disable in certain channels
-    cmd = cmd + msg.split(" ")
-    res = utils.command(cmd, msg)
-    for line in res.split("\n"):
-        await self.message(chan, line)
-
-
 @manager.hook(modname, "pig", desc="convert text to pig latin")
 @manager.arguments([Arg("text", optional=True)])
 async def pigify(self, c, n, m):
@@ -144,61 +130,6 @@ async def mock(self, chan, src, msg):
     return (Msg.RAW, f"<{usr}> {mocked}")
 
 
-async def qrenco(self, chan, src, msg):
-    """
-    :name: qrenco
-    :hook: cmd
-    :help: print a scannable qr code from text
-    :args: text:str
-    :aliases: qr
-    """
-    # encode text in MicroQR, it's a bit less spammy
-    res = utils.command(["qrencode", "-m2", "-v4", "-o-", "-tUTF8", msg], "")
-    for line in res.split("\n"):
-        await self.message(chan, line)
-
-
-async def figlet(self, chan, src, msg):
-    """
-    :name: figlet
-    :hook: cmd
-    :help: make some nice ASCII art with figlet
-    :args: text:str
-    """
-    await _cmd_with_args(self, chan, ["figlet"], msg)
-
-
-async def toilet(self, chan, src, msg):
-    """
-    :name: toilet
-    :hook: cmd
-    :help: make some nice ASCII art with toilet(1)
-    :args: text:str
-    :aliases: art
-    """
-    await _cmd_with_args(self, chan, ["toilet", "--irc"], msg)
-
-
-async def cowsay(self, chan, src, msg):
-    """
-    :name: cowsay
-    :hook: cmd
-    :help: use cow{say, think}(1) to generate ASCII art
-    :args: text:str
-    """
-    await _cmd_with_args(self, chan, ["cowsay"], msg)
-
-
-async def cowthink(self, chan, src, msg):
-    """
-    :name: cowthink
-    :hook: cmd
-    :help: use cow{say, think}(1) to generate ASCII art
-    :args: text:str
-    """
-    await _cmd_with_args(self, chan, ["cowthink"], msg)
-
-
 async def rainbow(self, chan, src, msg):
     """
     :name: rainbow
@@ -254,11 +185,6 @@ async def init(self):
     manager.register(self, pigify)
     manager.register(self, mock)
 
-    handlers.register(self, modname, qrenco)
-    handlers.register(self, modname, figlet)
-    handlers.register(self, modname, toilet)
-    handlers.register(self, modname, cowsay)
-    handlers.register(self, modname, cowthink)
     handlers.register(self, modname, rainbow)
     handlers.register(self, modname, communist)
     handlers.register(self, modname, rot13)

@@ -12,7 +12,7 @@ import common
 from manager import *
 from bs4 import BeautifulSoup as BS
 
-IS_URL = r"(https?|gemini)://\S+"
+IS_URL = r"(?:.*)?((?:https?|gemini)://\S+)"
 modname = "url"
 
 class UnknownSchemeException(Exception):
@@ -38,8 +38,12 @@ def _url_title(url, scheme):
 @manager.config("http-titles",   ConfigScope.CHAN, desc="True or False", cast=bool)
 @manager.config("gemini-titles", ConfigScope.CHAN, desc="True or False", cast=bool)
 async def url_filter(self, chan, src, msg):
+    url_matches = re.findall(IS_URL, msg)
+    if len(url_matches) < 1:
+        return
+
     try:
-        scheme = _url_scheme(msg)
+        scheme = _url_scheme(url_matches[0])
         if scheme.startswith("http"):
             if not configuration.get(self.network, chan, "http-titles", cast=bool):
                 return
@@ -47,7 +51,7 @@ async def url_filter(self, chan, src, msg):
             if not configuration.get(self.network, chan, "gemini-titles", cast=bool):
                 return
 
-        title = _url_title(msg, scheme)
+        title = _url_title(url_matches[0], scheme)
         await self.msg(modname, chan, [title])
     except:
         return

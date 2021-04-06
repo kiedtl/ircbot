@@ -135,25 +135,17 @@ async def mock(self, chan, src, msg):
     return (Msg.RAW, f"<{usr}> {mocked}")
 
 
+@manager.hook(modname, "rainbow", aliases=["lolcat"])
+@manager.arguments([Arg("text")])
+@manager.helptext([_irc_rainbow("make rainbows~~")])
 async def rainbow(self, chan, src, msg):
-    """
-    :name: rainbow
-    :hook: cmd
-    :help: make rainbows!
-    :args: text:str
-    :aliases: lolcat
-    """
     return (Msg.RAW, _irc_rainbow(msg))
 
 
+@manager.hook(modname, "communist", aliases=["com"])
+@manager.arguments([Arg("text")])
+@manager.helptext([_irc_communist("seize the means of production, comrade")])
 async def communist(self, chan, src, msg):
-    """
-    :name: communist
-    :hook: cmd
-    :help: seize the means of chaos production, comrade
-    :args: text:str
-    :aliases: com comm
-    """
     return (Msg.RAW, _irc_communist(msg))
 
 
@@ -163,23 +155,15 @@ async def capitalist(self, chan, src, msg):
     return (Msg.RAW, _irc_capitalist(msg))
 
 
+@manager.hook(modname, "rot13", desc="rot13 text")
+@manager.arguments([Arg("text")])
 async def rot13(self, chan, src, msg):
-    """
-    :name: rot13
-    :hook: cmd
-    :help: rot13 text
-    :args: text:str
-    """
     return (Msg.OK, caesar.rot(13)(msg))
 
 
+@manager.hook(modname, "rot", desc="like rot13, but rotate message by an arbitrary amount")
+@manager.arguments([Arg("rotation", argtype=ArgType.INT), Arg("text")])
 async def rot_n(self, chan, src, msg):
-    """
-    :name: rot
-    :hook: cmd
-    :help: like the rot13 command, but rotate message by an arbitrary amount
-    :args: rotation:int text:str
-    """
     args = msg.split(" ", 1)
 
     try:
@@ -196,8 +180,7 @@ async def init(self):
     manager.register(self, pigify)
     manager.register(self, mock)
     manager.register(self, capitalist)
-
-    handlers.register(self, modname, rainbow)
-    handlers.register(self, modname, communist)
-    handlers.register(self, modname, rot13)
-    handlers.register(self, modname, rot_n)
+    manager.register(self, rainbow)
+    manager.register(self, communist)
+    manager.register(self, rot13)
+    manager.register(self, rot_n)

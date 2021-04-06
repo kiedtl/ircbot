@@ -53,6 +53,11 @@ def _irc_communist(text):
     return f"\x038,5\x02 ☭ {text.upper()} ☭ \x0f"
 
 
+def _irc_capitalist(text):
+    #return f"\x037,3\x02 $$$ {text.upper()} $$$ \x0f"
+    return f"\x038,3\x02 $$$ {text.upper()} $$$ \x0f"
+
+
 def _mock_text(text):
     cases = utils.enum(UPPER=0, LOWER=1)
     dest = ""
@@ -152,6 +157,12 @@ async def communist(self, chan, src, msg):
     return (Msg.RAW, _irc_communist(msg))
 
 
+@manager.hook(modname, "capitalist", desc="$.$", aliases=["cap"])
+@manager.arguments([Arg("text")])
+async def capitalist(self, chan, src, msg):
+    return (Msg.RAW, _irc_capitalist(msg))
+
+
 async def rot13(self, chan, src, msg):
     """
     :name: rot13
@@ -184,6 +195,7 @@ async def init(self):
     manager.register(self, owoify)
     manager.register(self, pigify)
     manager.register(self, mock)
+    manager.register(self, capitalist)
 
     handlers.register(self, modname, rainbow)
     handlers.register(self, modname, communist)

@@ -350,7 +350,10 @@ async def _user_duckstats(self, chan, user):
     times = sorted([ducc["captured"] - ducc["appeared"] for ducc in ducc_record])
     fastest = times[0]
     slowest = times[-1]
-    average = sum(times) / len(times)
+
+    # Only calculate the average captures of captures done in less than 4 seconds.
+    fast_times = [time for time in times if time <= 4]
+    average = sum(fast_times) / len(fast_times)
 
     befriended_str = fmt.bold(fmt.green(befriended))
     murdered_str = fmt.bold(fmt.red(murdered))
@@ -382,7 +385,10 @@ async def _chan_duckstats(self, chan, context):
     )
     fastest = times[0]
     slowest = times[-1]
-    average = sum([t[0] for t in times]) / len(times)
+
+    # Only calculate the average captures of captures done in less than 4 seconds.
+    fast_times = [time[0] for time in times if time[0] <= 4]
+    average = sum(fast_times) / len(fast_times)
 
     befriended_str = fmt.bold(fmt.green(befriended))
     murdered_str = fmt.bold(fmt.red(murdered))

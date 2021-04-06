@@ -120,6 +120,7 @@ def aliases(aliases):
 def helptext(helptexts):
     def decorator(func):
         fninfo = _fn_get_info(func)
+        fninfo.helptext = []
         for helptext in helptexts:
             fninfo.helptext.append(helptext)
         setattr(func, FNINFO_ATTR, fninfo)
@@ -173,7 +174,11 @@ def register(self, func):
         help_string += "── " + fninfo.helptext[0]
 
         # register help message
-        self.help[fninfo.name] = [help_string] + fninfo.helptext[1:]
+        self.help[fninfo.name] = [help_string]
+        for othertext in fninfo.helptext[1:]:
+            if othertext is "":
+                continue
+            self.help[fninfo.name].append(othertext)
 
     # register handlers
     if fninfo.hook_type == HookType.COMMAND:

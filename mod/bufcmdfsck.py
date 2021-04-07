@@ -14,8 +14,9 @@ RESPONSE = [
     "you're clogging my logs",
     "opers: halp",
     "stop spamming",
+    "irssi--",
 ]
-PERCENTAGE = 30
+PERCENTAGE = 80
 
 modname = "bufcmdfsck"
 IS_BUFCMD = r"^(\/([0-9])+)+$"

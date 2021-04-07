@@ -8,7 +8,9 @@ import importlib, os, time
 import traceback
 import handlers
 import pprint
+import pydle
 import restart as _restart
+from handlers import *
 
 modname = "admin"
 
@@ -195,8 +197,15 @@ async def joinall(self, chan, source, msg):
     :require_admin:
     :aliases: joins
     """
+    joined = 0
     for i in config.prod_chans:
-        await self.join(i)
+        try:
+            joined += 1
+            await self.join(i)
+        except pydle.AlreadyInChannel:
+            joined -= 1
+            pass
+    return (Msg.OK, f"joined {joined}/{len(config.prod_chans)} channels")
 
 
 async def ev(self, chan, source, msg):

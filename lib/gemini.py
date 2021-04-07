@@ -12,38 +12,36 @@ DEF_PORT = 1965
 RESPONSES = {
     10: lambda m: f"(Input: {m})",
     11: lambda m: f"(Sensitive input: {m})",
-
     30: lambda m: f"(Redirect to {m})",
     31: lambda m: f"(Permanent redirect to {m})",
-
     40: lambda m: f"(Temporary failure: {m})",
     41: lambda _: f"(Server unavailable)",
     42: lambda _: f"(CGI error)",
     43: lambda _: f"(Proxy error)",
     44: lambda _: f"(Rate limited)",
-
     50: lambda m: f"(Permanent failure: {m})",
     51: lambda _: f"(Area 51: Not found)",
     52: lambda _: f"(Resource gone)",
     53: lambda _: f"(Proxy request refused)",
     59: lambda _: f"(Malformed request)",
-
     60: lambda m: f"(Need client certificate)",
     61: lambda _: f"(Unauthorised client certificate)",
     62: lambda _: f"(Invalid client certificate)",
 }
 
 sslctx = ssl.create_default_context()
-gemtext = utils.enum(TEXT=0, HEADER1=1,
-        HEADER2=2, HEADER3=3, LINK=4, QUOTE=5, LIST=6,
-        PREFORMAT=7)
+gemtext = utils.enum(
+    TEXT=0, HEADER1=1, HEADER2=2, HEADER3=3, LINK=4, QUOTE=5, LIST=6, PREFORMAT=7
+)
+
 
 @dataclasses.dataclass
 class GeminiDoc:
-    doctype: int     # status code "family". e.g. 3, 2, 1
-    status:  int     # exact status code. e.g. 31, 20, 11
-    meta:    str     # text that comes after the status code.
-    body:    list    # the document body. comment unneeded.
+    doctype: int  # status code "family". e.g. 3, 2, 1
+    status: int  # exact status code. e.g. 31, 20, 11
+    meta: str  # text that comes after the status code.
+    body: list  # the document body. comment unneeded.
+
 
 # Enable TOFU, which Gemini needs. Stupid, right?
 sslctx.check_hostname = False
@@ -53,6 +51,7 @@ sslctx.verify_mode = ssl.CERT_NONE
 # stolen from the av98 source code
 urllib.parse.uses_relative.append("gemini")
 urllib.parse.uses_netloc.append("gemini")
+
 
 def query(url):
     if not "://" in url:
@@ -79,12 +78,13 @@ def query(url):
 
     return r_buffer
 
+
 def parse(rawdata):
-    first  = (rawdata.split("\n", 1)[0]).strip("\r")
-    data   = (rawdata.split("\n", 1)[1])
+    first = (rawdata.split("\n", 1)[0]).strip("\r")
+    data = rawdata.split("\n", 1)[1]
     status = int(first.split(" ", 1)[0])
-    dtype  = int(str(status)[-2])
-    meta   = (first.split(" ", 1)[1]).strip("\r")
+    dtype = int(str(status)[-2])
+    meta = (first.split(" ", 1)[1]).strip("\r")
     parsed = []
 
     preformat = False
@@ -108,8 +108,7 @@ def parse(rawdata):
         elif line.startswith("=>"):
             # FIXME: won't split on tabs
             # FIXME: trim spaces from description
-            parsed.append([gemtext.LINK,
-                line[2:].strip().split(" ", 1)])
+            parsed.append([gemtext.LINK, line[2:].strip().split(" ", 1)])
         elif line.startswith(">"):
             parsed.append([gemtext.QUOTE, line[1:].strip()])
         elif line.startswith("*"):
@@ -119,13 +118,13 @@ def parse(rawdata):
 
     return GeminiDoc(dtype, status, meta, parsed)
 
+
 def title(doc: GeminiDoc, follow_redirect=True, redirects=[]):
     # when searching for the title in text, grab the
     # first element which is a header. if no title is found,
     # try again, but search for header2's. and so on and
     # so on.
-    attempts = [gemtext.HEADER1, gemtext.HEADER2,
-        gemtext.HEADER3, gemtext.TEXT]
+    attempts = [gemtext.HEADER1, gemtext.HEADER2, gemtext.HEADER3, gemtext.TEXT]
 
     if doc.doctype == 2:
         for attempt in attempts:
@@ -138,7 +137,7 @@ def title(doc: GeminiDoc, follow_redirect=True, redirects=[]):
                     continue
 
                 if len(text) > MAX_TITLE_WIDTH:
-                    text = text[:MAX_TITLE_WIDTH-3]
+                    text = text[: MAX_TITLE_WIDTH - 3]
                     text = text.strip() + "..."
 
                 return text
@@ -149,8 +148,9 @@ def title(doc: GeminiDoc, follow_redirect=True, redirects=[]):
             return "(Too many redirects)"
 
         redirects.append(doc.meta)
-        return title(parse(query(doc.meta)),
-            follow_redirect=follow_redirect, redirects=redirects)
+        return title(
+            parse(query(doc.meta)), follow_redirect=follow_redirect, redirects=redirects
+        )
     else:
         if doc.status in strings:
             return (strings[doc.status])(doc.meta)

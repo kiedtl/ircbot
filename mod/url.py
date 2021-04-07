@@ -15,11 +15,14 @@ from bs4 import BeautifulSoup as BS
 IS_URL = r"(?:.*)?((?:https?|gemini)://\S+)"
 modname = "url"
 
+
 class UnknownSchemeException(Exception):
     pass
 
+
 def _url_scheme(url):
     return urllib.parse.urlparse(url).scheme
+
 
 def _url_title(url, scheme):
     # TODO: gopher, finger
@@ -35,7 +38,7 @@ def _url_title(url, scheme):
 
 
 @manager.hook(modname, "filterurl", hook=HookType.PATTERN, pattern=IS_URL)
-@manager.config("http-titles",   ConfigScope.CHAN, desc="True or False", cast=bool)
+@manager.config("http-titles", ConfigScope.CHAN, desc="True or False", cast=bool)
 @manager.config("gemini-titles", ConfigScope.CHAN, desc="True or False", cast=bool)
 async def url_filter(self, chan, src, msg):
     url_matches = re.findall(IS_URL, msg)

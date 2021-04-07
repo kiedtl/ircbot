@@ -186,8 +186,12 @@ async def _summon_ducc(self, chan, phantom):
     magic = random.choice([_ducc_math_magic, _ducc_random_magic, _ducc_none_magic])()
 
     ducc = Ducc(
-        appeared=time.time(), magic=magic, waves=waves, art=_scii, slogan=slogan,
-        is_phantom = phantom
+        appeared=time.time(),
+        magic=magic,
+        waves=waves,
+        art=_scii,
+        slogan=slogan,
+        is_phantom=phantom,
     )
     duccs[chan].append(ducc)
     await self.message(chan, _ducc_fmt(ducc))

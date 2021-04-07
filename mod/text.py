@@ -54,7 +54,7 @@ def _irc_communist(text):
 
 
 def _irc_capitalist(text):
-    #return f"\x037,3\x02 $$$ {text.upper()} $$$ \x0f"
+    # return f"\x037,3\x02 $$$ {text.upper()} $$$ \x0f"
     return f"\x038,3\x02 $$$ {text.upper()} $$$ \x0f"
 
 
@@ -161,7 +161,9 @@ async def rot13(self, chan, src, msg):
     return (Msg.OK, caesar.rot(13)(msg))
 
 
-@manager.hook(modname, "rot", desc="like rot13, but rotate message by an arbitrary amount")
+@manager.hook(
+    modname, "rot", desc="like rot13, but rotate message by an arbitrary amount"
+)
 @manager.arguments([Arg("rotation", argtype=ArgType.INT), Arg("text")])
 async def rot_n(self, chan, src, msg):
     args = msg.split(" ", 1)

@@ -6,6 +6,7 @@ from datetime import datetime
 
 modname = "backlog"
 
+
 async def backlogger(self, chan, src, msg):
     if chan not in self.backlog:
         self.backlog[chan] = []

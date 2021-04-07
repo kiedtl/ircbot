@@ -84,6 +84,8 @@ async def execute(self, func, chan, src, msg):
 
     # if the handler returns anything, print it to IRC.
     # the returned data should be a Tuple[Msg, List[str]]
+    #
+    # TODO: for PATTERN/RAW modules as well
     if ret and type(ret) == tuple:
         msgtype = ret[0]
         msgstr = ret[1]

@@ -11,7 +11,6 @@ bot:
 	filter out messages tagged with @batch
 	add a better way to restart/reload/stop bot remotely (UNIX sockets?)
 		update systemd unit and add to repo.
-	do not crash if exception was thrown in a handle_raw
 
 documentation on the bot's internals.
 add config option controlling whether to display module name in bot messages
@@ -21,7 +20,6 @@ NEW FUNCTIONALITY
 -----------------
 
 calendar
-sedbot functionality
 koran lookup
 distrowatch lookup
 HN/lobsters lookup
@@ -30,14 +28,7 @@ wikipedia lookup
 GUS searching
 Google searching
 DDG searching
-Gemini/Gopher support for urls
+Gopher support for urls
 tell <user> command
 lastseen command
 talklike command
-
-evaluation:
-	python evaluation
-	wolfram|alpha evaluation
-	sed evaluation
-	dc/bc evaluation
-	common lisp evaluation

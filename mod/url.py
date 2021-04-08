@@ -16,7 +16,9 @@ IS_URL = r"(?:.*)?((?:https?|gemini)://\S+)"
 modname = "url"
 
 
-class UnknownSchemeException(Exception):
+class UnknownScheme(Exception):
+    pass
+class InvalidContentType(Exception):
     pass
 
 
@@ -28,13 +30,16 @@ def _url_title(url, scheme):
     # TODO: gopher, finger
     if scheme.startswith("http"):
         http = urllib.request.urlopen(url)
+        type = http.getheader('content-type')
+        if type and type is not 'text/html':
+            raise InvalidContentType()
         return BS(http).title.string
     elif scheme == "gemini":
         data = gemini.query(url)
         gemi = gemini.parse(data)
         return gemini.title(gemi)
     else:
-        raise UnknownSchemeException()
+        raise UnknownScheme()
 
 
 @manager.hook(modname, "filterurl", hook=HookType.PATTERN, pattern=IS_URL)
@@ -77,10 +82,14 @@ async def title(self, chan, src, msg):
     try:
         title = _url_title(txt, _url_scheme(txt))
         await self.msg(modname, chan, [title])
-    except UnknownSchemeException:
+    except UnknownScheme:
         await self.msg(modname, chan, [f"Invalid URL scheme."])
-    except:
-        await self.msg(modname, chan, [f"Invalid URL."])
+    except InvalidContentType:
+        await self.msg(modname, chan, [f"Not an HTML document."])
+    except urllib.error.HTTPError as e:
+        await self.msg(modname, chan, [f"{e}"])
+    except Exception as e:
+        await self.msg(modname, chan, [f"Failed to get title.", f"{e}"])
 
 
 async def _shorten(self, chan, msg, target="https://0x0.st/"):

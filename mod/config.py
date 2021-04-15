@@ -20,7 +20,7 @@ def _is_oper(self, chan, nick):
     return is_oper
 
 
-@manager.hook(modname, "cfg", access=AccessType.IDENTIFIED, aliases=["set", "c"])
+@manager.hook(modname, "cfg", access=AccessType.IDENTIFIED)
 @manager.arguments(
     [
         Arg("context", desc="<user/chan>"),

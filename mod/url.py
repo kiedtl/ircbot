@@ -31,7 +31,7 @@ def _url_title(url, scheme):
     if scheme.startswith("http"):
         http = urllib.request.urlopen(url)
         type = http.getheader('content-type')
-        if type and type is not 'text/html':
+        if type and type != 'text/html':
             raise InvalidContentType()
         return BS(http).title.string
     elif scheme == "gemini":

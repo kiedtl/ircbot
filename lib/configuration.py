@@ -38,7 +38,9 @@ def set(network, ctx, key, value):
 def try_cast(cast, value):
     if cast:
         if cast == bool and type(value) == str:
-            value = value.lower() == "true"
+            value = value.lower() == "on" or \
+                value.lower() == "yes" or \
+                value.lower() == "true"
         else:
             value = cast(value)
     return value

@@ -12,10 +12,10 @@ def _is_oper(self, chan, nick):
         return False
 
     is_oper = False
-    if "q" in self.channels[chan]:
-        is_oper = nick in self.channels[chan]["q"]
+    if "q" in self.channels[chan]["modes"]:
+        is_oper = nick in self.channels[chan]["modes"]["q"]
     if "o" in self.channels[chan]:
-        is_oper = nick in self.channels[chan]["o"]
+        is_oper = nick in self.channels[chan]["modes"]["o"]
 
     return is_oper
 
